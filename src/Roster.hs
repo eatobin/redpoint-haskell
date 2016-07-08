@@ -1,17 +1,24 @@
 module Roster where
 
+import           Data.Map.Strict (Map, (!))
+import qualified Data.Map.Strict as Map
+
 type PlrSym = String
+
+data GiftPair = GiftPair
+  { giver :: PlrSym
+  , givee :: PlrSym
+  } deriving (Show, Eq)
+
 type Name = String
-type GiftPair = (PlrSym, PlrSym)
 type GiftHist = [GiftPair]
 
 data Player = Player
-  { plrSym   :: PlrSym
-  , name     :: Name
+  { name     :: Name
   , giftHist :: GiftHist
   } deriving (Show, Eq)
 
-type Roster = [Player]
+type Roster = [(PlrSym, Player)]
 
 -- instance FromJSON Borrower where
 --   parseJSON (Object v) = Borrower <$>

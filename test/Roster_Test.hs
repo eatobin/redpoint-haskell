@@ -1,9 +1,14 @@
 module Roster_Test where
 
+import           Data.Map.Strict (Map, (!))
+import qualified Data.Map.Strict as Map
 import           Roster
 import           Test.HUnit
 
--- br1 = Borrower {name = "Borrower1", maxBooks = 1}
+plr1 = Player {name = "Ringo Starr", giftHist = [GiftPair {giver = "GeoHar", givee = "JohLen"}]}
+plr2 = Player {name = "John Lennon", giftHist = [GiftPair {giver = "RinSta", givee = "PauMcc"}]}
+rstr1 = Map.fromList [("RinSta", plr1), ("JohLen", plr2)]
+johLen = rstr1 ! "JohLen"
 --
 -- testMakeBorrower = (~=?)
 --   br1
