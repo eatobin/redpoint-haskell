@@ -7,8 +7,9 @@ import           Test.HUnit
 
 plr1 = Player {name = "Ringo Starr", giftHist = [GiftPair {giver = "GeoHar", givee = "JohLen"}]}
 plr2 = Player {name = "John Lennon", giftHist = [GiftPair {giver = "RinSta", givee = "PauMcc"}]}
-rstr1 = Map.fromList [("RinSta", plr1), ("JohLen", plr2)]
-johLen = rstr1 ! "JohLen"
+rstrLst = [("RinSta", plr1), ("JohLen", plr2)]
+rstrMap = Map.fromList rstrLst
+johLen = rstrMap ! "JohLen"
 --
 -- testMakeBorrower = (~=?)
 --   br1

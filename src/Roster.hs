@@ -18,8 +18,6 @@ data Player = Player
   , giftHist :: GiftHist
   } deriving (Show, Eq)
 
-type Roster = [(PlrSym, Player)]
-
 -- instance FromJSON Borrower where
 --   parseJSON (Object v) = Borrower <$>
 --                          v .: "name" <*>
