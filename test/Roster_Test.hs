@@ -5,11 +5,15 @@ import qualified Data.Map.Strict as Map
 import           Roster
 import           Test.HUnit
 
-plr1 = Player {name = "Ringo Starr", giftHist = [GiftPair {giver = "GeoHar", givee = "JohLen"}, GiftPair {giver = "EriTob", givee = "ScoTob"}]}
+plr1 = Player {name = "Ringo Starr", giftHist = [GiftPair {giver = "GeoHar", givee = "JohLen"}]}
 plr2 = Player {name = "John Lennon", giftHist = [GiftPair {giver = "RinSta", givee = "PauMcc"}]}
-rstrLst = [("RinSta", plr1), ("JohLen", plr2)]
+plr3 = Player {name = "George Harrison", giftHist = [GiftPair {giver = "PauMcc", givee = "RinSta"}]}
+plr4 = Player {name = "Paul McCartney", giftHist = [GiftPair {giver = "JohLen", givee = "GeoHar"}]}
+
+rstrLst = [("RinSta", plr1), ("JohLen", plr2), ("GeoHar", plr3), ("PauMcc", plr4)]
 rstrMap = Map.fromList rstrLst
 johLen = rstrMap ! "JohLen"
+pauMcc = rstrMap ! "PauMcc"
 gh1 = [GiftPair {giver = "GeoHar", givee = "JohLen"}, GiftPair {giver = "EriTob", givee = "ScoTob"}]
 fstPr = gh1 !! 0
 --

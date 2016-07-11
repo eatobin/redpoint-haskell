@@ -50,3 +50,5 @@ parsed:
 =>
 {:PauMcc {:name "Paul McCartney",
           :gift-history [{:giver :JohLen, :givee :GeoHar}]}}
+
+fromList [("JohLen",Player {name = "John Lennon", giftHist = [GiftPair {giver = "RinSta", givee = "PauMcc"}]}),("RinSta",Player {name = "Ringo Starr", giftHist = [GiftPair {giver = "GeoHar", givee = "JohLen"},GiftPair {giver = "EriTob", givee = "ScoTob"}]})]
