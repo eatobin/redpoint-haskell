@@ -18,7 +18,7 @@ data Player = Player
   , giftHist :: GiftHist
   } deriving (Show, Eq)
 
-makeRoster :: [(String, PlrSym)] -> Map String PlrSym
+makeRoster :: [(String, Player)] -> Map String Player
 makeRoster = Map.fromList
 
 -- instance FromJSON Borrower where
