@@ -5,11 +5,13 @@ import qualified Data.Map.Strict as Map
 import           Roster
 import           Test.HUnit
 
-plr1 = Player {name = "Ringo Starr", giftHist = [GiftPair {giver = "GeoHar", givee = "JohLen"}]}
+plr1 = Player {name = "Ringo Starr", giftHist = [GiftPair {giver = "GeoHar", givee = "JohLen"}, GiftPair {giver = "EriTob", givee = "ScoTob"}]}
 plr2 = Player {name = "John Lennon", giftHist = [GiftPair {giver = "RinSta", givee = "PauMcc"}]}
 rstrLst = [("RinSta", plr1), ("JohLen", plr2)]
 rstrMap = Map.fromList rstrLst
 johLen = rstrMap ! "JohLen"
+gh1 = [GiftPair {giver = "GeoHar", givee = "JohLen"}, GiftPair {giver = "EriTob", givee = "ScoTob"}]
+fstPr = gh1 !! 0
 --
 -- testMakeBorrower = (~=?)
 --   br1

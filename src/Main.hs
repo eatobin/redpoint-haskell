@@ -29,3 +29,6 @@ main = do
 m9 = Map.empty
 m10 = Map.insert "k1" 77 m9
 m11 = Map.insert "k2" 133 m10
+
+myMap :: Ord k => [(k, a)] -> Map k a
+myMap = Map.fromList

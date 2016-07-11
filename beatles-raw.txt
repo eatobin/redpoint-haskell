@@ -1,0 +1,52 @@
+slurped:
+(slurp "beatles2014.txt")
+=>
+"The Beatles, 2014
+ RinSta, Ringo Starr, JohLen, GeoHar
+ JohLen, John Lennon, PauMcc, RinSta
+ GeoHar, George Harrison, RinSta, PauMcc
+ PauMcc, Paul McCartney, GeoHar, JohLen
+ "
+
+de-spaced:
+(clojure.string/replace (slurp "beatles2014.txt") #", " ",")
+=>
+"The Beatles,2014
+ RinSta,Ringo Starr,JohLen,GeoHar
+ JohLen,John Lennon,PauMcc,RinSta
+ GeoHar,George Harrison,RinSta,PauMcc
+ PauMcc,Paul McCartney,GeoHar,JohLen
+ "
+
+parsed:
+(csv/parse-csv (clojure.string/replace (slurp "beatles2014.txt") #", " ","))
+=>
+(["The Beatles" "2014"]
+ ["RinSta" "Ringo Starr" "JohLen" "GeoHar"]
+ ["JohLen" "John Lennon" "PauMcc" "RinSta"]
+ ["GeoHar" "George Harrison" "RinSta" "PauMcc"]
+ ["PauMcc" "Paul McCartney" "GeoHar" "JohLen"])
+
+[["RinSta" "Ringo Starr" "JohLen" "GeoHar"]
+ ["JohLen" "John Lennon" "PauMcc" "RinSta"]
+ ["GeoHar" "George Harrison" "RinSta" "PauMcc"]
+ ["PauMcc" "Paul McCartney" "GeoHar" "JohLen"]]
+
+ {:RinSta {:name "Ringo Starr", :gift-history [{:giver :GeoHar, :givee :JohLen}]},
+  :JohLen {:name "John Lennon", :gift-history [{:giver :RinSta, :givee :PauMcc}]},
+  :GeoHar {:name "George Harrison", :gift-history [{:giver :PauMcc, :givee :RinSta}]},
+  :PauMcc {:name "Paul McCartney", :gift-history [{:giver :JohLen, :givee :GeoHar}]}}
+
+((get-in beatles [:GeoHar :gift-history]) 0)
+=> {:giver :PauMcc, :givee :RinSta}
+
+(get-in ((get-in beatles [:GeoHar :gift-history]) 0) [:giver])
+=> :PauMcc
+
+(get-in beatles [:JohLen :gift-history 0 :givee])
+=> :PauMcc
+
+(make-map ["PauMcc" "Paul McCartney" "GeoHar" "JohLen"])
+=>
+{:PauMcc {:name "Paul McCartney",
+          :gift-history [{:giver :JohLen, :givee :GeoHar}]}}
