@@ -10,7 +10,7 @@ plr2 = Player {name = "John Lennon", giftHist = [GiftPair {giver = "RinSta", giv
 plr3 = Player {name = "George Harrison", giftHist = [GiftPair {giver = "PauMcc", givee = "RinSta"}]}
 plr4 = Player {name = "Paul McCartney", giftHist = [GiftPair {giver = "JohLen", givee = "GeoHar"}]}
 
-rstrLst = [("RinSta", plr1), ("JohLen", plr2), ("GeoHar", plr3), ("PauMcc", plr4)]
+rstrLst = [("RinSta", Player {name = "Ringo Starr", giftHist = [GiftPair {giver = "GeoHar", givee = "JohLen"}]}), ("JohLen", plr2), ("GeoHar", plr3), ("PauMcc", plr4)]
 rstrMap = Map.fromList rstrLst
 johLen = rstrMap ! "JohLen"
 pauMcc = rstrMap ! "PauMcc"

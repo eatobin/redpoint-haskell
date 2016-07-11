@@ -18,6 +18,9 @@ data Player = Player
   , giftHist :: GiftHist
   } deriving (Show, Eq)
 
+makeRoster :: Ord k => [(k, a)] -> Map k a
+makeRoster = Map.fromList
+
 -- instance FromJSON Borrower where
 --   parseJSON (Object v) = Borrower <$>
 --                          v .: "name" <*>
