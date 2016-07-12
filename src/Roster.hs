@@ -1,13 +1,17 @@
+{-# LANGUAGE NamedFieldPuns    #-}
+
 module Roster where
 
 import           Data.Map.Strict (Map, (!))
 import qualified Data.Map.Strict as Map
 
 type PlrSym = String
+type Giver = PlrSym
+type Givee = PlrSym
 
 data GiftPair = GiftPair
-  { giver :: PlrSym
-  , givee :: PlrSym
+  { giver :: Giver
+  , givee :: Givee
   } deriving (Show, Eq)
 
 type Name = String
@@ -18,8 +22,23 @@ data Player = Player
   , giftHist :: GiftHist
   } deriving (Show, Eq)
 
-makeRoster :: [(String, Player)] -> Map String Player
-makeRoster = Map.fromList
+--["RinSta" "Ringo Starr" "JohLen" "GeoHar"]
+
+makeGiftPair :: Giver -> Givee -> GiftPair
+makeGiftPair = GiftPair
+
+makePlayer :: Name -> GiftHist -> Player
+makePlayer = Player
+
+makePlayerMap :: PlrSym -> Name -> Giver -> Givee -> Map PlrSym Player
+makePlayerMap s n gr ge =
+  Map.singleton s plr
+    where gp = makeGiftPair gr ge
+          plr = makePlayer n [gp]
+
+-- makeMap = Map.singleton
+-- makeRoster :: [(String, Player)] -> Map String Player
+-- makeRoster = Map.fromList
 
 -- instance FromJSON Borrower where
 --   parseJSON (Object v) = Borrower <$>

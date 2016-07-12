@@ -14,8 +14,11 @@ rstrLst = [("RinSta", Player {name = "Ringo Starr", giftHist = [GiftPair {giver 
 rstrMap = Map.fromList rstrLst
 johLen = rstrMap ! "JohLen"
 pauMcc = rstrMap ! "PauMcc"
+gh0 = [GiftPair {giver = "GeoHar", givee = "JohLen"}]
 gh1 = [GiftPair {giver = "GeoHar", givee = "JohLen"}, GiftPair {giver = "EriTob", givee = "ScoTob"}]
 fstPr = gh1 !! 0
+
+-- ["RinSta" "Ringo Starr" "JohLen" "GeoHar"]
 --
 -- testMakeBorrower = (~=?)
 --   br1
