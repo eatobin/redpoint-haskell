@@ -1,0 +1,10 @@
+lines "one, two\nthree"
+  ["one, two","three"]
+map (filter (/=',')) ["one, two","three"]
+  ["one two","three"]
+map words ["one, two","three"]
+  [["one," "two"],["three"]]
+filter (/=',') "one, two"
+  "one two"
+words "one two"
+  ["one","two"]
