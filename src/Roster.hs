@@ -36,6 +36,12 @@ makePlayerMap s n gr ge =
     where gp = makeGiftPair gr ge
           plr = makePlayer n [gp]
 
+makePlayerMap' :: [String] -> Map PlrSym Player
+makePlayerMap' [s, n, gr, ge] =
+  Map.singleton s plr
+    where gp = makeGiftPair gr ge
+          plr = makePlayer n [gp]
+
 -- makeMap = Map.singleton
 -- makeRoster :: [(String, Player)] -> Map String Player
 -- makeRoster = Map.fromList
