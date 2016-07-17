@@ -10,8 +10,8 @@ type Giver = PlrSym
 type Givee = PlrSym
 
 data GiftPair = GiftPair
-  { giver :: Giver
-  , givee :: Givee
+  { givee :: Givee
+  , giver :: Giver
   } deriving (Show, Eq)
 
 type Name = String
@@ -24,22 +24,22 @@ data Player = Player
 
 --["RinSta" "Ringo Starr" "JohLen" "GeoHar"]
 
-makeGiftPair :: Giver -> Givee -> GiftPair
+makeGiftPair :: Givee -> Giver -> GiftPair
 makeGiftPair = GiftPair
 
 makePlayer :: Name -> GiftHist -> Player
 makePlayer = Player
 
-makePlayerMap :: PlrSym -> Name -> Giver -> Givee -> Map PlrSym Player
-makePlayerMap s n gr ge =
+makePlayerMap :: PlrSym -> Name -> Givee -> Giver -> Map PlrSym Player
+makePlayerMap s n ge gr =
   Map.singleton s plr
-    where gp = makeGiftPair gr ge
+    where gp = makeGiftPair ge gr
           plr = makePlayer n [gp]
 
 makePlayerMap' :: [String] -> Map PlrSym Player
-makePlayerMap' [s, n, gr, ge] =
+makePlayerMap' [s, n, ge, gr] =
   Map.singleton s plr
-    where gp = makeGiftPair gr ge
+    where gp = makeGiftPair ge gr
           plr = makePlayer n [gp]
 
 -- makeMap = Map.singleton
