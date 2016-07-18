@@ -12,6 +12,7 @@ type Giver = PlrSym
 
 type PlayersString = String
 type PlayersList = [[String]]
+type PlayerLine = [String]
 
 data GiftPair = GiftPair
   { givee :: Givee
@@ -36,7 +37,7 @@ makePlayersList :: PlayersString -> PlayersList
 makePlayersList playersString = map (split ", ") playerString
   where playerString = lines playersString
 
-makePlayerKV :: [String] -> (PlrSym, Player)
+makePlayerKV :: PlayerLine -> (PlrSym, Player)
 makePlayerKV [s, n, ge, gr] =
   (s, plr)
     where gp = makeGiftPair ge gr
