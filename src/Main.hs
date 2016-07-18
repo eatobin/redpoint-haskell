@@ -1,52 +1,52 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
+-- module Main where
+
+-- import qualified Data.ByteString.Lazy as BL
+-- import Data.Csv
+-- import qualified Data.Vector as V
+--
+-- main :: IO ()
+-- main = do
+--     csvData <- BL.readFile "salaries.csv"
+--     case decode NoHeader csvData of
+--         Left err -> putStrLn err
+--         Right v -> V.forM_ v $ \ (name, salary :: Int) ->
+--             putStrLn $ name ++ " earns " ++ show salary ++ " dollars"
+
+
+
 module Main where
 
-import qualified Data.ByteString.Lazy as BL
-import Data.Csv
-import qualified Data.Vector as V
+import           All_Tests
+import           Roster
+import           Roster_Test
 
-main :: IO ()
+import           Data.Map.Strict (Map, (!))
+import qualified Data.Map.Strict as Map
+
 main = do
-    csvData <- BL.readFile "salaries.csv"
-    case decode NoHeader csvData of
-        Left err -> putStrLn err
-        Right v -> V.forM_ v $ \ (name, salary :: Int) ->
-            putStrLn $ name ++ " earns " ++ show salary ++ " dollars"
+    let m0 = Map.empty
+    let m1 = Map.insert "k1" 7 m0
+    let m  = Map.insert "k2" 13 m1
+    putStrLn $ "map: " ++ show m
 
+    let v1 = m ! "k1"
+    putStrLn $ "v1: " ++ show v1
+    putStrLn $ "len: " ++ show (Map.size m)
 
+    let m' = Map.delete "k2" m
+    putStrLn $ "map: " ++ show m'
 
--- module Main where
---
--- import           All_Tests
--- import           Roster
--- import           Roster_Test
---
--- import           Data.Map.Strict (Map, (!))
--- import qualified Data.Map.Strict as Map
---
--- main = do
---     let m0 = Map.empty
---     let m1 = Map.insert "k1" 7 m0
---     let m  = Map.insert "k2" 13 m1
---     putStrLn $ "map: " ++ show m
---
---     let v1 = m ! "k1"
---     putStrLn $ "v1: " ++ show v1
---     putStrLn $ "len: " ++ show (Map.size m)
---
---     let m' = Map.delete "k2" m
---     putStrLn $ "map: " ++ show m'
---
---     let prs = Map.lookup "k2" m'
---     putStrLn $ "prs: " ++ show prs
---
---     let n = Map.fromList [("foo", 1), ("bar", 2)]
---     putStrLn $ "map: " ++ show n
---
--- m9 = Map.empty
--- m10 = Map.insert "k1" 77 m9
--- m11 = Map.insert "k2" 133 m10
---
--- myMap :: Ord k => [(k, a)] -> Map k a
--- myMap = Map.fromList
+    let prs = Map.lookup "k2" m'
+    putStrLn $ "prs: " ++ show prs
+
+    let n = Map.fromList [("foo", 1), ("bar", 2)]
+    putStrLn $ "map: " ++ show n
+
+m9 = Map.empty
+m10 = Map.insert "k1" 77 m9
+m11 = Map.insert "k2" 133 m10
+
+myMap :: Ord k => [(k, a)] -> Map k a
+myMap = Map.fromList

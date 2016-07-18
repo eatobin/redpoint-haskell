@@ -23,8 +23,4 @@ executable redpoint-haskell
   build-depends:       base >= 4.7 && < 5
                      , HUnit
                      , containers
-                     , parsec
                      , MissingH
-                     , cassava
-                     , bytestring
-                     , vector

@@ -9,7 +9,7 @@ slurped:
  "
 
  "The Beatles, 2014\nRinSta, Ringo Starr, JohLen, GeoHar\nJohLen, John Lennon, PauMcc, RinSta\nGeoHar, George Harrison, RinSta, PauMcc\nPauMcc, Paul McCartney, GeoHar, JohLen"
-
+ "RinSta, Ringo Starr, JohLen, GeoHar\nJohLen, John Lennon, PauMcc, RinSta\nGeoHar, George Harrison, RinSta, PauMcc\nPauMcc, Paul McCartney, GeoHar, JohLen"
 de-spaced:
 (clojure.string/replace (slurp "beatles2014.txt") #", " ",")
 =>
@@ -54,3 +54,10 @@ parsed:
           :gift-history [{:giver :JohLen, :givee :GeoHar}]}}
 
 fromList [("GeoHar",Player {name = "George Harrison", giftHist = [GiftPair {giver = "PauMcc", givee = "RinSta"}]}),("JohLen",Player {name = "John Lennon", giftHist = [GiftPair {giver = "RinSta", givee = "PauMcc"}]}),("PauMcc",Player {name = "Paul McCartney", giftHist = [GiftPair {giver = "JohLen", givee = "GeoHar"}]}),("RinSta",Player {name = "Ringo Starr", giftHist = [GiftPair {giver = "GeoHar", givee = "JohLen"}]})]
+
+"RinSta, Ringo Starr, JohLen, GeoHar"
+
+[["RinSta","Ringo Starr","JohLen","GeoHar"],["JohLen","John Lennon","PauMcc","RinSta"],["GeoHar","George Harrison","RinSta","PauMcc"],["PauMcc","Paul McCartney","GeoHar","JohLen"]]
+
+fromList [("PauMcc",Player {name = "Paul McCartney", giftHist = [GiftPair {givee = "GeoHar", giver = "JohLen"}]})]
+fromList [("RinSta",Player {name = "Ringo Starr", giftHist = [GiftPair {givee = "JohLen", giver = "GeoHar"}]})]

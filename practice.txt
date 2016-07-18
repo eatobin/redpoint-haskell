@@ -1,10 +1,14 @@
-lines "one, two\nthree"
-  ["one, two","three"]
-map (filter (/=',')) ["one, two","three"]
-  ["one two","three"]
-map words ["one, two","three"]
-  [["one," "two"],["three"]]
-filter (/=',') "one, two"
-  "one two"
-words "one two"
-  ["one","two"]
+> lines "one, twenty two\nthree"
+  ["one, twenty two","three"]
+> split ", " "one, twenty two"
+  ["one","twenty two"]
+> map split ", " ["one, twenty two","three"]
+  [["one,","two"],["three"]]
+> map (map (filter (/=','))) [["one,","two"],["three"]]
+  [["one","two"],["three"]]
+
+> (map words . lines) "one, two\nthree\nfour and five, six, seven\n"
+  [["one,","two"],["three"],["four","and","five,","six,","seven"]]
+> map (map (filter (/=','))) $ (map words . lines) "one, two\nthree"
+  [["one","two"],["three"]]
+> map (map (filter (/=','))) $ (map words . lines) "one, two\nthree\nfour and five, six, seven"

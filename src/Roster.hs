@@ -1,13 +1,17 @@
-{-# LANGUAGE NamedFieldPuns    #-}
+{-# LANGUAGE NamedFieldPuns #-}
 
 module Roster where
 
 import           Data.Map.Strict (Map, (!))
 import qualified Data.Map.Strict as Map
+import Data.List.Utils
 
 type PlrSym = String
-type Giver = PlrSym
 type Givee = PlrSym
+type Giver = PlrSym
+
+type PlayersString = String
+type PlayersList = [[String]]
 
 data GiftPair = GiftPair
   { givee :: Givee
@@ -22,7 +26,7 @@ data Player = Player
   , giftHist :: GiftHist
   } deriving (Show, Eq)
 
---["RinSta" "Ringo Starr" "JohLen" "GeoHar"]
+--["RinSta","Ringo Starr","JohLen","GeoHar"]
 
 makeGiftPair :: Givee -> Giver -> GiftPair
 makeGiftPair = GiftPair
@@ -30,17 +34,26 @@ makeGiftPair = GiftPair
 makePlayer :: Name -> GiftHist -> Player
 makePlayer = Player
 
-makePlayerMap :: PlrSym -> Name -> Givee -> Giver -> Map PlrSym Player
-makePlayerMap s n ge gr =
-  Map.singleton s plr
-    where gp = makeGiftPair ge gr
-          plr = makePlayer n [gp]
+-- makePlayerMap :: [String] -> Map PlrSym Player
+-- makePlayerMap [s, n, ge, gr] =
+--   Map.singleton s plr
+--     where gp = makeGiftPair ge gr
+--           plr = makePlayer n [gp]
 
-makePlayerMap' :: [String] -> Map PlrSym Player
-makePlayerMap' [s, n, ge, gr] =
-  Map.singleton s plr
+makePlayerMap' :: [[String]] -> Map PlrSym Player
+makePlayerMap' [[s, n, ge, gr]] =
+  Map.fromList [(s, plr)]
     where gp = makeGiftPair ge gr
           plr = makePlayer n [gp]
+makePlayerMap' _ = Map.fromList [("RinSta",Player {name = "Ringo Starr", giftHist = [GiftPair {givee = "JohLen", giver = "GeoHar"}]})]
+
+-- makePlayersList :: PlayersString -> PlayersList
+-- makePlayersList playersString = map (split ", ") playerString
+--   where playerString = lines playersString
+--
+-- makePlayersMap :: PlayersString -> [Map PlrSym Player]
+-- makePlayersMap playersString = map makePlayerMap playersList
+--   where playersList = makePlayersList playersString
 
 -- makeMap = Map.singleton
 -- makeRoster :: [(String, Player)] -> Map String Player
