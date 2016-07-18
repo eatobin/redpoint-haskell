@@ -9,7 +9,6 @@ import           Test.HUnit
 -- plr2 = Player {pName = "John Lennon", giftHist = [GiftPair {giver = "RinSta", givee = "PauMcc"}]}
 -- plr3 = Player {pName = "George Harrison", giftHist = [GiftPair {giver = "PauMcc", givee = "RinSta"}]}
 -- plr4 = Player {pName = "Paul McCartney", giftHist = [GiftPair {giver = "JohLen", givee = "GeoHar"}]}
-playersString = "RinSta, Ringo Starr, JohLen, GeoHar\nJohLen, John Lennon, PauMcc, RinSta\nGeoHar, George Harrison, RinSta, PauMcc\nPauMcc, Paul McCartney, GeoHar, JohLen"
 playersRoster = Map.fromList [("GeoHar",Player {pName = "George Harrison", giftHist = [GiftPair {givee = "RinSta", giver = "PauMcc"}]})
   ,("JohLen",Player {pName = "John Lennon", giftHist = [GiftPair {givee = "PauMcc", giver = "RinSta"}]})
   ,("PauMcc",Player {pName = "Paul McCartney", giftHist = [GiftPair {givee = "GeoHar", giver = "JohLen"}]})
@@ -25,30 +24,20 @@ rosterString = "The Beatles, 2014\nRinSta, Ringo Starr, JohLen, GeoHar\nJohLen, 
 -- fstPr = gh1 !! 0
 
 -- ["RinSta" "Ringo Starr" "JohLen" "GeoHar"]
---
-testMakeRoster = (~=?)
+
+testGetRosterName = (~=?)
+  "The Beatles"
+  (getRosterName rosterString)
+
+testGetRosterYear = (~=?)
+  "2014"
+  (getRosterYear rosterString)
+
+testplayersMapFromString = (~=?)
   playersRoster
-  (playersMapFromString playersString)
---
--- testGetName = (~=?)
---   "Borrower1"
---   (getName br1)
---
--- testSetName = (~=?)
---   br1
---   (setName "Borrower1" (Borrower "Jack" 1))
---
--- testGetMaxBooks = (~=?)
---   1
---   (getMaxBooks br1)
---
--- testSetMaxBooks = (~=?)
---   Borrower {pName = "Borrower1", maxBooks = 11}
---   (setMaxBooks 11 br1)
---
--- testBorrowerToString = (~=?)
---   "Borrower1 (1 books)"
---   (borrowerToString br1)
---
-rosterTests = TestList [ testMakeRoster ]
+  (playersMapFromString rosterString)
+
+rosterTests = TestList [ testplayersMapFromString, testGetRosterName
+                       , testGetRosterYear ]
+
 runRosterTests = runTestTT $ TestList [ rosterTests ]
