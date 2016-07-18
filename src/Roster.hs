@@ -19,18 +19,28 @@ data GiftPair = GiftPair
   , giver :: Giver
   } deriving (Show, Eq)
 
-type Name = String
+type PName = String
 type GiftHist = [GiftPair]
 
 data Player = Player
-  { name     :: Name
+  { pName    :: PName
   , giftHist :: GiftHist
+  } deriving (Show, Eq)
+
+type RosterString = String
+type RName = String
+type Year = String
+
+data Roster = Roster
+  { tName      :: RName
+  , year       :: Year
+  , playersMap :: Map PlrSym Player
   } deriving (Show, Eq)
 
 makeGiftPair :: Givee -> Giver -> GiftPair
 makeGiftPair = GiftPair
 
-makePlayer :: Name -> GiftHist -> Player
+makePlayer :: PName -> GiftHist -> Player
 makePlayer = Player
 
 makePlayersList :: PlayersString -> PlayersList
@@ -38,10 +48,10 @@ makePlayersList playersString = map (split ", ") playerString
   where playerString = lines playersString
 
 makePlayerKV :: PlayerLine -> (PlrSym, Player)
-makePlayerKV [s, n, ge, gr] =
+makePlayerKV [s, pn, ge, gr] =
   (s, plr)
     where gp = makeGiftPair ge gr
-          plr = makePlayer n [gp]
+          plr = makePlayer pn [gp]
 
 makePlayersKVList :: PlayersList -> [(PlrSym, Player)]
 makePlayersKVList = map makePlayerKV
@@ -49,5 +59,19 @@ makePlayersKVList = map makePlayerKV
 makePlayersMap :: [(PlrSym, Player)] -> Map PlrSym Player
 makePlayersMap  = Map.fromList
 
-makeRoster :: PlayersString -> Map PlrSym Player
-makeRoster = makePlayersMap . makePlayersKVList . makePlayersList
+playersMapFromString :: PlayersString -> Map PlrSym Player
+playersMapFromString = makePlayersMap . makePlayersKVList . makePlayersList
+
+getRosterName :: RosterString -> RName
+getRosterName rosterString =
+  head ri
+    where ri = head sLines
+          sLines = map (split ", ") rosterLines
+          rosterLines = lines rosterString
+
+getRosterYear :: RosterString -> Year
+getRosterYear rosterString =
+  last ri
+    where ri = head sLines
+          sLines = map (split ", ") rosterLines
+          rosterLines = lines rosterString
