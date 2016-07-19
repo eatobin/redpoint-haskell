@@ -5,7 +5,7 @@ import qualified Data.Map.Strict as Map
 import           Roster
 import           Test.HUnit
 
--- plr1 = Player {pName = "Ringo Starr", giftHist = [GiftPair {giver = "GeoHar", givee = "JohLen"}]}
+plr1 = Player {pName = "Ringo Starr", giftHist = [GiftPair {giver = "GeoHar", givee = "JohLen"}]}
 -- plr2 = Player {pName = "John Lennon", giftHist = [GiftPair {giver = "RinSta", givee = "PauMcc"}]}
 -- plr3 = Player {pName = "George Harrison", giftHist = [GiftPair {giver = "PauMcc", givee = "RinSta"}]}
 -- plr4 = Player {pName = "Paul McCartney", giftHist = [GiftPair {giver = "JohLen", givee = "GeoHar"}]}
@@ -33,11 +33,19 @@ testGetRosterYear = (~=?)
   "2014"
   (getRosterYear rosterString)
 
-testplayersMapFromString = (~=?)
+testPlayersMapFromString = (~=?)
   playersRoster
   (playersMapFromString rosterString)
 
-rosterTests = TestList [ testplayersMapFromString, testGetRosterName
-                       , testGetRosterYear ]
+testGetPlayer = (~=?)
+  plr1
+  (getPlayer "RinSta" playersRoster)
+
+testGetPlayerName = (~=?)
+  "Ringo Starr"
+  (getPlayerName plr1)
+
+rosterTests = TestList [ testPlayersMapFromString, testGetRosterName
+                       , testGetRosterYear, testGetPlayer, testGetPlayerName ]
 
 runRosterTests = runTestTT $ TestList [ rosterTests ]

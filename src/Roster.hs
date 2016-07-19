@@ -1,3 +1,5 @@
+{-# LANGUAGE NamedFieldPuns #-}
+
 module Roster where
 
 import           Data.List.Utils
@@ -27,6 +29,11 @@ type RName = String
 type Year = String
 type RosterString = String
 type RosterLine = [String]
+
+-- rosterString = "The Beatles, 2014\nRinSta, Ringo Starr, JohLen, GeoHar\nJohLen, John Lennon, PauMcc, RinSta\nGeoHar, George Harrison, RinSta, PauMcc\nPauMcc, Paul McCartney, GeoHar, JohLen"
+-- rosterList = [["The Beatles","2014"],["RinSta","Ringo Starr","JohLen","GeoHar"],["JohLen","John Lennon","PauMcc","RinSta"],["GeoHar","George Harrison","RinSta","PauMcc"],["PauMcc","Paul McCartney","GeoHar","JohLen"]]
+-- rosterLine = ["The Beatles","2014"]
+-- Map PlrSym Player = Map.fromList [("GeoHar",Player {pName = "George Harrison", giftHist = [GiftPair {givee = "RinSta", giver = "PauMcc"}]})]
 
 makeRosterList :: RosterString -> RosterList
 makeRosterList rosterString = map (split ", ") rosterLines
@@ -66,3 +73,10 @@ makePlayersMap  = Map.fromList
 
 playersMapFromString :: RosterString -> Map PlrSym Player
 playersMapFromString = makePlayersMap . makePlayersKVList . getPlayersList
+
+getPlayer :: PlrSym -> Map PlrSym Player -> Player
+getPlayer ps pm =
+  pm ! ps
+
+getPlayerName :: Player -> PName
+getPlayerName Player {pName} = pName
