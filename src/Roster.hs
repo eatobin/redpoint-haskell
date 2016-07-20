@@ -59,7 +59,7 @@ getRosterYear rosterString =
   let ri = (getRosterInfo rosterString)
   in case ri of
     (_:y:_) -> y
-    _     -> "None"
+    _       -> "None"
 
 getPlayersList :: RosterString -> RosterList
 getPlayersList rosterString =
