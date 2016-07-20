@@ -36,22 +36,34 @@ type RosterLine = [String]
 -- Map PlrSym Player = Map.fromList [("GeoHar",Player {pName = "George Harrison", giftHist = [GiftPair {givee = "RinSta", giver = "PauMcc"}]})]
 
 makeRosterList :: RosterString -> RosterList
-makeRosterList rosterString = map (split ", ") rosterLines
-  where rosterLines = lines rosterString
+makeRosterList rosterString =
+  map (split ", ") rosterLines
+    where rosterLines = lines rosterString
 
 getRosterInfo :: RosterString -> RosterLine
-getRosterInfo rosterString = head (makeRosterList rosterString)
+getRosterInfo rosterString =
+  let rl = (makeRosterList rosterString)
+  in case rl of
+    (x:_) -> x
+    _     -> []
 
 getRosterName :: RosterString -> RName
 getRosterName rosterString =
-  head (getRosterInfo rosterString)
+  let ri = (getRosterInfo rosterString)
+  in case ri of
+    (x:_) -> x
+    _     -> "None"
 
 getRosterYear :: RosterString -> Year
 getRosterYear rosterString =
-  last (getRosterInfo rosterString)
+  let ri = (getRosterInfo rosterString)
+  in case ri of
+    (_:y:_) -> y
+    _     -> "None"
 
 getPlayersList :: RosterString -> RosterList
-getPlayersList rosterString = drop 1 (makeRosterList rosterString)
+getPlayersList rosterString =
+  drop 1 (makeRosterList rosterString)
 
 makePlayersKVList :: RosterList -> [(PlrSym, Player)]
 makePlayersKVList = map makePlayerKV
@@ -80,14 +92,3 @@ getPlayer ps pm =
 
 getPlayerName :: Player -> PName
 getPlayerName Player {pName} = pName
-
-getFirst :: RosterList -> RosterLine
-getFirst (x:_) = [x]
-getFirst _ = []
-
-getBetter :: RosterString -> RosterLine
-getBetter rosterString =
-  let rl = (makeRosterList rosterString)
-  in case rl of
-    (x:_) -> [x]
-    _     -> []
