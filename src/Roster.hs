@@ -80,3 +80,8 @@ getPlayer ps pm =
 
 getPlayerName :: Player -> PName
 getPlayerName Player {pName} = pName
+
+getFirst :: RosterList -> RosterLine
+getFirst (x:_) = [x]
+getFirst _ = []
+
