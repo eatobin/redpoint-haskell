@@ -42,21 +42,21 @@ makeRosterList rosterString =
 
 getRosterInfo :: RosterString -> RosterLine
 getRosterInfo rosterString =
-  let rl = (makeRosterList rosterString)
+  let rl = makeRosterList rosterString
   in case rl of
     (x:_) -> x
     _     -> []
 
 getRosterName :: RosterString -> RName
 getRosterName rosterString =
-  let ri = (getRosterInfo rosterString)
+  let ri = getRosterInfo rosterString
   in case ri of
     (x:_) -> x
     _     -> "None"
 
 getRosterYear :: RosterString -> Year
 getRosterYear rosterString =
-  let ri = (getRosterInfo rosterString)
+  let ri = getRosterInfo rosterString
   in case ri of
     (_:y:_) -> y
     _       -> "None"
