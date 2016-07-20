@@ -85,3 +85,9 @@ getFirst :: RosterList -> RosterLine
 getFirst (x:_) = [x]
 getFirst _ = []
 
+getBetter :: RosterString -> RosterLine
+getBetter rosterString =
+  let rl = (makeRosterList rosterString)
+  in case rl of
+    (x:_) -> [x]
+    _     -> []
