@@ -45,7 +45,13 @@ testGetPlayerName = (~=?)
   "Ringo Starr"
   (getPlayerName plr1)
 
+testPlayerNameFromPlrSym = (~=?)
+  "Ringo Starr"
+  (playerNameFromPlrSym "RinSta" playersRoster)
+
+
 rosterTests = TestList [ testPlayersMapFromString, testGetRosterName
-                       , testGetRosterYear, testGetPlayer, testGetPlayerName ]
+                       , testGetRosterYear, testGetPlayer, testGetPlayerName
+                       , testPlayerNameFromPlrSym ]
 
 runRosterTests = runTestTT $ TestList [ rosterTests ]
