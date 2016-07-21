@@ -40,12 +40,19 @@ makeRosterList rosterString =
   map (split ", ") rosterLines
     where rosterLines = lines rosterString
 
+makeRosterLine :: RosterList -> RosterLine
+makeRosterLine (x:_) = x
+makeRosterLine _     = []
+
 getRosterInfo :: RosterString -> RosterLine
-getRosterInfo rosterString =
-  let rl = makeRosterList rosterString
-  in case rl of
-    (x:_) -> x
-    _     -> []
+getRosterInfo = makeRosterLine . makeRosterList
+
+--getRosterInfo :: RosterString -> RosterLine
+--getRosterInfo rosterString =
+--  let rl = makeRosterList rosterString
+--  in case rl of
+--    (x:_) -> x
+--    _     -> []
 
 getRosterName :: RosterString -> RName
 getRosterName rosterString =
@@ -92,3 +99,6 @@ getPlayer ps pm =
 
 getPlayerName :: Player -> PName
 getPlayerName Player {pName} = pName
+
+playerNameFromPlrSym :: PlrSym -> Map PlrSym Player -> PName
+playerNameFromPlrSym ps pm = getPlayerName $ getPlayer ps pm
