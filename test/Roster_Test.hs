@@ -51,8 +51,13 @@ testGetPlayerName = (~=?)
   "Ringo Starr"
   (getPlayerName "RinSta" playersRoster)
 
+testGetGiveeCode = (~=?)
+  "GeoHar"
+  (getGiveeCode "PauMcc" 0 playersRoster)
+
 
 rosterTests = TestList [ testMakeplayersMap, testGetRosterName
-                       , testGetRosterYear, testGetPlayer, testGetPlayerName ]
+                       , testGetRosterYear, testGetPlayer, testGetPlayerName
+                       , testGetGiveeCode ]
 
 runRosterTests = runTestTT $ TestList [ rosterTests ]
