@@ -5,6 +5,8 @@ module Roster_Create where
 import           Data.List.Utils
 import           Data.Map.Strict (Map, (!))
 import qualified Data.Map.Strict as Map
+import qualified Data.Sequence   as Seq
+
 
 type RosterString = String
 type RosterList = [[String]]
@@ -64,4 +66,4 @@ makeplayersMap :: RosterString -> Map PlrSym Player
 makeplayersMap = makePlayersMap . makePlayersKVList . makePlayersList . makeRosterList
 
 getRosterInfo :: RosterString -> RosterLine
-getRosterInfo = makeRosterInfo . makeRosterList 
+getRosterInfo = makeRosterInfo . makeRosterList

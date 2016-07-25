@@ -20,8 +20,8 @@ rosterString = "The Beatles, 2014\nRinSta, Ringo Starr, JohLen, GeoHar\nJohLen, 
 -- rstrMap = Map.fromList rstrLst
 -- johLen = rstrMap ! "JohLen"
 -- pauMcc = rstrMap ! "PauMcc"
--- gh0 = [GiftPair {giver = "GeoHar", givee = "JohLen"}]
--- gh1 = [GiftPair {giver = "GeoHar", givee = "JohLen"}, GiftPair {giver = "EriTo b", givee = "ScoTob"}]
+gh0 = [GiftPair {giver = "GeoHar", givee = "JohLen"}]
+gh1 = [GiftPair {giver = "GeoHarX", givee = "JohLenX"}, GiftPair {giver = "EriTob", givee = "ScoTob"}]
 -- fstPr = gh1 !! 0
 
 -- ["RinSta" "Ringo Starr" "JohLen" "GeoHar"]

@@ -5,7 +5,8 @@ module Roster where
 import           Data.List.Utils
 import           Data.Map.Strict (Map, (!))
 import qualified Data.Map.Strict as Map
-import Roster_Create
+import qualified Data.Sequence   as Seq
+import           Roster_Create
 
 type RName = String
 type RYear = String
@@ -58,6 +59,28 @@ getGiverCode ps y pm =
   in case giftPair of
     GiftPair {giver} -> giver
 
+setPlayerGiftHist :: GiftHist -> Player -> Player
+setPlayerGiftHist gh plr@Player {giftHist} = plr {giftHist = gh}
+
+setGiftPairGiver :: Giver -> GiftPair -> GiftPair
+setGiftPairGiver gr gp@GiftPair {giver} = gp {giver = gr}
+
+setGiftPairGivee :: Givee -> GiftPair -> GiftPair
+setGiftPairGivee ge gp@GiftPair {givee} = gp {givee = ge}
+
+-- setGiftHistory :: GiftPair -> GYear -> GiftHist -> GiftHist
+setGiftHistory gp y gh =
+  Seq.update y gp gh
+
+-- setPlayer ps gh pm = Map.insert ps (setGiftHist gh (getPlayer ps pm)) pm
+
+gh1 = [GiftPair {giver = "GeoHarX", givee = "JohLenX"}, GiftPair {giver = "EriTob", givee = "ScoTob"}]
+ds = Seq.singleton 1
+gh9 = Seq.fromList gh1
+gp = GiftPair {giver = "GeoHar", givee = "JohLen"}
+nw = Seq.update 1 gp gh9
+
+
 --(defn set-givee-code [p-symbol year ge p-map]
 --  (if (and (contains? p-map p-symbol)
 --           (contains? p-map ge)
@@ -84,15 +107,16 @@ getGiverCode ps y pm =
 --        gp@GiftPair {givee} -> gp {givee = ge}
 --    else pm
 
-setGiveeCode ps y ge pm =
-  let histLen = length $ getGiftHistory ps pm
-  in
-    if Map.member ps pm &&
-       Map.member ge pm
-       && (y + 1) <= histLen
-    then
-      let player = getPlayer ps pm
-      in case player of
-        
-    else
-      Player {pName = "Ringo Starr", giftHist = [GiftPair {giver = "GeoHar", givee = "JohLen"}]}
+-- setGiveeCode ps y ge pm =
+--   let histLen = length $ getGiftHistory ps pm
+--   in
+--     if Map.member ps pm &&
+--        Map.member ge pm
+--        && (y + 1) <= histLen
+--     then
+--       let player = getPlayer ps pm
+--       in case player of
+--
+--     else
+--       Player {pName = "Ringo Starr", giftHist = [GiftPair {giver = "GeoHar", givee = "JohLen"}]}
+l = Map.fromList [("one", (1,1)), ("two", (2,2))]
