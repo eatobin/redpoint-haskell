@@ -5,54 +5,11 @@ module Roster where
 import           Data.List.Utils
 import           Data.Map.Strict (Map, (!))
 import qualified Data.Map.Strict as Map
-
-type PlrSym = String
-type Givee = PlrSym
-type Giver = PlrSym
-
-type RosterList = [[String]]
-
-data GiftPair = GiftPair
-  { givee :: Givee
-  , giver :: Giver
-  } deriving (Show, Eq)
-
-type PName = String
-type GiftHist = [GiftPair]
-
-data Player = Player
-  { pName    :: PName
-  , giftHist :: GiftHist
-  } deriving (Show, Eq)
+import Roster_Create
 
 type RName = String
-type Year = String
-type RosterString = String
-type RosterLine = [String]
+type RYear = String
 
--- rosterString = "The Beatles, 2014\nRinSta, Ringo Starr, JohLen, GeoHar\nJohLen, John Lennon, PauMcc, RinSta\nGeoHar, George Harrison, RinSta, PauMcc\nPauMcc, Paul McCartney, GeoHar, JohLen"
--- rosterList = [["The Beatles","2014"],["RinSta","Ringo Starr","JohLen","GeoHar"],["JohLen","John Lennon","PauMcc","RinSta"],["GeoHar","George Harrison","RinSta","PauMcc"],["PauMcc","Paul McCartney","GeoHar","JohLen"]]
--- rosterLine = ["The Beatles","2014"]
--- Map PlrSym Player = Map.fromList [("GeoHar",Player {pName = "George Harrison", giftHist = [GiftPair {givee = "RinSta", giver = "PauMcc"}]})]
-
-makeRosterList :: RosterString -> RosterList
-makeRosterList rosterString =
-  map (split ", ") rosterLines
-    where rosterLines = lines rosterString
-
-makeRosterLine :: RosterList -> RosterLine
-makeRosterLine (x:_) = x
-makeRosterLine _     = []
-
-getRosterInfo :: RosterString -> RosterLine
-getRosterInfo = makeRosterLine . makeRosterList
-
---getRosterInfo :: RosterString -> RosterLine
---getRosterInfo rosterString =
---  let rl = makeRosterList rosterString
---  in case rl of
---    (x:_) -> x
---    _     -> []
 
 getRosterName :: RosterString -> RName
 getRosterName rosterString =
@@ -61,44 +18,36 @@ getRosterName rosterString =
     (x:_) -> x
     _     -> "None"
 
-getRosterYear :: RosterString -> Year
+getRosterYear :: RosterString -> RYear
 getRosterYear rosterString =
   let ri = getRosterInfo rosterString
   in case ri of
     (_:y:_) -> y
     _       -> "None"
 
-getPlayersList :: RosterString -> RosterList
-getPlayersList rosterString =
-  drop 1 (makeRosterList rosterString)
-
-makePlayersKVList :: RosterList -> [(PlrSym, Player)]
-makePlayersKVList = map makePlayerKV
-
-makeGiftPair :: Givee -> Giver -> GiftPair
-makeGiftPair = GiftPair
-
-makePlayer :: PName -> GiftHist -> Player
-makePlayer = Player
-
-makePlayerKV :: RosterLine -> (PlrSym, Player)
-makePlayerKV [s, pn, ge, gr] =
-  (s, plr)
-    where gp = makeGiftPair ge gr
-          plr = makePlayer pn [gp]
-
-makePlayersMap :: [(PlrSym, Player)] -> Map PlrSym Player
-makePlayersMap  = Map.fromList
-
-playersMapFromString :: RosterString -> Map PlrSym Player
-playersMapFromString = makePlayersMap . makePlayersKVList . getPlayersList
-
 getPlayer :: PlrSym -> Map PlrSym Player -> Player
 getPlayer ps pm =
   pm ! ps
 
-getPlayerName :: Player -> PName
-getPlayerName Player {pName} = pName
+getPlayerName :: PlrSym -> Map PlrSym Player -> PName
+getPlayerName ps pm =
+  let player = getPlayer ps pm
+  in case player of
+    Player {pName} -> pName
 
-playerNameFromPlrSym :: PlrSym -> Map PlrSym Player -> PName
-playerNameFromPlrSym ps pm = getPlayerName $ getPlayer ps pm
+getGiftHistory :: PlrSym -> Map PlrSym Player -> GiftHist
+getGiftHistory ps pm =
+  let player = getPlayer ps pm
+  in case player of
+    Player {giftHist} -> giftHist
+
+--(defn get-givee-code [p-symbol year p-map]
+--  (get-in p-map
+--          [p-symbol :gift-history year :givee]))
+
+getGiveeCode :: PlrSym -> GYear -> Map PlrSym Player -> Givee
+getGiveeCode ps y pm =
+  let hist = getGiftHistory ps pm
+      giftYear = hist !! y
+  in case giftYear of
+    GiftPair {givee} -> givee

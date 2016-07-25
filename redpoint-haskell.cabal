@@ -16,7 +16,8 @@ executable redpoint-haskell
   hs-source-dirs:      src
                      , test
   main-is:             Main.hs
-  other-modules:       Roster
+  other-modules:       Roster_Create
+                     , Roster
                      , Roster_Test
                      , All_Tests
   default-language:    Haskell2010

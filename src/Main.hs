@@ -3,6 +3,7 @@ module Main where
 import           All_Tests
 import           Roster
 import           Roster_Test
+import Roster_Create
 
 import           Data.Map.Strict (Map, (!))
 import qualified Data.Map.Strict as Map
