@@ -41,13 +41,58 @@ getGiftHistory ps pm =
   in case player of
     Player {giftHist} -> giftHist
 
---(defn get-givee-code [p-symbol year p-map]
---  (get-in p-map
---          [p-symbol :gift-history year :givee]))
+getGiftPair :: PlrSym -> GYear -> Map PlrSym Player -> GiftPair
+getGiftPair ps y pm =
+  let hist = getGiftHistory ps pm
+  in hist !! y
 
 getGiveeCode :: PlrSym -> GYear -> Map PlrSym Player -> Givee
 getGiveeCode ps y pm =
-  let hist = getGiftHistory ps pm
-      giftYear = hist !! y
-  in case giftYear of
+  let giftPair = getGiftPair ps y pm
+  in case giftPair of
     GiftPair {givee} -> givee
+
+getGiverCode :: PlrSym -> GYear -> Map PlrSym Player -> Giver
+getGiverCode ps y pm =
+  let giftPair = getGiftPair ps y pm
+  in case giftPair of
+    GiftPair {giver} -> giver
+
+--(defn set-givee-code [p-symbol year ge p-map]
+--  (if (and (contains? p-map p-symbol)
+--           (contains? p-map ge)
+--           (<= (+ year 1) (count
+--                            (get-in p-map
+--                                    [p-symbol :gift-history]))))
+--    (let [gr (get-in p-map
+--                     [p-symbol :gift-history year :giver])]
+--      (assoc-in p-map
+--                [p-symbol :gift-history year]
+--                {:giver gr :givee ge}))))
+
+
+
+--setGiveeCode :: PlrSym -> GYear -> Givee -> Map PlrSym Player -> Map PlrSym Player
+--setGiveeCode ps y ge pm =
+--  let histLen = length $ getGiftHistory ps pm
+--  in
+--    if member ps pm && member ge pm && (y + 1) <= histLen
+--      then
+--        let gr = getGiverCode ps y pm
+--          giftPair = getGiftPair ps y pm
+--      in case giftPair of
+--        gp@GiftPair {givee} -> gp {givee = ge}
+--    else pm
+
+setGiveeCode ps y ge pm =
+  let histLen = length $ getGiftHistory ps pm
+  in
+    if Map.member ps pm &&
+       Map.member ge pm
+       && (y + 1) <= histLen
+    then
+      let player = getPlayer ps pm
+      in case player of
+        
+    else
+      Player {pName = "Ringo Starr", giftHist = [GiftPair {giver = "GeoHar", givee = "JohLen"}]}
