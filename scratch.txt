@@ -33,3 +33,10 @@ nw = Seq.update 1 gp gh9
 seq1 = Seq.fromList [GiftPair {givee = "JohLenX", giver = "GeoHarX"},GiftPair {givee = "ScoTob", giver = "EriTob"}]
 
 l = Map.fromList [("one", (1,1)), ("two", (2,2))]
+
+player = symb pmap
+pname = player
+ghist = player
+gpair = ghist year
+ge = gpair
+gr = gpair
