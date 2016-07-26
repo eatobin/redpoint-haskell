@@ -12,3 +12,24 @@
 > map (map (filter (/=','))) $ (map words . lines) "one, two\nthree"
   [["one","two"],["three"]]
 > map (map (filter (/=','))) $ (map words . lines) "one, two\nthree\nfour and five, six, seven"
+
+-- getPlayerName ps pm =
+--   let player = getPlayer ps pm
+--   in case player of
+--     Player {pName} -> pName
+
+
+-- getGiftHistory :: PlrSym -> Map PlrSym Player -> GiftHist
+-- getGiftHistory ps pm =
+--   let player = getPlayer ps pm
+--   in case player of
+--     Player {giftHist} -> giftHist
+
+gh11 = [GiftPair {giver = "GeoHarX", givee = "JohLenX"}, GiftPair {giver = "EriTob", givee = "ScoTob"}]
+ds = Seq.singleton 1
+gh9 = Seq.fromList gh11
+gp = GiftPair {giver = "GeoHar", givee = "JohLen"}
+nw = Seq.update 1 gp gh9
+seq1 = Seq.fromList [GiftPair {givee = "JohLenX", giver = "GeoHarX"},GiftPair {givee = "ScoTob", giver = "EriTob"}]
+
+l = Map.fromList [("one", (1,1)), ("two", (2,2))]
