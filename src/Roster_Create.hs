@@ -22,7 +22,7 @@ data GiftPair = GiftPair
   } deriving (Show, Eq)
 
 type PName = String
-type GiftHist = [GiftPair]
+type GiftHist = Seq.Seq GiftPair
 type GYear = Int
 
 data Player = Player
@@ -54,7 +54,7 @@ makePlayerKV :: RosterLine -> (PlrSym, Player)
 makePlayerKV [s, pn, ge, gr] =
   (s, plr)
     where gp = makeGiftPair ge gr
-          plr = makePlayer pn [gp]
+          plr = makePlayer pn (Seq.singleton gp)
 
 makePlayersKVList :: RosterList -> [(PlrSym, Player)]
 makePlayersKVList = map makePlayerKV

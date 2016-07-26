@@ -45,7 +45,7 @@ getGiftHistory ps pm =
 getGiftPair :: PlrSym -> GYear -> Map PlrSym Player -> GiftPair
 getGiftPair ps y pm =
   let hist = getGiftHistory ps pm
-  in hist !! y
+  in Seq.index hist y
 
 getGiveeCode :: PlrSym -> GYear -> Map PlrSym Player -> Givee
 getGiveeCode ps y pm =
@@ -69,17 +69,17 @@ setGiftPairGivee :: Givee -> GiftPair -> GiftPair
 setGiftPairGivee ge gp@GiftPair {givee} = gp {givee = ge}
 
 -- setGiftHistory :: GiftPair -> GYear -> GiftHist -> GiftHist
-setGiftHistory gp y gh =
-  Seq.update y gp gh
+setGiftHistory gp y =
+  Seq.update y gp
 
 -- setPlayer ps gh pm = Map.insert ps (setGiftHist gh (getPlayer ps pm)) pm
 
-gh1 = [GiftPair {giver = "GeoHarX", givee = "JohLenX"}, GiftPair {giver = "EriTob", givee = "ScoTob"}]
+gh11 = [GiftPair {giver = "GeoHarX", givee = "JohLenX"}, GiftPair {giver = "EriTob", givee = "ScoTob"}]
 ds = Seq.singleton 1
-gh9 = Seq.fromList gh1
+gh9 = Seq.fromList gh11
 gp = GiftPair {giver = "GeoHar", givee = "JohLen"}
 nw = Seq.update 1 gp gh9
-
+seq1 = Seq.fromList [GiftPair {givee = "JohLenX", giver = "GeoHarX"},GiftPair {givee = "ScoTob", giver = "EriTob"}]
 
 --(defn set-givee-code [p-symbol year ge p-map]
 --  (if (and (contains? p-map p-symbol)
