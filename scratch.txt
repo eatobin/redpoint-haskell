@@ -40,3 +40,28 @@ ghist = player
 gpair = ghist year
 ge = gpair
 gr = gpair
+
+-- getPlayerName :: PlrSym -> Map PlrSym Player -> PName
+-- getPlayerName ps pm =
+--   extractPlayerName $ getPlayer ps pm
+
+-- getGiftHistory :: PlrSym -> Map PlrSym Player -> GiftHist
+-- getGiftHistory ps pm =
+--   extractGiftHistory $ getPlayer ps pm
+
+-- getGiftPair :: PlrSym -> GYear -> Map PlrSym Player -> GiftPair
+-- getGiftPair ps y pm =
+--   let gh = getGiftHistory ps pm
+--   in Seq.index gh y
+
+-- getGiveeCode :: PlrSym -> GYear -> Map PlrSym Player -> Givee
+-- getGiveeCode ps y pm =
+--   let gp = getGiftPair ps y pm
+--   in case gp of
+--     GiftPair {givee} -> givee
+
+-- getGiverCode :: PlrSym -> GYear -> Map PlrSym Player -> Giver
+-- getGiverCode ps y pm =
+--   let gp = getGiftPair ps y pm
+--   in case gp of
+--     GiftPair {giver} -> giver

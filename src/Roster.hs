@@ -30,40 +30,21 @@ getPlayer :: PlrSym -> Map PlrSym Player -> Player
 getPlayer ps pm =
   pm ! ps
 
-extractPlayerName :: Player -> PName
-extractPlayerName Player {pName} = pName
+getPlayerName :: Player -> PName
+getPlayerName Player {pName} = pName
 
-extractGiftHistory :: Player -> GiftHist
-extractGiftHistory Player {giftHist} = giftHist
+getGiftHistory :: Player -> GiftHist
+getGiftHistory Player {giftHist} = giftHist
 
-getPlayerName :: PlrSym -> Map PlrSym Player -> PName
-getPlayerName ps pm =
-  extractPlayerName $ getPlayer ps pm
-
-getGiftHistory :: PlrSym -> Map PlrSym Player -> GiftHist
-getGiftHistory ps pm =
-  extractGiftHistory $ getPlayer ps pm
-
-getGiftPair :: PlrSym -> GYear -> Map PlrSym Player -> GiftPair
-getGiftPair ps y pm =
-  let gh = getGiftHistory ps pm
-  in Seq.index gh y
-
-extractGiftPair :: GiftHist -> GYear -> GiftPair
-extractGiftPair =
+getGiftPair :: GiftHist -> GYear -> GiftPair
+getGiftPair =
   Seq.index
 
-getGiveeCode :: PlrSym -> GYear -> Map PlrSym Player -> Givee
-getGiveeCode ps y pm =
-  let gp = getGiftPair ps y pm
-  in case gp of
-    GiftPair {givee} -> givee
+getGiverCode :: GiftPair -> Giver
+getGiverCode GiftPair {giver} = giver
 
-getGiverCode :: PlrSym -> GYear -> Map PlrSym Player -> Giver
-getGiverCode ps y pm =
-  let gp = getGiftPair ps y pm
-  in case gp of
-    GiftPair {giver} -> giver
+getGiveeCode :: GiftPair -> Givee
+getGiveeCode GiftPair {givee} = givee
 
 setPlayerGiftHist :: GiftHist -> Player -> Player
 setPlayerGiftHist gh plr@Player {giftHist} = plr {giftHist = gh}
@@ -81,8 +62,8 @@ setGiftHistoryGiftPair =
 setGiveeCodeChecked :: PlrSym -> GYear -> Givee -> Map PlrSym Player -> Map PlrSym Player
 setGiveeCodeChecked ps y ge pm =
   let plr = getPlayer ps pm
-      gh = extractGiftHistory plr
-      gp = extractGiftPair gh y
+      gh = getGiftHistory plr
+      gp = getGiftPair gh y
       ngp = setGiftPairGivee ge gp
       ngh = setGiftHistoryGiftPair y ngp gh
       nplr = setPlayerGiftHist ngh plr
@@ -90,7 +71,9 @@ setGiveeCodeChecked ps y ge pm =
 
 setGiveeCode :: PlrSym -> GYear -> Givee -> Map PlrSym Player -> Map PlrSym Player
 setGiveeCode ps y ge pm =
-  let histLen = length $ getGiftHistory ps pm
+  let plr = getPlayer ps pm
+      gh = getGiftHistory plr
+      histLen = length gh
   in
     if Map.member ps pm &&
        Map.member ge pm &&
