@@ -64,6 +64,3 @@ makePlayersMap  = Map.fromList
 
 makeplayersMap :: RosterString -> Map PlrSym Player
 makeplayersMap = makePlayersMap . makePlayersKVList . makePlayersList . makeRosterList
-
-getRosterInfo :: RosterString -> RosterLine
-getRosterInfo = makeRosterInfo . makeRosterList

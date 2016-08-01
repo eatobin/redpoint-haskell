@@ -9,22 +9,24 @@ import qualified Data.Sequence   as Seq
 import           Roster_Create
 
 type RName = String
-type RYear = String
+type RYear = Int
 
 
 getRosterName :: RosterString -> RName
 getRosterName rosterString =
-  let ri = getRosterInfo rosterString
+  let rl = makeRosterList rosterString
+      ri = makeRosterInfo rl
   in case ri of
     (x:_) -> x
     _     -> "None"
 
 getRosterYear :: RosterString -> RYear
 getRosterYear rosterString =
-  let ri = getRosterInfo rosterString
+  let rl = makeRosterList rosterString
+      ri = makeRosterInfo rl
   in case ri of
-    (_:y:_) -> y
-    _       -> "None"
+    (_:y:_) -> read y
+    _       -> 0
 
 getPlayer :: PlrSym -> Map PlrSym Player -> Player
 getPlayer ps pm =
