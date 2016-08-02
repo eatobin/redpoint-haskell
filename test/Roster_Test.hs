@@ -32,33 +32,33 @@ gh1 = Seq.fromList [GiftPair {giver = "GeoHarX", givee = "JohLenX"}, GiftPair {g
 -- rosterLine = ["The Beatles","2014"]
 -- playersMap = Map.fromList [("GeoHar",Player {pName = "George Harrison", giftHist = [GiftPair {givee = "RinSta", giver = "PauMcc"}]})]
 
-testGetRosterName = (~=?)
-  "The Beatles"
-  (getRosterName rosterString)
+--testGetRosterName = (~=?)
+--  "The Beatles"
+--  (getRosterName rosterString)
 
-testGetRosterYear = (~=?)
-  "2014"
-  (getRosterYear rosterString)
+--testGetRosterYear = (~=?)
+--  "2014"
+--  (getRosterYear rosterString)
 
-testMakeplayersMap = (~=?)
-  playersRoster
-  (makeplayersMap rosterString)
+--testMakeplayersMap = (~=?)
+--  playersRoster
+--  (makeplayersMap rosterString)
 
-testGetPlayer = (~=?)
-  plr1
-  (getPlayer "RinSta" playersRoster)
+--testGetPlayer = (~=?)
+--  plr1
+--  (getPlayer "RinSta" playersRoster)
 
-testGetPlayerName = (~=?)
-  "Ringo Starr"
-  (getPlayerName "RinSta" playersRoster)
+--testGetPlayerName = (~=?)
+--  "Ringo Starr"
+--  (getPlayerName "RinSta" playersRoster)
 
-testGetGiveeCode = (~=?)
-  "GeoHar"
-  (getGiveeCode "PauMcc" 0 playersRoster)
+--testGetGiveeCode = (~=?)
+--  "GeoHar"
+--  (getGiveeCode "PauMcc" 0 playersRoster)
 
 
-rosterTests = TestList [ testMakeplayersMap, testGetRosterName
-                       , testGetRosterYear, testGetPlayer, testGetPlayerName
-                       , testGetGiveeCode ]
+--rosterTests = TestList [ testMakeplayersMap, testGetRosterName
+--                       , testGetRosterYear, testGetPlayer, testGetPlayerName
+--                       , testGetGiveeCode ]
 
-runRosterTests = runTestTT $ TestList [ rosterTests ]
+--runRosterTests = runTestTT $ TestList [ rosterTests ]
