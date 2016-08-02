@@ -14,8 +14,8 @@
 > map (map (filter (/=','))) $ (map words . lines) "one, two\nthree\nfour and five, six, seven"
 
 -- getPlayerName ps pm =
---   let player = getPlayer ps pm
---   in case player of
+--   let plr = getPlayer ps pm
+--   in case plr of
 --     Player {pName} -> pName
 
 

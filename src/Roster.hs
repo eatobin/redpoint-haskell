@@ -30,8 +30,11 @@ getPlayer :: PlrSym -> Map PlrSym Player -> Player
 getPlayer ps pm =
   pm ! ps
 
-getPlayerName :: Player -> PName
-getPlayerName Player {pName} = pName
+getPlayerName :: PlrSym -> Map PlrSym Player -> PName
+getPlayerName ps pm =
+  let plr = getPlayer ps pm
+  in case plr of
+    Player {pName} -> pName
 
 getGiftHistory :: Player -> GiftHist
 getGiftHistory Player {giftHist} = giftHist
