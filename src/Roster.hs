@@ -86,3 +86,17 @@ setGiveeCode ps y ge pm =
       setGiveeCodeChecked ps y ge pm
     else
       pm
+
+checkGive :: PlrSym -> GYear -> PlrSym -> Map PlrSym Player -> Bool
+checkGive ps y gv pm =
+  let plr = getPlayer ps pm
+      gh = getGiftHistory plr
+      histLen = length gh
+  in
+    if Map.member ps pm &&
+       Map.member gv pm &&
+       (y + 1) <= histLen
+    then
+      True
+    else
+      False
