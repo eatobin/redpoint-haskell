@@ -52,7 +52,7 @@ getGiveeCodePair :: GiftPair -> Givee
 getGiveeCodePair GiftPair {givee} = givee
 
 getGiveeCode :: PlrSym -> Map PlrSym Player -> GYear -> Givee
-getGiveeCode ps pm gy = getGiveeCodePair $ getGiftPair (getGiftHistory (getPlayer ps pm)) gy
+getGiveeCode ps pm gy = getGiveeCodePair $ getGiftPair (getGiftHistory $ getPlayer ps pm) gy
 
 setPlayerGiftHist :: GiftHist -> Player -> Player
 setPlayerGiftHist gh plr@Player {giftHist} = plr {giftHist = gh}
