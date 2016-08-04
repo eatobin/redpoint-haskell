@@ -1,12 +1,10 @@
 module Main where
 
 import           All_Tests
+import           Control.Concurrent.STM
 import           Roster
 import           Roster_Create
 import           Roster_Test
-
-import           Data.Map.Strict (Map, (!))
-import qualified Data.Map.Strict as Map
 import           System.IO
 
 --main = do
@@ -44,9 +42,12 @@ main = do
     let rName = getRosterName rosterInfo
     let rYear = getRosterYear rosterInfo
     let playersMap = makePlayersMap rosterList
+    tvRoster <- atomically (newTVar playersMap)
     print rName
-    print rYear
-    print playersMap
-    print (getPlayer "RinSta" playersMap)
-    print (getPlayerName "RinSta" playersMap)
-    print (getGiveeCode "PauMcc" playersMap 0)
+    roster <- readTVarIO tvRoster
+    -- print roster
+    -- print rYear
+    -- print playersMap
+    print (getPlayer "RinSta" roster)
+    print (getPlayerName "RinSta" roster)
+    print (getGiveeCode "PauMcc" roster 0)

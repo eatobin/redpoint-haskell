@@ -25,3 +25,4 @@ executable redpoint-haskell
                      , HUnit
                      , containers
                      , MissingH
+                     , stm
