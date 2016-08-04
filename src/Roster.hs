@@ -50,17 +50,17 @@ getGiveeCode ps pm gy =
           gh = getGiftHistory plr
           gp = getGiftPair gh gy
 
-setPlayerGiftHist :: GiftHist -> Player -> Player
-setPlayerGiftHist gh plr@Player {giftHist} = plr {giftHist = gh}
+setPlayer :: GiftHist -> Player -> Player
+setPlayer gh plr@Player {giftHist} = plr {giftHist = gh}
 
-setGiftPairGiver :: Giver -> GiftPair -> GiftPair
-setGiftPairGiver gr gp@GiftPair {giver} = gp {giver = gr}
+setPairGiver :: Giver -> GiftPair -> GiftPair
+setPairGiver gr gp@GiftPair {giver} = gp {giver = gr}
 
-setGiftPairGivee :: Givee -> GiftPair -> GiftPair
-setGiftPairGivee ge gp@GiftPair {givee} = gp {givee = ge}
+setPairGivee :: Givee -> GiftPair -> GiftPair
+setPairGivee ge gp@GiftPair {givee} = gp {givee = ge}
 
-setGiftHistoryGiftPair :: GYear -> GiftPair -> GiftHist -> GiftHist
-setGiftHistoryGiftPair =
+setGiftHistory :: GYear -> GiftPair -> GiftHist -> GiftHist
+setGiftHistory =
   Seq.update
 
 setGiveeCodeChecked :: PlrSym -> GYear -> Givee -> Map PlrSym Player -> Map PlrSym Player
@@ -68,9 +68,9 @@ setGiveeCodeChecked ps y ge pm =
   let plr = getPlayer ps pm
       gh = getGiftHistory plr
       gp = getGiftPair gh y
-      ngp = setGiftPairGivee ge gp
-      ngh = setGiftHistoryGiftPair y ngp gh
-      nplr = setPlayerGiftHist ngh plr
+      ngp = setPairGivee ge gp
+      ngh = setGiftHistory y ngp gh
+      nplr = setPlayer ngh plr
   in Map.insert ps nplr pm
 
 setGiveeCode :: PlrSym -> GYear -> Givee -> Map PlrSym Player -> Map PlrSym Player
