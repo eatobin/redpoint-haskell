@@ -15,6 +15,14 @@ roster = Map.fromList [("GeoHar",Player {pName = "George Harrison", giftHist = S
   ,("JohLen",Player {pName = "John Lennon", giftHist = Seq.fromList [GiftPair {givee = "PauMcc", giver = "RinSta"}]})
   ,("PauMcc",Player {pName = "Paul McCartney", giftHist = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}]})
   ,("RinSta",Player {pName = "Ringo Starr", giftHist = Seq.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}]})]
+rosterGE = Map.fromList [("GeoHar",Player {pName = "George Harrison", giftHist = Seq.fromList [GiftPair {givee = "GeoHar", giver = "PauMcc"}]})
+  ,("JohLen",Player {pName = "John Lennon", giftHist = Seq.fromList [GiftPair {givee = "PauMcc", giver = "RinSta"}]})
+  ,("PauMcc",Player {pName = "Paul McCartney", giftHist = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}]})
+  ,("RinSta",Player {pName = "Ringo Starr", giftHist = Seq.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}]})]
+rosterGR = Map.fromList [("GeoHar",Player {pName = "George Harrison", giftHist = Seq.fromList [GiftPair {givee = "RinSta", giver = "GeoHar"}]})
+  ,("JohLen",Player {pName = "John Lennon", giftHist = Seq.fromList [GiftPair {givee = "PauMcc", giver = "RinSta"}]})
+  ,("PauMcc",Player {pName = "Paul McCartney", giftHist = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}]})
+  ,("RinSta",Player {pName = "Ringo Starr", giftHist = Seq.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}]})]
 testRosterString = "The Beatles, 2014\nRinSta, Ringo Starr, JohLen, GeoHar\nJohLen, John Lennon, PauMcc, RinSta\nGeoHar, George Harrison, RinSta, PauMcc\nPauMcc, Paul McCartney, GeoHar, JohLen"
 
 -- rstrLst = [("RinSta", Player {pName = "Ringo Starr", giftHist = [GiftPair {giver = "GeoHar", givee = "JohLen"}]}), ("JohLen", plr2), ("GeoHar", plr3), ("PauMcc", plr4)]
@@ -52,12 +60,51 @@ testGetPlayerName = (~=?)
   "Ringo Starr"
   (getPlayerName "RinSta" roster)
 
-testGetGiveeCode = (~=?)
+testGetGivee = (~=?)
   "GeoHar"
-  (getGiveeCode "PauMcc" roster 0)
+  (getGivee "PauMcc" roster 0)
+
+testSetGiveePass = (~=?)
+  rosterGE
+  (setGivee "GeoHar" 0 "GeoHar" roster)
+
+testSetGiveeFailPlr = (~=?)
+  roster
+  (setGivee "GeoHarX" 0 "GeoHar" roster)
+
+testSetGiveeFailYr = (~=?)
+  roster
+  (setGivee "GeoHar" 9 "GeoHar" roster)
+
+testSetGiveeFailGv = (~=?)
+  roster
+  (setGivee "GeoHar" 0 "GeoHarX" roster)
+
+
+
+testSetGiverPass = (~=?)
+  rosterGR
+  (setGiver "GeoHar" 0 "GeoHar" roster)
+
+testSetGiverFailPlr = (~=?)
+  roster
+  (setGiver "GeoHarX" 0 "GeoHar" roster)
+
+testSetGiverFailYr = (~=?)
+  roster
+  (setGiver "GeoHar" 9 "GeoHar" roster)
+
+testSetGiverFailGv = (~=?)
+  roster
+  (setGiver "GeoHar" 0 "GeoHarX" roster)
+
+
 
 rosterTests = TestList [ testMakeplayersMap, testGetRosterName
                        , testGetRosterYear, testGetPlayer, testGetPlayerName
-                       , testGetGiveeCode ]
+                       , testGetGivee, testSetGiveePass, testSetGiveeFailPlr
+                       , testSetGiveeFailYr, testSetGiveeFailGv
+                       , testSetGiverPass, testSetGiverFailPlr
+                       , testSetGiverFailYr, testSetGiverFailGv ]
 
 runRosterTests = runTestTT $ TestList [ rosterTests ]

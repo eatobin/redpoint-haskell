@@ -50,4 +50,4 @@ main = do
     -- print playersMap
     print (getPlayer "RinSta" roster)
     print (getPlayerName "RinSta" roster)
-    print (getGiveeCode "PauMcc" roster 0)
+    print (getGivee "PauMcc" roster 0)
