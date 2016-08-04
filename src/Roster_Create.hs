@@ -62,5 +62,5 @@ makePlayersKVList = map makePlayerKV
 makePlayersMapList :: [(PlrSym, Player)] -> Map PlrSym Player
 makePlayersMapList  = Map.fromList
 
-makePlayersMap :: RosterString -> Map PlrSym Player
-makePlayersMap = makePlayersMapList . makePlayersKVList . makePlayersList . makeRosterList
+makePlayersMap :: RosterList -> Map PlrSym Player
+makePlayersMap = makePlayersMapList . makePlayersKVList . makePlayersList

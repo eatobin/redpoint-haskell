@@ -11,11 +11,11 @@ plr1 = Player {pName = "Ringo Starr", giftHist = Seq.fromList [GiftPair {giver =
 -- plr2 = Player {pName = "John Lennon", giftHist = [GiftPair {giver = "RinSta", givee = "PauMcc"}]}
 -- plr3 = Player {pName = "George Harrison", giftHist = [GiftPair {giver = "PauMcc", givee = "RinSta"}]}
 -- plr4 = Player {pName = "Paul McCartney", giftHist = [GiftPair {giver = "JohLen", givee = "GeoHar"}]}
-playersRoster = Map.fromList [("GeoHar",Player {pName = "George Harrison", giftHist = Seq.fromList [GiftPair {givee = "RinSta", giver = "PauMcc"}]})
+playersMap = Map.fromList [("GeoHar",Player {pName = "George Harrison", giftHist = Seq.fromList [GiftPair {givee = "RinSta", giver = "PauMcc"}]})
   ,("JohLen",Player {pName = "John Lennon", giftHist = Seq.fromList [GiftPair {givee = "PauMcc", giver = "RinSta"}]})
   ,("PauMcc",Player {pName = "Paul McCartney", giftHist = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}]})
   ,("RinSta",Player {pName = "Ringo Starr", giftHist = Seq.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}]})]
-rosterString = "The Beatles, 2014\nRinSta, Ringo Starr, JohLen, GeoHar\nJohLen, John Lennon, PauMcc, RinSta\nGeoHar, George Harrison, RinSta, PauMcc\nPauMcc, Paul McCartney, GeoHar, JohLen"
+testRosterString = "The Beatles, 2014\nRinSta, Ringo Starr, JohLen, GeoHar\nJohLen, John Lennon, PauMcc, RinSta\nGeoHar, George Harrison, RinSta, PauMcc\nPauMcc, Paul McCartney, GeoHar, JohLen"
 
 -- rstrLst = [("RinSta", Player {pName = "Ringo Starr", giftHist = [GiftPair {giver = "GeoHar", givee = "JohLen"}]}), ("JohLen", plr2), ("GeoHar", plr3), ("PauMcc", plr4)]
 -- rstrMap = Map.fromList rstrLst
@@ -27,34 +27,34 @@ gh1 = Seq.fromList [GiftPair {giver = "GeoHarX", givee = "JohLenX"}, GiftPair {g
 
 -- ["RinSta" "Ringo Starr" "JohLen" "GeoHar"]
 
--- rosterString = "The Beatles, 2014\nRinSta, Ringo Starr, JohLen, GeoHar\nJohLen, John Lennon, PauMcc, RinSta\nGeoHar, George Harrison, RinSta, PauMcc\nPauMcc, Paul McCartney, GeoHar, JohLen"
--- rosterList = [["The Beatles","2014"],["RinSta","Ringo Starr","JohLen","GeoHar"],["JohLen","John Lennon","PauMcc","RinSta"],["GeoHar","George Harrison","RinSta","PauMcc"],["PauMcc","Paul McCartney","GeoHar","JohLen"]]
--- rosterLine = ["The Beatles","2014"]
+-- testRosterString = "The Beatles, 2014\nRinSta, Ringo Starr, JohLen, GeoHar\nJohLen, John Lennon, PauMcc, RinSta\nGeoHar, George Harrison, RinSta, PauMcc\nPauMcc, Paul McCartney, GeoHar, JohLen"
+testRosterList = [["The Beatles","2014"],["RinSta","Ringo Starr","JohLen","GeoHar"],["JohLen","John Lennon","PauMcc","RinSta"],["GeoHar","George Harrison","RinSta","PauMcc"],["PauMcc","Paul McCartney","GeoHar","JohLen"]]
+testRosterLine = ["The Beatles","2014"]
 -- playersMap = Map.fromList [("GeoHar",Player {pName = "George Harrison", giftHist = [GiftPair {givee = "RinSta", giver = "PauMcc"}]})]
 
 testGetRosterName = (~=?)
   "The Beatles"
-  (getRosterName rosterString)
+  (getRosterName testRosterLine)
 
 testGetRosterYear = (~=?)
   2014
-  (getRosterYear rosterString)
+  (getRosterYear testRosterLine)
 
 testMakeplayersMap = (~=?)
-  playersRoster
-  (makePlayersMap rosterString)
+  playersMap
+  (makePlayersMap testRosterList)
 
 testGetPlayer = (~=?)
   plr1
-  (getPlayer "RinSta" playersRoster)
+  (getPlayer "RinSta" playersMap)
 
 testGetPlayerName = (~=?)
   "Ringo Starr"
-  (getPlayerName "RinSta" playersRoster)
+  (getPlayerName "RinSta" playersMap)
 
 testGetGiveeCode = (~=?)
   "GeoHar"
-  (getGiveeCode "PauMcc" playersRoster 0)
+  (getGiveeCode "PauMcc" playersMap 0)
 
 rosterTests = TestList [ testMakeplayersMap, testGetRosterName
                        , testGetRosterYear, testGetPlayer, testGetPlayerName

@@ -2,12 +2,12 @@ module Main where
 
 import           All_Tests
 import           Roster
+import           Roster_Create
 import           Roster_Test
-import Roster_Create
 
 import           Data.Map.Strict (Map, (!))
 import qualified Data.Map.Strict as Map
-import System.IO
+import           System.IO
 
 --main = do
 --    let m0 = Map.empty
@@ -36,6 +36,17 @@ import System.IO
 --myMap = Map.fromList
 
 main :: IO ()
-main = do 
-    contents <- readFile "beatles2014.txt"  
-    print (makeRosterList contents)
+main = do
+    rosterString <- readFile "beatles2014.txt"
+    let rosterList = makeRosterList rosterString
+    let rosterInfo = makeRosterInfo rosterList
+    let playersList = makePlayersList rosterList
+    let rName = getRosterName rosterInfo
+    let rYear = getRosterYear rosterInfo
+    let playersMap = makePlayersMap rosterList
+    print rName
+    print rYear
+    print playersMap
+    print (getPlayer "RinSta" playersMap)
+    print (getPlayerName "RinSta" playersMap)
+    print (getGiveeCode "PauMcc" playersMap 0)

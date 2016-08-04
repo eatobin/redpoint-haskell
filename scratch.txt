@@ -65,3 +65,19 @@ gr = gpair
 --   let gp = getGiftPair ps y pm
 --   in case gp of
 --     GiftPair {giver} -> giver
+
+getRosterName :: RosterString -> RName
+getRosterName rosterString =
+  let rl = makeRosterList rosterString
+      ri = makeRosterInfo rl
+  in case ri of
+    (x:_) -> x
+    _     -> "None"
+
+getRosterYear :: RosterString -> RYear
+getRosterYear rosterString =
+  let rl = makeRosterList rosterString
+      ri = makeRosterInfo rl
+  in case ri of
+    (_:y:_) -> read y
+    _       -> 0
