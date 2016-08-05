@@ -33,8 +33,8 @@ getPlayerName ps pm =
 getGiftHistory :: Player -> GiftHist
 getGiftHistory Player {giftHist} = giftHist
 
-getGiftPair :: GiftHist -> GYear -> GiftPair
-getGiftPair =
+giftPairGH :: GiftHist -> GYear -> GiftPair
+giftPairGH =
   Seq.index
 
 giverPr :: GiftPair -> Giver
@@ -43,19 +43,22 @@ giverPr GiftPair {giver} = giver
 giveePr :: GiftPair -> Givee
 giveePr GiftPair {givee} = givee
 
+getGiftPair :: PlrSym -> Map PlrSym Player -> GYear -> GiftPair
+getGiftPair ps pm =
+  giftPairGH gh
+    where plr = getPlayer ps pm
+          gh = getGiftHistory plr
+
 getGivee :: PlrSym -> Map PlrSym Player -> GYear -> Givee
 getGivee ps pm gy =
   giveePr gp
-    where plr = getPlayer ps pm
-          gh = getGiftHistory plr
-          gp = getGiftPair gh gy
+    where gp = getGiftPair ps pm gy
 
 getGiver :: PlrSym -> Map PlrSym Player -> GYear -> Giver
 getGiver ps pm gy =
   giverPr gp
-    where plr = getPlayer ps pm
-          gh = getGiftHistory plr
-          gp = getGiftPair gh gy
+    where gp = getGiftPair ps pm gy
+
 
 setPlayer :: GiftHist -> Player -> Player
 setPlayer gh plr@Player {giftHist} = plr {giftHist = gh}
@@ -76,13 +79,9 @@ checkGive ps y gv pm =
       gh = getGiftHistory plr
       histLen = length gh
   in
-    if Map.member ps pm &&
-       Map.member gv pm &&
-       (y + 1) <= histLen
-    then
-      True
-    else
-      False
+    (Map.member ps pm &&
+    Map.member gv pm &&
+    (y + 1) <= histLen)
 
 setGivee :: PlrSym -> GYear -> Givee -> Map PlrSym Player -> Map PlrSym Player
 setGivee ps y ge pm =
@@ -90,7 +89,7 @@ setGivee ps y ge pm =
   then
     let plr = getPlayer ps pm
         gh = getGiftHistory plr
-        gp = getGiftPair gh y
+        gp = giftPairGH gh y
         ngp = setPairGivee ge gp
         ngh = setGiftHistory y ngp gh
         nplr = setPlayer ngh plr
@@ -104,7 +103,7 @@ setGiver ps y gr pm =
   then
     let plr = getPlayer ps pm
         gh = getGiftHistory plr
-        gp = getGiftPair gh y
+        gp = giftPairGH gh y
         ngp = setPairGiver gr gp
         ngh = setGiftHistory y ngp gh
         nplr = setPlayer ngh plr
