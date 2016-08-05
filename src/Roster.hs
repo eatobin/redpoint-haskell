@@ -14,11 +14,11 @@ type RYear = Int
 
 getRosterName :: RosterLine -> RName
 getRosterName (x:_) = x
-getRosterName _ = "None"
+getRosterName _     = "None"
 
 getRosterYear :: RosterLine -> RYear
 getRosterYear (_:y:_) = read y
-getRosterYear _ = 0
+getRosterYear _       = 0
 
 getPlayer :: PlrSym -> Map PlrSym Player -> Player
 getPlayer ps pm =
@@ -46,6 +46,13 @@ giveePr GiftPair {givee} = givee
 getGivee :: PlrSym -> Map PlrSym Player -> GYear -> Givee
 getGivee ps pm gy =
   giveePr gp
+    where plr = getPlayer ps pm
+          gh = getGiftHistory plr
+          gp = getGiftPair gh gy
+
+getGiver :: PlrSym -> Map PlrSym Player -> GYear -> Giver
+getGiver ps pm gy =
+  giverPr gp
     where plr = getPlayer ps pm
           gh = getGiftHistory plr
           gp = getGiftPair gh gy
