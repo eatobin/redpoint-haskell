@@ -32,7 +32,7 @@ testRosterString = "The Beatles, 2014\nRinSta, Ringo Starr, JohLen, GeoHar\nJohL
 gh0 = Seq.fromList [GiftPair {giver = "GeoHar", givee = "JohLen"}]
 gh1 = Seq.fromList [GiftPair {giver = "GeoHarX", givee = "JohLenX"}, GiftPair {giver = "EriTob", givee = "ScoTob"}]
 -- fstPr = gh1 !! 0
-
+gp1 = GiftPair {giver = "RinSta", givee = "RinSta"}
 -- ["RinSta" "Ringo Starr" "JohLen" "GeoHar"]
 
 -- testRosterString = "The Beatles, 2014\nRinSta, Ringo Starr, JohLen, GeoHar\nJohLen, John Lennon, PauMcc, RinSta\nGeoHar, George Harrison, RinSta, PauMcc\nPauMcc, Paul McCartney, GeoHar, JohLen"
@@ -80,8 +80,6 @@ testSetGiveeFailGv = (~=?)
   roster
   (setGivee "GeoHar" 0 "GeoHarX" roster)
 
-
-
 testSetGiverPass = (~=?)
   rosterGR
   (setGiver "GeoHar" 0 "GeoHar" roster)
@@ -97,8 +95,6 @@ testSetGiverFailYr = (~=?)
 testSetGiverFailGv = (~=?)
   roster
   (setGiver "GeoHar" 0 "GeoHarX" roster)
-
-
 
 rosterTests = TestList [ testMakeplayersMap, testGetRosterName
                        , testGetRosterYear, testGetPlayer, testGetPlayerName

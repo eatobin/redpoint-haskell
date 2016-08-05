@@ -24,6 +24,9 @@ getPlayer :: PlrSym -> Map PlrSym Player -> Player
 getPlayer ps pm =
   pm ! ps
 
+setPlayer :: GiftHist -> Player -> Player
+setPlayer gh plr@Player {giftHist} = plr {giftHist = gh}
+
 getPlayerName :: PlrSym -> Map PlrSym Player -> PName
 getPlayerName ps pm =
   let plr = getPlayer ps pm
@@ -33,45 +36,39 @@ getPlayerName ps pm =
 getGiftHistory :: Player -> GiftHist
 getGiftHistory Player {giftHist} = giftHist
 
-giftPairGH :: GiftHist -> GYear -> GiftPair
-giftPairGH =
+giftPairFrmGH :: GiftHist -> GYear -> GiftPair
+giftPairFrmGH =
   Seq.index
 
-giverPr :: GiftPair -> Giver
-giverPr GiftPair {giver} = giver
+giveeFrmPr :: GiftPair -> Givee
+giveeFrmPr GiftPair {givee} = givee
 
-giveePr :: GiftPair -> Givee
-giveePr GiftPair {givee} = givee
+giverFrmPr :: GiftPair -> Giver
+giverFrmPr GiftPair {giver} = giver
 
 getGiftPair :: PlrSym -> Map PlrSym Player -> GYear -> GiftPair
 getGiftPair ps pm =
-  giftPairGH gh
+  giftPairFrmGH gh
     where plr = getPlayer ps pm
           gh = getGiftHistory plr
 
+setGiftPair :: PlrSym -> GYear -> GiftPair -> Map PlrSym Player -> Map PlrSym Player
+setGiftPair ps gy gp pm =
+  let plr = getPlayer ps pm
+      gh = getGiftHistory plr
+      ngh = setGiftHistory gy gp gh
+      nplr = setPlayer ngh plr
+  in Map.insert ps nplr pm
+
 getGivee :: PlrSym -> Map PlrSym Player -> GYear -> Givee
 getGivee ps pm gy =
-  giveePr gp
+  giveeFrmPr gp
     where gp = getGiftPair ps pm gy
 
 getGiver :: PlrSym -> Map PlrSym Player -> GYear -> Giver
 getGiver ps pm gy =
-  giverPr gp
+  giverFrmPr gp
     where gp = getGiftPair ps pm gy
-
-
-setPlayer :: GiftHist -> Player -> Player
-setPlayer gh plr@Player {giftHist} = plr {giftHist = gh}
-
-setPairGiver :: Giver -> GiftPair -> GiftPair
-setPairGiver gr gp@GiftPair {giver} = gp {giver = gr}
-
-setPairGivee :: Givee -> GiftPair -> GiftPair
-setPairGivee ge gp@GiftPair {givee} = gp {givee = ge}
-
-setGiftHistory :: GYear -> GiftPair -> GiftHist -> GiftHist
-setGiftHistory =
-  Seq.update
 
 checkGive :: PlrSym -> GYear -> PlrSym -> Map PlrSym Player -> Bool
 checkGive ps y gv pm =
@@ -84,29 +81,25 @@ checkGive ps y gv pm =
     (y + 1) <= histLen)
 
 setGivee :: PlrSym -> GYear -> Givee -> Map PlrSym Player -> Map PlrSym Player
-setGivee ps y ge pm =
-  if checkGive ps y ge pm
+setGivee ps gy ge pm =
+  if checkGive ps gy ge pm
   then
-    let plr = getPlayer ps pm
-        gh = getGiftHistory plr
-        gp = giftPairGH gh y
-        ngp = setPairGivee ge gp
-        ngh = setGiftHistory y ngp gh
-        nplr = setPlayer ngh plr
-    in Map.insert ps nplr pm
+    let gr = getGiver ps pm gy
+        gp = makeGiftPair ge gr
+    in setGiftPair ps gy gp pm
   else
     pm
 
 setGiver :: PlrSym -> GYear -> Giver -> Map PlrSym Player -> Map PlrSym Player
-setGiver ps y gr pm =
-  if checkGive ps y gr pm
+setGiver ps gy gr pm =
+  if checkGive ps gy gr pm
   then
-    let plr = getPlayer ps pm
-        gh = getGiftHistory plr
-        gp = giftPairGH gh y
-        ngp = setPairGiver gr gp
-        ngh = setGiftHistory y ngp gh
-        nplr = setPlayer ngh plr
-    in Map.insert ps nplr pm
+    let ge = getGivee ps pm gy
+        gp = makeGiftPair ge gr
+    in setGiftPair ps gy gp pm
   else
     pm
+
+setGiftHistory :: GYear -> GiftPair -> GiftHist -> GiftHist
+setGiftHistory =
+  Seq.update

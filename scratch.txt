@@ -81,3 +81,37 @@ getRosterYear rosterString =
   in case ri of
     (_:y:_) -> read y
     _       -> 0
+
+setGiveeGP :: Givee -> GiftPair -> GiftPair
+setGiveeGP ge gp@GiftPair {givee} = gp {givee = ge}
+
+setGiverGP :: Giver -> GiftPair -> GiftPair
+setGiverGP gr gp@GiftPair {giver} = gp {giver = gr}
+
+-- setGivee :: PlrSym -> GYear -> Givee -> Map PlrSym Player -> Map PlrSym Player
+-- setGivee ps y ge pm =
+--   if checkGive ps y ge pm
+--   then
+--     let plr = getPlayer ps pm
+--         gh = getGiftHistory plr
+--         gp = giftPairGH gh y
+--         ngp = setGivee ge gp
+--         ngh = setGiftHistory y ngp gh
+--         nplr = setPlayer ngh plr
+--     in Map.insert ps nplr pm
+--   else
+--     pm
+--
+-- setGiver :: PlrSym -> GYear -> Giver -> Map PlrSym Player -> Map PlrSym Player
+-- setGiver ps y gr pm =
+--   if checkGive ps y gr pm
+--   then
+--     let plr = getPlayer ps pm
+--         gh = getGiftHistory plr
+--         gp = giftPairGH gh y
+--         ngp = setGiver gr gp
+--         ngh = setGiftHistory y ngp gh
+--         nplr = setPlayer ngh plr
+--     in Map.insert ps nplr pm
+--   else
+--     pm
