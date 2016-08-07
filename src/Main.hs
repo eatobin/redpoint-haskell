@@ -43,11 +43,21 @@ main = do
     let rYear = getRosterYear rosterInfo
     let playersMap = makePlayersMap rosterList
     tvRoster <- atomically (newTVar playersMap)
-    print rName
+    -- print rName
     roster <- readTVarIO tvRoster
     -- print roster
     -- print rYear
     -- print playersMap
-    print (getPlayerInRoster "RinSta" roster)
-    print (getPlayerNameInRoster "RinSta" roster)
-    print (getGiveeInRoster "PauMcc" roster 0)
+    -- print (getPlayerInRoster "RinSta" roster)
+    -- print (getPlayerNameInRoster "RinSta" roster)
+    -- print (getGiveeInRoster "PauMcc" roster 0)
+    -- atomically $ modifyTVar tvRoster (setGiveeInRoster "PauMcc" 0 "PauMcc")
+    -- roster <- readTVarIO tvRoster
+    -- print (getGiveeInRoster "PauMcc" roster 0)
+    -- print (getGiverInRoster "PauMcc" roster 0)
+    -- atomically $ modifyTVar tvRoster (setGiverInRoster "PauMcc" 0 "PauMcc")
+    -- roster <- readTVarIO tvRoster
+    -- print (getGiverInRoster "PauMcc" roster 0)
+    atomically $ modifyTVar tvRoster addYearInRoster
+    roster <- readTVarIO tvRoster
+    print roster

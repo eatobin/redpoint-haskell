@@ -115,3 +115,13 @@ checkGive ps y gv pm =
     (Map.member ps pm &&
     Map.member gv pm &&
     (y + 1) <= histLen)
+
+addYearInPlayer :: Player -> Player
+addYearInPlayer plr =
+  let gh = getGiftHistoryInPlayer plr
+      ngh = gh Seq.|> GiftPair {givee = "none", giver = "none"}
+  in setGiftHistoryInPlayer ngh plr
+
+addYearInRoster :: Map PlrSym Player -> Map PlrSym Player
+addYearInRoster =
+  Map.map addYearInPlayer

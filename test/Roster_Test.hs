@@ -24,7 +24,10 @@ rosterGR = Map.fromList [("GeoHar",Player {pName = "George Harrison", giftHist =
   ,("PauMcc",Player {pName = "Paul McCartney", giftHist = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}]})
   ,("RinSta",Player {pName = "Ringo Starr", giftHist = Seq.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}]})]
 testRosterString = "The Beatles, 2014\nRinSta, Ringo Starr, JohLen, GeoHar\nJohLen, John Lennon, PauMcc, RinSta\nGeoHar, George Harrison, RinSta, PauMcc\nPauMcc, Paul McCartney, GeoHar, JohLen"
-
+rosterAddYear = Map.fromList [("GeoHar",Player {pName = "George Harrison", giftHist = Seq.fromList [GiftPair {givee = "RinSta", giver = "PauMcc"},GiftPair {givee = "none", giver = "none"}]})
+  ,("JohLen",Player {pName = "John Lennon", giftHist = Seq.fromList [GiftPair {givee = "PauMcc", giver = "RinSta"},GiftPair {givee = "none", giver = "none"}]})
+  ,("PauMcc",Player {pName = "Paul McCartney", giftHist = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"},GiftPair {givee = "none", giver = "none"}]})
+  ,("RinSta",Player {pName = "Ringo Starr", giftHist = Seq.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"},GiftPair {givee = "none", giver = "none"}]})]
 -- rstrLst = [("RinSta", Player {pName = "Ringo Starr", giftHist = [GiftPair {giver = "GeoHar", givee = "JohLen"}]}), ("JohLen", plr2), ("GeoHar", plr3), ("PauMcc", plr4)]
 -- rstrMap = Map.fromList rstrLst
 -- johLen = rstrMap ! "JohLen"
@@ -39,6 +42,7 @@ gp1 = GiftPair {giver = "RinSta", givee = "RinSta"}
 testRosterList = [["The Beatles","2014"],["RinSta","Ringo Starr","JohLen","GeoHar"],["JohLen","John Lennon","PauMcc","RinSta"],["GeoHar","George Harrison","RinSta","PauMcc"],["PauMcc","Paul McCartney","GeoHar","JohLen"]]
 testRosterLine = ["The Beatles","2014"]
 -- roster = Map.fromList [("GeoHar",Player {pName = "George Harrison", giftHist = [GiftPair {givee = "RinSta", giver = "PauMcc"}]})]
+makeNewGH = gh0 Seq.|> gp1
 
 testGetRosterName = (~=?)
   "The Beatles"
@@ -96,12 +100,18 @@ testSetGiverInRosterFailGv = (~=?)
   roster
   (setGiverInRoster "GeoHar" 0 "GeoHarX" roster)
 
+testAddYearInRoster = (~=?)
+  rosterAddYear
+  (addYearInRoster roster)
+
 rosterTests = TestList [ testMakeplayersMap, testGetRosterName
                        , testGetRosterYear, testGetPlayerInRoster
                        , testGetPlayerNameInRoster
-                       , testGetGiveeInRoster, testSetGiveeInRosterPass, testSetGiveeInRosterFailPlr
+                       , testGetGiveeInRoster, testSetGiveeInRosterPass
+                       , testSetGiveeInRosterFailPlr
                        , testSetGiveeInRosterFailYr, testSetGiveeInRosterFailGv
                        , testSetGiverInRosterPass, testSetGiverInRosterFailPlr
-                       , testSetGiverInRosterFailYr, testSetGiverInRosterFailGv ]
+                       , testSetGiverInRosterFailYr, testSetGiverInRosterFailGv
+                       , testAddYearInRoster]
 
 runRosterTests = runTestTT $ TestList [ rosterTests ]
