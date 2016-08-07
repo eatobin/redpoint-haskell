@@ -1,6 +1,6 @@
 {-# LANGUAGE NamedFieldPuns #-}
 
-module Roster_Create where
+module Roster_Utility where
 
 import           Data.List.Utils
 import           Data.Map.Strict (Map, (!))

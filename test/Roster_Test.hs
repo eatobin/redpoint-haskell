@@ -4,7 +4,7 @@ import           Data.Map.Strict (Map, (!))
 import qualified Data.Map.Strict as Map
 import qualified Data.Sequence   as Seq
 import           Roster
-import           Roster_Create
+import           Roster_Utility
 import           Test.HUnit
 
 plr1 = Player {pName = "Ringo Starr", giftHist = Seq.fromList [GiftPair {giver = "GeoHar", givee = "JohLen"}]}

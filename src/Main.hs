@@ -3,7 +3,7 @@ module Main where
 import           All_Tests
 import           Control.Concurrent.STM
 import           Roster
-import           Roster_Create
+import           Roster_Utility
 import           Roster_Test
 import           System.IO
 

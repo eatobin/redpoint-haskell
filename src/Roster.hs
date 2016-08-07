@@ -6,7 +6,7 @@ import           Data.List.Utils
 import           Data.Map.Strict (Map, (!))
 import qualified Data.Map.Strict as Map
 import qualified Data.Sequence   as Seq
-import           Roster_Create
+import           Roster_Utility
 
 type RName = String
 type RYear = Int

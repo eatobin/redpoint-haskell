@@ -16,7 +16,7 @@ executable redpoint-haskell
   hs-source-dirs:      src
                      , test
   main-is:             Main.hs
-  other-modules:       Roster_Create
+  other-modules:       Roster_Utility
                      , Roster
                      , Roster_Test
                      , All_Tests
