@@ -48,6 +48,6 @@ main = do
     -- print roster
     -- print rYear
     -- print playersMap
-    print (getPlayer "RinSta" roster)
-    print (getPlayerName "RinSta" roster)
-    print (getGivee "PauMcc" roster 0)
+    print (getPlayerInRoster "RinSta" roster)
+    print (getPlayerNameInRoster "RinSta" roster)
+    print (getGiveeInRoster "PauMcc" roster 0)

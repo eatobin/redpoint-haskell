@@ -20,86 +20,86 @@ getRosterYear :: RosterLine -> RYear
 getRosterYear (_:y:_) = read y
 getRosterYear _       = 0
 
-getPlayer :: PlrSym -> Map PlrSym Player -> Player
-getPlayer ps pm =
+getPlayerInRoster :: PlrSym -> Map PlrSym Player -> Player
+getPlayerInRoster ps pm =
   pm ! ps
 
-setPlayer :: GiftHist -> Player -> Player
-setPlayer gh plr@Player {giftHist} = plr {giftHist = gh}
+setGiftHistoryInPlayer :: GiftHist -> Player -> Player
+setGiftHistoryInPlayer gh plr@Player {giftHist} = plr {giftHist = gh}
 
-getPlayerName :: PlrSym -> Map PlrSym Player -> PName
-getPlayerName ps pm =
-  let plr = getPlayer ps pm
+getPlayerNameInRoster :: PlrSym -> Map PlrSym Player -> PName
+getPlayerNameInRoster ps pm =
+  let plr = getPlayerInRoster ps pm
   in case plr of
     Player {pName} -> pName
 
-getGiftHistory :: Player -> GiftHist
-getGiftHistory Player {giftHist} = giftHist
+getGiftHistoryInPlayer :: Player -> GiftHist
+getGiftHistoryInPlayer Player {giftHist} = giftHist
 
-giftPairFrmGH :: GiftHist -> GYear -> GiftPair
-giftPairFrmGH =
+getGiftPairInGiftHistory :: GiftHist -> GYear -> GiftPair
+getGiftPairInGiftHistory =
   Seq.index
 
-giveeFrmPr :: GiftPair -> Givee
-giveeFrmPr GiftPair {givee} = givee
+getGiveeInGiftPair :: GiftPair -> Givee
+getGiveeInGiftPair GiftPair {givee} = givee
 
-giverFrmPr :: GiftPair -> Giver
-giverFrmPr GiftPair {giver} = giver
+getGiverInGiftPair :: GiftPair -> Giver
+getGiverInGiftPair GiftPair {giver} = giver
 
-getGiftPair :: PlrSym -> Map PlrSym Player -> GYear -> GiftPair
-getGiftPair ps pm =
-  giftPairFrmGH gh
-    where plr = getPlayer ps pm
-          gh = getGiftHistory plr
+getGiftPairInRoster :: PlrSym -> Map PlrSym Player -> GYear -> GiftPair
+getGiftPairInRoster ps pm =
+  getGiftPairInGiftHistory gh
+    where plr = getPlayerInRoster ps pm
+          gh = getGiftHistoryInPlayer plr
 
-setGiftPair :: PlrSym -> GYear -> GiftPair -> Map PlrSym Player -> Map PlrSym Player
-setGiftPair ps gy gp pm =
-  let plr = getPlayer ps pm
-      gh = getGiftHistory plr
-      ngh = setGiftHistory gy gp gh
-      nplr = setPlayer ngh plr
+setGiftPairInRoster :: PlrSym -> GYear -> GiftPair -> Map PlrSym Player -> Map PlrSym Player
+setGiftPairInRoster ps gy gp pm =
+  let plr = getPlayerInRoster ps pm
+      gh = getGiftHistoryInPlayer plr
+      ngh = setGiftPairInGiftHistory gy gp gh
+      nplr = setGiftHistoryInPlayer ngh plr
   in Map.insert ps nplr pm
 
-getGivee :: PlrSym -> Map PlrSym Player -> GYear -> Givee
-getGivee ps pm gy =
-  giveeFrmPr gp
-    where gp = getGiftPair ps pm gy
+getGiveeInRoster :: PlrSym -> Map PlrSym Player -> GYear -> Givee
+getGiveeInRoster ps pm gy =
+  getGiveeInGiftPair gp
+    where gp = getGiftPairInRoster ps pm gy
 
-getGiver :: PlrSym -> Map PlrSym Player -> GYear -> Giver
-getGiver ps pm gy =
-  giverFrmPr gp
-    where gp = getGiftPair ps pm gy
+getGiverInRoster :: PlrSym -> Map PlrSym Player -> GYear -> Giver
+getGiverInRoster ps pm gy =
+  getGiverInGiftPair gp
+    where gp = getGiftPairInRoster ps pm gy
 
 checkGive :: PlrSym -> GYear -> PlrSym -> Map PlrSym Player -> Bool
 checkGive ps y gv pm =
-  let plr = getPlayer ps pm
-      gh = getGiftHistory plr
+  let plr = getPlayerInRoster ps pm
+      gh = getGiftHistoryInPlayer plr
       histLen = length gh
   in
     (Map.member ps pm &&
     Map.member gv pm &&
     (y + 1) <= histLen)
 
-setGivee :: PlrSym -> GYear -> Givee -> Map PlrSym Player -> Map PlrSym Player
-setGivee ps gy ge pm =
+setGiveeInRoster :: PlrSym -> GYear -> Givee -> Map PlrSym Player -> Map PlrSym Player
+setGiveeInRoster ps gy ge pm =
   if checkGive ps gy ge pm
   then
-    let gr = getGiver ps pm gy
+    let gr = getGiverInRoster ps pm gy
         gp = makeGiftPair ge gr
-    in setGiftPair ps gy gp pm
+    in setGiftPairInRoster ps gy gp pm
   else
     pm
 
-setGiver :: PlrSym -> GYear -> Giver -> Map PlrSym Player -> Map PlrSym Player
-setGiver ps gy gr pm =
+setGiverInRoster :: PlrSym -> GYear -> Giver -> Map PlrSym Player -> Map PlrSym Player
+setGiverInRoster ps gy gr pm =
   if checkGive ps gy gr pm
   then
-    let ge = getGivee ps pm gy
+    let ge = getGiveeInRoster ps pm gy
         gp = makeGiftPair ge gr
-    in setGiftPair ps gy gp pm
+    in setGiftPairInRoster ps gy gp pm
   else
     pm
 
-setGiftHistory :: GYear -> GiftPair -> GiftHist -> GiftHist
-setGiftHistory =
+setGiftPairInGiftHistory :: GYear -> GiftPair -> GiftHist -> GiftHist
+setGiftPairInGiftHistory =
   Seq.update

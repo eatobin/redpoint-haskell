@@ -52,55 +52,56 @@ testMakeplayersMap = (~=?)
   roster
   (makePlayersMap testRosterList)
 
-testGetPlayer = (~=?)
+testGetPlayerInRoster = (~=?)
   plr1
-  (getPlayer "RinSta" roster)
+  (getPlayerInRoster "RinSta" roster)
 
-testGetPlayerName = (~=?)
+testGetPlayerNameInRoster = (~=?)
   "Ringo Starr"
-  (getPlayerName "RinSta" roster)
+  (getPlayerNameInRoster "RinSta" roster)
 
-testGetGivee = (~=?)
+testGetGiveeInRoster = (~=?)
   "GeoHar"
-  (getGivee "PauMcc" roster 0)
+  (getGiveeInRoster "PauMcc" roster 0)
 
-testSetGiveePass = (~=?)
+testSetGiveeInRosterPass = (~=?)
   rosterGE
-  (setGivee "GeoHar" 0 "GeoHar" roster)
+  (setGiveeInRoster "GeoHar" 0 "GeoHar" roster)
 
-testSetGiveeFailPlr = (~=?)
+testSetGiveeInRosterFailPlr = (~=?)
   roster
-  (setGivee "GeoHarX" 0 "GeoHar" roster)
+  (setGiveeInRoster "GeoHarX" 0 "GeoHar" roster)
 
-testSetGiveeFailYr = (~=?)
+testSetGiveeInRosterFailYr = (~=?)
   roster
-  (setGivee "GeoHar" 9 "GeoHar" roster)
+  (setGiveeInRoster "GeoHar" 9 "GeoHar" roster)
 
-testSetGiveeFailGv = (~=?)
+testSetGiveeInRosterFailGv = (~=?)
   roster
-  (setGivee "GeoHar" 0 "GeoHarX" roster)
+  (setGiveeInRoster "GeoHar" 0 "GeoHarX" roster)
 
-testSetGiverPass = (~=?)
+testSetGiverInRosterPass = (~=?)
   rosterGR
-  (setGiver "GeoHar" 0 "GeoHar" roster)
+  (setGiverInRoster "GeoHar" 0 "GeoHar" roster)
 
-testSetGiverFailPlr = (~=?)
+testSetGiverInRosterFailPlr = (~=?)
   roster
-  (setGiver "GeoHarX" 0 "GeoHar" roster)
+  (setGiverInRoster "GeoHarX" 0 "GeoHar" roster)
 
-testSetGiverFailYr = (~=?)
+testSetGiverInRosterFailYr = (~=?)
   roster
-  (setGiver "GeoHar" 9 "GeoHar" roster)
+  (setGiverInRoster "GeoHar" 9 "GeoHar" roster)
 
-testSetGiverFailGv = (~=?)
+testSetGiverInRosterFailGv = (~=?)
   roster
-  (setGiver "GeoHar" 0 "GeoHarX" roster)
+  (setGiverInRoster "GeoHar" 0 "GeoHarX" roster)
 
 rosterTests = TestList [ testMakeplayersMap, testGetRosterName
-                       , testGetRosterYear, testGetPlayer, testGetPlayerName
-                       , testGetGivee, testSetGiveePass, testSetGiveeFailPlr
-                       , testSetGiveeFailYr, testSetGiveeFailGv
-                       , testSetGiverPass, testSetGiverFailPlr
-                       , testSetGiverFailYr, testSetGiverFailGv ]
+                       , testGetRosterYear, testGetPlayerInRoster
+                       , testGetPlayerNameInRoster
+                       , testGetGiveeInRoster, testSetGiveeInRosterPass, testSetGiveeInRosterFailPlr
+                       , testSetGiveeInRosterFailYr, testSetGiveeInRosterFailGv
+                       , testSetGiverInRosterPass, testSetGiverInRosterFailPlr
+                       , testSetGiverInRosterFailYr, testSetGiverInRosterFailGv ]
 
 runRosterTests = runTestTT $ TestList [ rosterTests ]
