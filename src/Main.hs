@@ -3,8 +3,8 @@ module Main where
 import           All_Tests
 import           Control.Concurrent.STM
 import           Roster
-import           Roster_Utility
 import           Roster_Test
+import           Roster_Utility
 import           System.IO
 
 --main = do
