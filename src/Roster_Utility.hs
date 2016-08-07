@@ -64,3 +64,43 @@ makePlayersMapList  = Map.fromList
 
 makePlayersMap :: RosterList -> Map PlrSym Player
 makePlayersMap = makePlayersMapList . makePlayersKVList . makePlayersList
+
+getPlayerInRoster :: PlrSym -> Map PlrSym Player -> Player
+getPlayerInRoster ps pm =
+  pm ! ps
+
+getGiftPairInRoster :: PlrSym -> Map PlrSym Player -> GYear -> GiftPair
+getGiftPairInRoster ps pm =
+  getGiftPairInGiftHistory gh
+    where plr = getPlayerInRoster ps pm
+          gh = getGiftHistoryInPlayer plr
+
+getGiveeInGiftPair :: GiftPair -> Givee
+getGiveeInGiftPair GiftPair {givee} = givee
+
+getGiverInGiftPair :: GiftPair -> Giver
+getGiverInGiftPair GiftPair {giver} = giver
+
+getGiftHistoryInPlayer :: Player -> GiftHist
+getGiftHistoryInPlayer Player {giftHist} = giftHist
+
+getGiftPairInGiftHistory :: GiftHist -> GYear -> GiftPair
+getGiftPairInGiftHistory =
+  Seq.index
+
+setGiftPairInGiftHistory :: GYear -> GiftPair -> GiftHist -> GiftHist
+setGiftPairInGiftHistory =
+  Seq.update
+
+setGiftHistoryInPlayer :: GiftHist -> Player -> Player
+setGiftHistoryInPlayer gh plr@Player {giftHist} = plr {giftHist = gh}
+
+checkGive :: PlrSym -> GYear -> PlrSym -> Map PlrSym Player -> Bool
+checkGive ps y gv pm =
+  let plr = getPlayerInRoster ps pm
+      gh = getGiftHistoryInPlayer plr
+      histLen = length gh
+  in
+    (Map.member ps pm &&
+    Map.member gv pm &&
+    (y + 1) <= histLen)

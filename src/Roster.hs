@@ -20,37 +20,11 @@ getRosterYear :: RosterLine -> RYear
 getRosterYear (_:y:_) = read y
 getRosterYear _       = 0
 
-getPlayerInRoster :: PlrSym -> Map PlrSym Player -> Player
-getPlayerInRoster ps pm =
-  pm ! ps
-
-setGiftHistoryInPlayer :: GiftHist -> Player -> Player
-setGiftHistoryInPlayer gh plr@Player {giftHist} = plr {giftHist = gh}
-
 getPlayerNameInRoster :: PlrSym -> Map PlrSym Player -> PName
 getPlayerNameInRoster ps pm =
   let plr = getPlayerInRoster ps pm
   in case plr of
     Player {pName} -> pName
-
-getGiftHistoryInPlayer :: Player -> GiftHist
-getGiftHistoryInPlayer Player {giftHist} = giftHist
-
-getGiftPairInGiftHistory :: GiftHist -> GYear -> GiftPair
-getGiftPairInGiftHistory =
-  Seq.index
-
-getGiveeInGiftPair :: GiftPair -> Givee
-getGiveeInGiftPair GiftPair {givee} = givee
-
-getGiverInGiftPair :: GiftPair -> Giver
-getGiverInGiftPair GiftPair {giver} = giver
-
-getGiftPairInRoster :: PlrSym -> Map PlrSym Player -> GYear -> GiftPair
-getGiftPairInRoster ps pm =
-  getGiftPairInGiftHistory gh
-    where plr = getPlayerInRoster ps pm
-          gh = getGiftHistoryInPlayer plr
 
 setGiftPairInRoster :: PlrSym -> GYear -> GiftPair -> Map PlrSym Player -> Map PlrSym Player
 setGiftPairInRoster ps gy gp pm =
@@ -69,16 +43,6 @@ getGiverInRoster :: PlrSym -> Map PlrSym Player -> GYear -> Giver
 getGiverInRoster ps pm gy =
   getGiverInGiftPair gp
     where gp = getGiftPairInRoster ps pm gy
-
-checkGive :: PlrSym -> GYear -> PlrSym -> Map PlrSym Player -> Bool
-checkGive ps y gv pm =
-  let plr = getPlayerInRoster ps pm
-      gh = getGiftHistoryInPlayer plr
-      histLen = length gh
-  in
-    (Map.member ps pm &&
-    Map.member gv pm &&
-    (y + 1) <= histLen)
 
 setGiveeInRoster :: PlrSym -> GYear -> Givee -> Map PlrSym Player -> Map PlrSym Player
 setGiveeInRoster ps gy ge pm =
@@ -99,7 +63,3 @@ setGiverInRoster ps gy gr pm =
     in setGiftPairInRoster ps gy gp pm
   else
     pm
-
-setGiftPairInGiftHistory :: GYear -> GiftPair -> GiftHist -> GiftHist
-setGiftPairInGiftHistory =
-  Seq.update
