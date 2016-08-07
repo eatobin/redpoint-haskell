@@ -2,14 +2,9 @@
 
 module Roster where
 
-import           Data.List.Utils
 import           Data.Map.Strict (Map, (!))
 import qualified Data.Map.Strict as Map
-import qualified Data.Sequence   as Seq
 import           Roster_Utility
-
-type RName = String
-type RYear = Int
 
 
 getRosterName :: RosterLine -> RName
@@ -25,14 +20,6 @@ getPlayerNameInRoster ps pm =
   let plr = getPlayerInRoster ps pm
   in case plr of
     Player {pName} -> pName
-
-setGiftPairInRoster :: PlrSym -> GYear -> GiftPair -> Map PlrSym Player -> Map PlrSym Player
-setGiftPairInRoster ps gy gp pm =
-  let plr = getPlayerInRoster ps pm
-      gh = getGiftHistoryInPlayer plr
-      ngh = setGiftPairInGiftHistory gy gp gh
-      nplr = setGiftHistoryInPlayer ngh plr
-  in Map.insert ps nplr pm
 
 getGiveeInRoster :: PlrSym -> Map PlrSym Player -> GYear -> Givee
 getGiveeInRoster ps pm gy =

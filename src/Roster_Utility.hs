@@ -30,6 +30,9 @@ data Player = Player
   , giftHist :: GiftHist
   } deriving (Show, Eq)
 
+type RName = String
+type RYear = Int
+
 
 makeRosterList :: RosterString -> RosterList
 makeRosterList rosterString =
@@ -94,6 +97,14 @@ setGiftPairInGiftHistory =
 
 setGiftHistoryInPlayer :: GiftHist -> Player -> Player
 setGiftHistoryInPlayer gh plr@Player {giftHist} = plr {giftHist = gh}
+
+setGiftPairInRoster :: PlrSym -> GYear -> GiftPair -> Map PlrSym Player -> Map PlrSym Player
+setGiftPairInRoster ps gy gp pm =
+  let plr = getPlayerInRoster ps pm
+      gh = getGiftHistoryInPlayer plr
+      ngh = setGiftPairInGiftHistory gy gp gh
+      nplr = setGiftHistoryInPlayer ngh plr
+  in Map.insert ps nplr pm
 
 checkGive :: PlrSym -> GYear -> PlrSym -> Map PlrSym Player -> Bool
 checkGive ps y gv pm =
