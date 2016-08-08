@@ -35,10 +35,10 @@ import           System.IO
 
 main :: IO ()
 main = do
+    rosterString <- readFile "beatles2014.txt"
     tvNoGivee <- atomically (newTVar [])
     tvNoGiver <- atomically (newTVar [])
     tvRosterPrintString <- atomically (newTVar "")
-    rosterString <- readFile "beatles2014.txt"
     let rosterList = makeRosterList rosterString
     let rosterInfo = makeRosterInfo rosterList
     let playersList = makePlayersList rosterList
