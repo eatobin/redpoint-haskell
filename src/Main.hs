@@ -6,6 +6,8 @@ import           Roster
 import           Roster_Test
 import           Roster_Utility
 import           System.IO
+import           Data.Map.Strict (Map, (!))
+import qualified Data.Map.Strict as Map
 
 main :: IO ()
 main = do
@@ -19,11 +21,11 @@ main = do
     let rName = getRosterName rosterInfo
     let rYear = getRosterYear rosterInfo
     let playersMap = makePlayersMap rosterList
-    -- let rosterPrintString =
+    -- atomically $ modifyTVar tvRosterPrintString printStringRoster
     -- rosterPrintString <- readTVarIO tvRosterPrintString
     -- atomically $ writeTVar tvRosterPrintString ("\n" ++ rName ++ " - Year " ++ show rYear ++ " Gifts:\n\n")
-    atomically $ writeTVar tvRosterPrintString (printStringRoster rName rYear)
-
+    -- atomically $ writeTVar tvRosterPrintString (printStringRoster rName rYear 0 playersMap)
+    --  atomically $ writeTVar tvRosterPrintString printStringRoster
     -- tvRoster <- atomically (newTVar playersMap)
     -- print rName
     -- roster <- readTVarIO tvRoster
@@ -61,8 +63,8 @@ main = do
 
 
 
-printStringRoster :: RName -> RYear -> String
-printStringRoster rName rYear= "\n" ++ rName ++ " - Year " ++ show rYear ++ " Gifts:\n\n"
+-- printStringRoster :: RName -> RYear -> GYear -> Map PlrSym Player -> String
+-- printStringRoster rName rYear gy pm = "\n" ++ rName ++ " - Year " ++ show rYear ++ " Gifts:\n\n"
  -- "--- Status Report of Test Library ---\n" ++
  -- "\n" ++
  -- libraryToString bksb brsb ++
@@ -73,6 +75,51 @@ printStringRoster rName rYear= "\n" ++ rName ++ " - Year " ++ show rYear ++ " Gi
  -- "\n"
  --   where bks = fst bksb
  --         brs = fst brsb
+
+tester :: RName -> RYear -> GYear -> Map PlrSym Player -> IO ()
+tester rn ry gy pm = do
+  x <- atomically (newTVar ("\n" ++ rn ++ " - Year " ++ show ry ++ " Gifts:\n\n"))
+  atomically $ modifyTVar x (++ "\none")
+  atomically $ modifyTVar x (++ "\ntwo")
+  atomically $ modifyTVar x (++ "\nthree")
+  let n = getPlayerNameInPlayer plr1
+  let ge = getGiveeInPlayer gy plr1
+  let gr = getGiverInPlayer gy plr1
+  atomically $ modifyTVar x (++ "\n" ++ n ++ ge ++ gr)
+  x <- readTVarIO x
+  putStrLn x
+
+
+--Haskell implementation
+fizzbuzz xs =
+  mapM_ putStrLn $
+    [ if fizz && buzz then "FizzBuzz"
+      else if fizz then "Fizz"
+      else if buzz then "Buzz"
+      else show x
+      | x <- xs, let fizz = x `mod` 3 == 0,
+                     let buzz = x `mod` 5 == 0 ]
+
+
+
+-- little roster = do
+--   let syms = Map.keys roster
+--     do
+--       print "x"
+--       print "y"
+-- map (getGiveeInPlayer 0) (Map.elems roster)
+
+-- printStringRoster :: String -> IO String
+-- printStringRoster rosterString = do
+--   let rosterList = makeRosterList rosterString
+--   let rosterInfo = makeRosterInfo rosterList
+--   let playersList = makePlayersList rosterList
+--   let rName = getRosterName rosterInfo
+--   let rYear = getRosterYear rosterInfo
+--   let playersMap = makePlayersMap rosterList
+--   let rosterString = "\n" ++ rName ++ " - Year " ++ show rYear ++ " Gifts:\n\n"
+-- --   tvNoGiveeX <- atomically (newTVar "Works!")
+--   return rosterString
 
 
 --  (defn print-string-giving-roster [gift-year]

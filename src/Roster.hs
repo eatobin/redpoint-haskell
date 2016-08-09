@@ -9,11 +9,11 @@ import           Roster_Utility
 
 getRosterName :: RosterLine -> RName
 getRosterName (x:_) = x
-getRosterName _     = "None"
+-- getRosterName _     = "None"
 
 getRosterYear :: RosterLine -> RYear
 getRosterYear (_:y:_) = read y
-getRosterYear _       = 0
+-- getRosterYear _       = 0
 
 getPlayerNameInRoster :: PlrSym -> Map PlrSym Player -> PName
 getPlayerNameInRoster ps pm =
@@ -21,15 +21,30 @@ getPlayerNameInRoster ps pm =
   in case plr of
     Player {pName} -> pName
 
+getPlayerNameInPlayer :: Player -> PName
+getPlayerNameInPlayer Player {pName} = pName
+
 getGiveeInRoster :: PlrSym -> Map PlrSym Player -> GYear -> Givee
 getGiveeInRoster ps pm gy =
   getGiveeInGiftPair gp
     where gp = getGiftPairInRoster ps pm gy
 
+getGiveeInPlayer :: GYear -> Player -> Givee
+getGiveeInPlayer gy plr =
+  getGiveeInGiftPair gp
+    where gh = getGiftHistoryInPlayer plr
+          gp = getGiftPairInGiftHistory gh gy
+
 getGiverInRoster :: PlrSym -> Map PlrSym Player -> GYear -> Giver
 getGiverInRoster ps pm gy =
   getGiverInGiftPair gp
     where gp = getGiftPairInRoster ps pm gy
+
+getGiverInPlayer :: GYear -> Player -> Giver
+getGiverInPlayer gy plr =
+  getGiverInGiftPair gp
+    where gh = getGiftHistoryInPlayer plr
+          gp = getGiftPairInGiftHistory gh gy
 
 setGiveeInRoster :: PlrSym -> GYear -> Givee -> Map PlrSym Player -> Map PlrSym Player
 setGiveeInRoster ps gy ge pm =
