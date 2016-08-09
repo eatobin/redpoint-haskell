@@ -7,32 +7,6 @@ import           Roster_Test
 import           Roster_Utility
 import           System.IO
 
---main = do
---    let m0 = Map.empty
---    let m1 = Map.insert "k1" 7 m0
---    let m  = Map.insert "k2" 13 m1
---    putStrLn $ "map: " ++ show m
-
---    let v1 = m ! "k1"
---    putStrLn $ "v1: " ++ show v1
---    putStrLn $ "len: " ++ show (Map.size m)
-
---    let m' = Map.delete "k2" m
---    putStrLn $ "map: " ++ show m'
-
---    let prs = Map.lookup "k2" m'
---    putStrLn $ "prs: " ++ show prs
-
---    let n = Map.fromList [("foo", 1), ("bar", 2)]
---    putStrLn $ "map: " ++ show n
-
---m9 = Map.empty
---m10 = Map.insert "k1" 77 m9
---m11 = Map.insert "k2" 133 m10
-
---myMap :: Ord k => [(k, a)] -> Map k a
---myMap = Map.fromList
-
 main :: IO ()
 main = do
     rosterString <- readFile "beatles2014.txt"
@@ -45,9 +19,14 @@ main = do
     let rName = getRosterName rosterInfo
     let rYear = getRosterYear rosterInfo
     let playersMap = makePlayersMap rosterList
-    tvRoster <- atomically (newTVar playersMap)
+    -- let rosterPrintString =
+    -- rosterPrintString <- readTVarIO tvRosterPrintString
+    -- atomically $ writeTVar tvRosterPrintString ("\n" ++ rName ++ " - Year " ++ show rYear ++ " Gifts:\n\n")
+    atomically $ writeTVar tvRosterPrintString (printStringRoster rName rYear)
+
+    -- tvRoster <- atomically (newTVar playersMap)
     -- print rName
-    roster <- readTVarIO tvRoster
+    -- roster <- readTVarIO tvRoster
     -- print roster
     -- print rYear
     -- print playersMap
@@ -61,30 +40,41 @@ main = do
     -- atomically $ modifyTVar tvRoster (setGiverInRoster "PauMcc" 0 "PauMcc")
     -- roster <- readTVarIO tvRoster
     -- print (getGiverInRoster "PauMcc" roster 0)
-    atomically $ modifyTVar tvRoster addYearInRoster
-    roster <- readTVarIO tvRoster
-    noGivee <- readTVarIO tvNoGivee
-    noGiver <- readTVarIO tvNoGiver
+    -- atomically $ modifyTVar tvRoster addYearInRoster
+    -- roster <- readTVarIO tvRoster
+    -- noGivee <- readTVarIO tvNoGivee
+    -- noGiver <- readTVarIO tvNoGiver
     rosterPrintString <- readTVarIO tvRosterPrintString
-    print roster
+    -- print roster
+    -- print show noGivee
+    -- print noGiver
+    putStrLn rosterPrintString
+
+
+-- printStatus :: TVar ([Book], Bool) -> TVar ([Borrower], Bool) -> IO ()
+-- printStatus tvbksb tvbrsb = do
+--   bksb <- readTVarIO tvbksb
+--   brsb <- readTVarIO tvbrsb
+--   if snd bksb && snd brsb then putStrLn (statusToString bksb brsb)
+--     else putStrLn "\n*** There was an error with the operation just performed! ***\n"
 
 
 
 
---statusToString :: Books -> Borrowers -> String
---statusToString bksb brsb = "\n" ++
---  "--- Status Report of Test Library ---\n" ++
---  "\n" ++
---  libraryToString bksb brsb ++
---  "\n" ++
---  unlines (map bookToString bks) ++ "\n" ++
---  unlines (map borrowerToString brs) ++ "\n" ++
---  "--- End of Status Report ---" ++
---  "\n"
---    where bks = fst bksb
---          brs = fst brsb
-  
-  
+printStringRoster :: RName -> RYear -> String
+printStringRoster rName rYear= "\n" ++ rName ++ " - Year " ++ show rYear ++ " Gifts:\n\n"
+ -- "--- Status Report of Test Library ---\n" ++
+ -- "\n" ++
+ -- libraryToString bksb brsb ++
+ -- "\n" ++
+ -- unlines (map bookToString bks) ++ "\n" ++
+ -- unlines (map borrowerToString brs) ++ "\n" ++
+ -- "--- End of Status Report ---" ++
+ -- "\n"
+ --   where bks = fst bksb
+ --         brs = fst brsb
+
+
 --  (defn print-string-giving-roster [gift-year]
 --  (let [no-givee (atom [])
 --        no-giver (atom [])
