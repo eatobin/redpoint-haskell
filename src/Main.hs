@@ -103,7 +103,8 @@ fizzbuzz xs =
 
 fizzbuzz2 xs gy rm =
   mapM_ putStrLn $
-    [ n ++ " is buying for " ++  grn
+    [ if ge == "none" then "none"
+      else n ++ " is buying for " ++  grn
       | x <- xs, let n = getPlayerNameInPlayer x,
                  let ge = getGiveeInPlayer gy x,
                  let grn = getPlayerNameInRoster ge rm ]
