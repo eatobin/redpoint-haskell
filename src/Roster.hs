@@ -21,30 +21,30 @@ getPlayerNameInRoster ps pm =
   in case plr of
     Player {pName} -> pName
 
-getPlayerNameInPlayer :: Player -> PName
-getPlayerNameInPlayer Player {pName} = pName
+-- getPlayerNameInPlayer :: Player -> PName
+-- getPlayerNameInPlayer Player {pName} = pName
 
 getGiveeInRoster :: PlrSym -> Map PlrSym Player -> GYear -> Givee
 getGiveeInRoster ps pm gy =
   getGiveeInGiftPair gp
     where gp = getGiftPairInRoster ps pm gy
 
-getGiveeInPlayer :: GYear -> Player -> Givee
-getGiveeInPlayer gy plr =
-  getGiveeInGiftPair gp
-    where gh = getGiftHistoryInPlayer plr
-          gp = getGiftPairInGiftHistory gh gy
+-- getGiveeInPlayer :: GYear -> Player -> Givee
+-- getGiveeInPlayer gy plr =
+--   getGiveeInGiftPair gp
+--     where gh = getGiftHistoryInPlayer plr
+--           gp = getGiftPairInGiftHistory gh gy
 
 getGiverInRoster :: PlrSym -> Map PlrSym Player -> GYear -> Giver
 getGiverInRoster ps pm gy =
   getGiverInGiftPair gp
     where gp = getGiftPairInRoster ps pm gy
 
-getGiverInPlayer :: GYear -> Player -> Giver
-getGiverInPlayer gy plr =
-  getGiverInGiftPair gp
-    where gh = getGiftHistoryInPlayer plr
-          gp = getGiftPairInGiftHistory gh gy
+-- getGiverInPlayer :: GYear -> Player -> Giver
+-- getGiverInPlayer gy plr =
+--   getGiverInGiftPair gp
+--     where gh = getGiftHistoryInPlayer plr
+--           gp = getGiftPairInGiftHistory gh gy
 
 setGiveeInRoster :: PlrSym -> GYear -> Givee -> Map PlrSym Player -> Map PlrSym Player
 setGiveeInRoster ps gy ge pm =

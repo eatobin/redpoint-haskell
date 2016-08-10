@@ -76,18 +76,18 @@ main = do
  --   where bks = fst bksb
  --         brs = fst brsb
 
-tester :: RName -> RYear -> GYear -> Map PlrSym Player -> IO ()
-tester rn ry gy pm = do
-  x <- atomically (newTVar ("\n" ++ rn ++ " - Year " ++ show ry ++ " Gifts:\n\n"))
-  atomically $ modifyTVar x (++ "\none")
-  atomically $ modifyTVar x (++ "\ntwo")
-  atomically $ modifyTVar x (++ "\nthree")
-  let n = getPlayerNameInPlayer plr1
-  let ge = getGiveeInPlayer gy plr1
-  let gr = getGiverInPlayer gy plr1
-  atomically $ modifyTVar x (++ "\n" ++ n ++ ge ++ gr)
-  x <- readTVarIO x
-  putStrLn x
+-- tester :: RName -> RYear -> GYear -> Map PlrSym Player -> IO ()
+-- tester rn ry gy pm = do
+--   x <- atomically (newTVar ("\n" ++ rn ++ " - Year " ++ show ry ++ " Gifts:\n\n"))
+--   atomically $ modifyTVar x (++ "\none")
+--   atomically $ modifyTVar x (++ "\ntwo")
+--   atomically $ modifyTVar x (++ "\nthree")
+--   let n = getPlayerNameInPlayer plr1
+--   let ge = getGiveeInPlayer gy plr1
+--   let gr = getGiverInPlayer gy plr1
+--   atomically $ modifyTVar x (++ "\n" ++ n ++ ge ++ gr)
+--   x <- readTVarIO x
+--   putStrLn x
 
 
 --Haskell implementation
@@ -101,16 +101,24 @@ fizzbuzz xs =
                  let buzz = x `mod` 5 == 0 ]
 
 
-fizzbuzz2 xs gy rm = do
+fizzbuzz2 xs gy pm = do
   putStrLn "Hi Eric!"
   mapM_ putStrLn $
     [ if ge == "none" then n ++ " is buying for nobody - see below..."
       else n ++ " is buying for " ++  gen
-      | x <- xs, let n = getPlayerNameInPlayer x,
-                 let ge = getGiveeInPlayer gy x,
-                 let gen = getPlayerNameInRoster ge rm ]
+      | x <- xs, let n = getPlayerNameInRoster x pm,
+                 let ge = getGiveeInRoster x pm gy,
+                 let gen = getPlayerNameInRoster ge pm ]
 
-
+fizzbuzz3 rn ry gy pm = do
+ putStrLn ("\n" ++ rn ++ " - Year " ++ show ry ++ " Gifts:\n")
+ mapM_ putStrLn $
+   [ if ge == "none" then n ++ " is buying for nobody - see below..."
+     else n ++ " is buying for " ++  gen
+     |          let xs = Map.keys pm,
+       x <- xs, let n = getPlayerNameInRoster x pm,
+                let ge = getGiveeInRoster x pm gy,
+                let gen = getPlayerNameInRoster ge pm ]
 
 -- little roster = do
 --   let syms = Map.keys roster
