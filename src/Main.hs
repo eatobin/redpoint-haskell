@@ -98,7 +98,15 @@ fizzbuzz xs =
       else if buzz then "Buzz"
       else show x
       | x <- xs, let fizz = x `mod` 3 == 0,
-                     let buzz = x `mod` 5 == 0 ]
+                 let buzz = x `mod` 5 == 0 ]
+
+
+fizzbuzz2 xs gy rm =
+  mapM_ putStrLn $
+    [ n ++ " is buying for " ++  grn
+      | x <- xs, let n = getPlayerNameInPlayer x,
+                 let ge = getGiveeInPlayer gy x,
+                 let grn = getPlayerNameInRoster ge rm ]
 
 
 
