@@ -110,15 +110,16 @@ fizzbuzz2 xs gy pm = do
                  let ge = getGiveeInRoster x pm gy,
                  let gen = getPlayerNameInRoster ge pm ]
 
-fizzbuzz3 rn ry gy pm = do
- putStrLn ("\n" ++ rn ++ " - Year " ++ show ry ++ " Gifts:\n")
- mapM_ putStrLn $
-   [ if ge == "none" then n ++ " is buying for nobody - see below..."
-     else n ++ " is buying for " ++  gen
-     |          let xs = Map.keys pm,
-       x <- xs, let n = getPlayerNameInRoster x pm,
-                let ge = getGiveeInRoster x pm gy,
-                let gen = getPlayerNameInRoster ge pm ]
+fizzbuzz3 rn ry gy pm =
+  do
+   putStrLn ("\n" ++ rn ++ " - Year " ++ show ry ++ " Gifts:\n")
+   mapM_ putStrLn $
+     [ if ge == "none" then n ++ " is buying for nobody - see below..."
+       else n ++ " is buying for " ++  gen
+       |          let xs = Map.keys pm,
+         x <- xs, let n = getPlayerNameInRoster x pm,
+                  let ge = getGiveeInRoster x pm gy,
+                  let gen = getPlayerNameInRoster ge pm ]
 
 -- little roster = do
 --   let syms = Map.keys roster
