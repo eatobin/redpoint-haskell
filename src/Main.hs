@@ -8,6 +8,7 @@ import           Roster_Utility
 import           System.IO
 import           Data.Map.Strict (Map, (!))
 import qualified Data.Map.Strict as Map
+import Control.Monad
 
 main :: IO ()
 main = do
@@ -110,16 +111,48 @@ fizzbuzz2 xs gy pm = do
                  let ge = getGiveeInRoster x pm gy,
                  let gen = getPlayerNameInRoster ge pm ]
 
-fizzbuzz3 rn ry gy pm =
+printStringGivingRoster rn ry gy pm =
   do
    putStrLn ("\n" ++ rn ++ " - Year " ++ show ry ++ " Gifts:\n")
    mapM_ putStrLn $
-     [ if ge == "none" then n ++ " is buying for nobody - see below..."
-       else n ++ " is buying for " ++  gen
+     [ n ++ " is buying for " ++  gen
        |          let xs = Map.keys pm,
          x <- xs, let n = getPlayerNameInRoster x pm,
                   let ge = getGiveeInRoster x pm gy,
-                  let gen = getPlayerNameInRoster ge pm ]
+                  let gen = getPlayerNameInRoster ge pm,
+                  ge /= "none" ]
+
+   let noErrors = (length [x | let xs = Map.keys pm, x <- xs, let ge = getGiveeInRoster x pm gy, ge == "none"]) == 0
+   if noErrors
+     then putStrLn ""
+     else putStrLn "\nThere is a logic error in this year's pairings.\nDo you see it?\nIf not... call me and I'll explain!\n"
+
+   mapM_ putStrLn $
+    [ n ++ " is buying for no one."
+      |          let xs = Map.keys pm,
+        x <- xs, let n = getPlayerNameInRoster x pm,
+                 let ge = getGiveeInRoster x pm gy,
+                --  let gen = getPlayerNameInRoster ge pm,
+                 ge == "none" ]
+
+   mapM_ putStrLn $
+    [ n ++ " is receiving from no one."
+      |          let xs = Map.keys pm,
+        x <- xs, let n = getPlayerNameInRoster x pm,
+                 let gr = getGiverInRoster x pm gy,
+                 gr == "none" ]
+
+
+testing  gy pm = [x | let xs = Map.keys pm, x <- xs, let ge = getGiveeInRoster x pm gy, ge /= "none"]
+
+
+
+
+
+
+putString :: [Char] -> IO ()
+putString s = mapM_ putChar s
+
 
 -- little roster = do
 --   let syms = Map.keys roster
