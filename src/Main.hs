@@ -13,9 +13,6 @@ import Control.Monad
 main :: IO ()
 main = do
     rosterString <- readFile "beatles2014.txt"
-    tvNoGivee <- atomically (newTVar [])
-    tvNoGiver <- atomically (newTVar [])
-    tvRosterPrintString <- atomically (newTVar "")
     let rosterList = makeRosterList rosterString
     let rosterInfo = makeRosterInfo rosterList
     let playersList = makePlayersList rosterList
@@ -27,31 +24,30 @@ main = do
     -- atomically $ writeTVar tvRosterPrintString ("\n" ++ rName ++ " - Year " ++ show rYear ++ " Gifts:\n\n")
     -- atomically $ writeTVar tvRosterPrintString (printStringRoster rName rYear 0 playersMap)
     --  atomically $ writeTVar tvRosterPrintString printStringRoster
-    -- tvRoster <- atomically (newTVar playersMap)
+    tvRoster <- atomically (newTVar playersMap)
     -- print rName
-    -- roster <- readTVarIO tvRoster
-    -- print roster
+    roster <- readTVarIO tvRoster
+    print roster
     -- print rYear
     -- print playersMap
-    -- print (getPlayerInRoster "RinSta" roster)
-    -- print (getPlayerNameInRoster "RinSta" roster)
-    -- print (getGiveeInRoster "PauMcc" roster 0)
-    -- atomically $ modifyTVar tvRoster (setGiveeInRoster "PauMcc" 0 "PauMcc")
-    -- roster <- readTVarIO tvRoster
-    -- print (getGiveeInRoster "PauMcc" roster 0)
-    -- print (getGiverInRoster "PauMcc" roster 0)
-    -- atomically $ modifyTVar tvRoster (setGiverInRoster "PauMcc" 0 "PauMcc")
-    -- roster <- readTVarIO tvRoster
-    -- print (getGiverInRoster "PauMcc" roster 0)
-    -- atomically $ modifyTVar tvRoster addYearInRoster
-    -- roster <- readTVarIO tvRoster
+    print (getPlayerInRoster "RinSta" roster)
+    print (getPlayerNameInRoster "RinSta" roster)
+    print (getGiveeInRoster "PauMcc" roster 0)
+    atomically $ modifyTVar tvRoster (setGiveeInRoster "PauMcc" 0 "PauMcc")
+    roster <- readTVarIO tvRoster
+    print (getGiveeInRoster "PauMcc" roster 0)
+    print (getGiverInRoster "PauMcc" roster 0)
+    atomically $ modifyTVar tvRoster (setGiverInRoster "PauMcc" 0 "PauMcc")
+    roster <- readTVarIO tvRoster
+    print (getGiverInRoster "PauMcc" roster 0)
+    atomically $ modifyTVar tvRoster addYearInRoster
+    roster <- readTVarIO tvRoster
     -- noGivee <- readTVarIO tvNoGivee
     -- noGiver <- readTVarIO tvNoGiver
-    rosterPrintString <- readTVarIO tvRosterPrintString
-    -- print roster
-    -- print show noGivee
-    -- print noGiver
-    putStrLn rosterPrintString
+    -- rosterPrintString <- readTVarIO tvRosterPrintString
+    print roster
+    
+    
 
 
 -- printStatus :: TVar ([Book], Bool) -> TVar ([Borrower], Bool) -> IO ()
@@ -113,7 +109,7 @@ fizzbuzz2 xs gy pm = do
 
 printStringGivingRoster rn ry gy pm =
   do
-   putStrLn ("\n" ++ rn ++ " - Year " ++ show ry ++ " Gifts:\n")
+   putStrLn ("\n" ++ rn ++ " - Year " ++ show (ry + gy) ++ " Gifts:\n")
    mapM_ putStrLn $
      [ n ++ " is buying for " ++  gen
        |          let xs = Map.keys pm,
