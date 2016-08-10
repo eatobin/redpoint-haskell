@@ -1,0 +1,5 @@
+The Partial Beatles, 2014
+RinSta, Ringo Starr, JohLen, GeoHar
+JohLen, John Lennon, none, RinSta
+GeoHar, George Harrison, RinSta, PauMcc
+PauMcc, Paul McCartney, GeoHar, none

@@ -122,10 +122,8 @@ printStringGivingRoster rn ry gy pm =
                   let gen = getPlayerNameInRoster ge pm,
                   ge /= "none" ]
 
-   let noErrors = (length [x | let xs = Map.keys pm, x <- xs, let ge = getGiveeInRoster x pm gy, ge == "none"]) == 0
-   if noErrors
-     then putStrLn ""
-     else putStrLn "\nThere is a logic error in this year's pairings.\nDo you see it?\nIf not... call me and I'll explain!\n"
+   let errors = (length [x | let xs = Map.keys pm, x <- xs, let ge = getGiveeInRoster x pm gy, ge == "none"]) /= 0
+   when errors $ putStrLn "\nThere is a logic error in this year's pairings.\nDo you see it?\nIf not... call me and I'll explain!\n"
 
    mapM_ putStrLn $
     [ n ++ " is buying for no one."
