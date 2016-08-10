@@ -104,7 +104,7 @@ fizzbuzz xs =
 fizzbuzz2 xs gy rm = do
   putStrLn "Hi Eric!"
   mapM_ putStrLn $
-    [ if ge == "none" then "none"
+    [ if ge == "none" then n ++ " is buying for nobody - see below..."
       else n ++ " is buying for " ++  gen
       | x <- xs, let n = getPlayerNameInPlayer x,
                  let ge = getGiveeInPlayer gy x,
