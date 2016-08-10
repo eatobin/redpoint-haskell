@@ -101,7 +101,8 @@ fizzbuzz xs =
                  let buzz = x `mod` 5 == 0 ]
 
 
-fizzbuzz2 xs gy rm =
+fizzbuzz2 xs gy rm = do
+  putStrLn "Hi Eric!"
   mapM_ putStrLn $
     [ if ge == "none" then "none"
       else n ++ " is buying for " ++  grn
