@@ -19,6 +19,7 @@ main = do
     let rName = getRosterName rosterInfo
     let rYear = getRosterYear rosterInfo
     let playersMap = makePlayersMap rosterList
+    let gy = 0
     -- atomically $ modifyTVar tvRosterPrintString printStringRoster
     -- rosterPrintString <- readTVarIO tvRosterPrintString
     -- atomically $ writeTVar tvRosterPrintString ("\n" ++ rName ++ " - Year " ++ show rYear ++ " Gifts:\n\n")
@@ -32,21 +33,21 @@ main = do
     -- print playersMap
     print (getPlayerInRoster "RinSta" roster)
     print (getPlayerNameInRoster "RinSta" roster)
-    print (getGiveeInRoster "PauMcc" roster 0)
-    atomically $ modifyTVar tvRoster (setGiveeInRoster "PauMcc" 0 "PauMcc")
+    print (getGiveeInRoster "PauMcc" roster gy)
+    atomically $ modifyTVar tvRoster (setGiveeInRoster "PauMcc" gy "PauMcc")
     roster <- readTVarIO tvRoster
-    print (getGiveeInRoster "PauMcc" roster 0)
-    print (getGiverInRoster "PauMcc" roster 0)
-    atomically $ modifyTVar tvRoster (setGiverInRoster "PauMcc" 0 "PauMcc")
+    print (getGiveeInRoster "PauMcc" roster gy)
+    print (getGiverInRoster "PauMcc" roster gy)
+    atomically $ modifyTVar tvRoster (setGiverInRoster "PauMcc" gy "PauMcc")
     roster <- readTVarIO tvRoster
-    print (getGiverInRoster "PauMcc" roster 0)
+    print (getGiverInRoster "PauMcc" roster gy)
     atomically $ modifyTVar tvRoster addYearInRoster
     roster <- readTVarIO tvRoster
     -- noGivee <- readTVarIO tvNoGivee
     -- noGiver <- readTVarIO tvNoGiver
     -- rosterPrintString <- readTVarIO tvRosterPrintString
     print roster
-    
+    printStringGivingRoster rName rYear gy roster
     
 
 
