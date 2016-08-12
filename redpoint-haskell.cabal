@@ -27,4 +27,4 @@ executable redpoint-haskell
                      , containers
                      , MissingH
                      , stm
-                     , random-extras
+                     , random-fu
