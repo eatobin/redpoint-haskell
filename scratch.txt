@@ -141,3 +141,18 @@ setGiverGP gr gp@GiftPair {giver} = gp {giver = gr}
 
 --myMap :: Ord k => [(k, a)] -> Map k a
 --myMap = Map.fromList
+
+-- getGiveeInPlayer :: GYear -> Player -> Givee
+-- getGiveeInPlayer gy plr =
+--   getGiveeInGiftPair gp
+--     where gh = getGiftHistoryInPlayer plr
+--           gp = getGiftPairInGiftHistory gh gy
+
+-- getGiverInPlayer :: GYear -> Player -> Giver
+-- getGiverInPlayer gy plr =
+--   getGiverInGiftPair gp
+--     where gh = getGiftHistoryInPlayer plr
+--           gp = getGiftPairInGiftHistory gh gy
+
+-- getPlayerNameInPlayer :: Player -> PName
+-- getPlayerNameInPlayer Player {pName} = pName

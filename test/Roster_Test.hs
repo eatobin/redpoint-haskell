@@ -1,6 +1,5 @@
 module Roster_Test where
 
-import           Data.Map.Strict (Map, (!))
 import qualified Data.Map.Strict as Map
 import qualified Data.Sequence   as Seq
 import           Roster
