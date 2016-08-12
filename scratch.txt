@@ -156,3 +156,12 @@ setGiverGP gr gp@GiftPair {giver} = gp {giver = gr}
 
 -- getPlayerNameInPlayer :: Player -> PName
 -- getPlayerNameInPlayer Player {pName} = pName
+
+pick :: [a] -> IO a
+pick xs = randomRIO (0, length xs - 1) >>= return . (xs !!)
+
+randomInt :: IO Int
+randomInt = pick [0,1,2]
+
+randomChar :: IO Char
+randomChar = pick ['a'..'z']

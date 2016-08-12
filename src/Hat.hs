@@ -1,30 +1,17 @@
 module Hat where
 
+import qualified Data.Map.Strict as Map
 import           Roster
 import           Roster_Utility
-import qualified Data.Map.Strict        as Map
-import System.Random
+import           System.Random
 
 type Hat = [PlrSym]
 
 makeHat :: PlayersMap -> Hat
-makeHat pm = Map.keys pm
+makeHat = Map.keys
 
---drawPuck :: Hat -> PlrSym
---drawPuck h = 
---  if not (null h)
---    then runRVar (randomElement h)
---    else "empty"
---reversed = randomElement [0,1,2]
-
---test = do
---  x <- reversed
---  return x
-pick :: [a] -> IO a
-pick xs = randomRIO (0, length xs - 1) >>= return . (xs !!)
-
-randomInt :: IO Int
-randomInt = pick [0,1,2]
-
-randomChar :: IO Char
-randomChar = pick ['a'..'z']
+drawPuck :: Hat -> IO PlrSym
+drawPuck h =
+ if not (null h)
+   then fmap (h !!) (randomRIO (0, length h - 1))
+   else return "empty"
