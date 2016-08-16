@@ -16,6 +16,10 @@ testRemovePuck = (~=?)
   ["GeoHar","PauMcc","RinSta"]
   (removePuck "JohLen" testHat)
 
+testRemovePuckEmpty = (~=?)
+  ["GeoHar","PauMcc","RinSta"]
+  (removePuck "JohLen" [])
+
 testDiscardPuck = (~=?)
   ["PauMcc","JohLen"]
   (discardPuck "JohLen" ["PauMcc"])
@@ -25,6 +29,6 @@ testReturnDiscards = (~=?)
   (returnDiscards ["GeoHar"] ["PauMcc","JohLen"])
 
 hatTests = TestList [ testMakeHat, testRemovePuck, testDiscardPuck
-                    , testReturnDiscards ]
+                    , testReturnDiscards, testRemovePuckEmpty ]
 
 runHatTests = runTestTT $ TestList [ hatTests ]
