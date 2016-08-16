@@ -21,7 +21,7 @@ removePuck ps =
 
 discardPuck :: PlrSym -> Discards -> Discards
 discardPuck ps d =
-  ps : d
+  d ++ [ps]
 
 returnDiscards :: Discards -> Hat -> Hat
 returnDiscards d h =
