@@ -116,6 +116,6 @@ rosterTests = TestList [ testMakeplayersMap, testGetRosterName
                        , testSetGiveeInRosterFailYr, testSetGiveeInRosterFailGv
                        , testSetGiverInRosterPass, testSetGiverInRosterFailPlr
                        , testSetGiverInRosterFailYr, testSetGiverInRosterFailGv
-                       , testAddYearInRoster]
+                       , testAddYearInRoster ]
 
 runRosterTests = runTestTT $ TestList [ rosterTests ]

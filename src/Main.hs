@@ -4,10 +4,11 @@ import           All_Tests
 import           Control.Concurrent.STM
 import           Control.Monad
 import qualified Data.Map.Strict        as Map
+import           Hat
+import           Hat_Test
 import           Roster
 import           Roster_Test
 import           Roster_Utility
-import Hat
 
 main :: IO ()
 main = do
@@ -49,7 +50,7 @@ main = do
     printGivingRoster rName rYear gy tvRoster
 
 
-printGivingRoster :: RName -> RYear -> GYear -> TVar (PlayersMap) -> IO ()
+printGivingRoster :: RName -> RYear -> GYear -> TVar PlayersMap -> IO ()
 printGivingRoster rn ry gy tvpm =
   do
    pm <- readTVarIO tvpm
