@@ -17,7 +17,7 @@ testRemovePuck = (~=?)
   (removePuck "JohLen" testHat)
 
 testRemovePuckEmpty = (~=?)
-  ["GeoHar","PauMcc","RinSta"]
+  []
   (removePuck "JohLen" [])
 
 testDiscardPuck = (~=?)
