@@ -13,3 +13,12 @@ giveeNotRecip ps ge gy pm =
   ps /= recip
     where
       recip = getGiveeInRoster ge pm gy
+
+giveeNotRepeat :: PlrSym -> Givee -> GYear -> PlayersMap -> Bool
+giveeNotRepeat ps ge gy pm =
+  let
+    past = filter (>= 0) $ takeWhile (>= (gy - 3)) $ iterate (subtract 1) (gy - 1)
+    geY = getGiveeInRoster ps pm
+    geYrs = map geY past
+  in
+    notElem ge geYrs
