@@ -9,6 +9,8 @@ import           Hat_Test
 import           Roster
 import           Roster_Test
 import           Roster_Utility
+import           Rules
+import           Rules_Test
 
 main :: IO ()
 main = do
