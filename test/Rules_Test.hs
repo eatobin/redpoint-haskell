@@ -2,10 +2,10 @@ module Rules_Test where
 
 import           Hat
 import           Roster
+import           Roster_Test
 import           Roster_Utility
 import           Rules
 import           Test.HUnit
-import Roster_Test
 
 testGiveeNotSelf = (~=?)
   True

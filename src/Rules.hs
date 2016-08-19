@@ -4,12 +4,12 @@ import           Hat
 import           Roster
 import           Roster_Utility
 
-giveeNotSelf :: Giver -> Givee -> Bool
-giveeNotSelf gr ge =
-  gr /= ge
+giveeNotSelf :: PlrSym -> Givee -> Bool
+giveeNotSelf ps ge =
+  ps /= ge
 
-giveeNotRecip :: Giver -> Givee -> GYear -> PlayersMap -> Bool
-giveeNotRecip gr ge gy pm =
-  gr /= recip
-   where
-     recip = getGiverInRoster ge pm gy
+giveeNotRecip :: PlrSym -> Givee -> GYear -> PlayersMap -> Bool
+giveeNotRecip ps ge gy pm =
+  ps /= recip
+    where
+      recip = getGiveeInRoster ge pm gy
