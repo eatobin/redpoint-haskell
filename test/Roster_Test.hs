@@ -28,15 +28,14 @@ partialRoster = Map.fromList [("GeoHar",Player {pName = "George Harrison", giftH
   ,("PauMcc",Player {pName = "Paul McCartney", giftHist = Seq.fromList [GiftPair {givee = "GeoHar", giver = "none"}]})
   ,("RinSta",Player {pName = "Ringo Starr", giftHist = Seq.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}]})]
 testRosterList = [["The Beatles","2014"],["RinSta","Ringo Starr","JohLen","GeoHar"],["JohLen","John Lennon","PauMcc","RinSta"],["GeoHar","George Harrison","RinSta","PauMcc"],["PauMcc","Paul McCartney","GeoHar","JohLen"]]
-testRosterLine = ["The Beatles","2014"]
 
 testGetRosterName = (~=?)
   "The Beatles"
-  (getRosterName testRosterLine)
+  (getRosterName testRosterList)
 
 testGetRosterYear = (~=?)
   2014
-  (getRosterYear testRosterLine)
+  (getRosterYear testRosterList)
 
 testMakeplayersMap = (~=?)
   roster

@@ -29,9 +29,8 @@ main = do
     tvGivee <- atomically (newTVar "none")
     rosterString <- readFileIntoString "beatles-partial2014.txt"
     let rosterList = makeRosterList rosterString
-    let rosterInfo = makeRosterInfo rosterList
-    let rName = getRosterName rosterInfo
-    let rYear = getRosterYear rosterInfo
+    let rName = getRosterName rosterList
+    let rYear = getRosterYear rosterList
     let playersMap = makePlayersMap rosterList
     tvPM <- atomically (newTVar playersMap)
     tvGiverHat <- atomically (newTVar [])

@@ -5,11 +5,17 @@ module Roster where
 import qualified Data.Map.Strict as Map
 import           Roster_Utility
 
-getRosterName :: RosterLine -> RName
-getRosterName (x:_) = x
+getRosterName :: RosterList -> RName
+getRosterName list =
+  let line = makeRosterInfo list
+  in case line of
+    (x:_) -> x
 
-getRosterYear :: RosterLine -> RYear
-getRosterYear (_:y:_) = read y
+getRosterYear :: RosterList -> RYear
+getRosterYear list =
+  let line = makeRosterInfo list
+  in case line of
+    (_:y:_) -> read y
 
 getPlayerNameInRoster :: PlrSym -> PlayersMap -> PName
 getPlayerNameInRoster ps pm =
