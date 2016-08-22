@@ -78,14 +78,20 @@ main = do
     -- print givee
     startNewYear tvGY tvPM tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards
     giverHat <- readTVarIO tvGiverHat
+    giveeHat <- readTVarIO tvGiveeHat
     giver <- readTVarIO tvGiver
-    print giverHat
-    print giver
-    selectNewgiver tvGiver tvGiverHat
-    giverHat <- readTVarIO tvGiverHat
-    giver <- readTVarIO tvGivee
-    print giverHat
-    print giver
+    givee <- readTVarIO tvGivee
+    -- print giverHat
+    print giveeHat
+    print givee
+    selectNewgiver tvGiver tvGiverHat tvDiscards tvGiveeHat tvGivee
+    -- giverHat <- readTVarIO tvGiverHat
+    giveeHat <- readTVarIO tvGiveeHat
+    -- giver <- readTVarIO tvGiver
+    givee <- readTVarIO tvGivee
+    -- print giverHat
+    print giveeHat
+    print givee
     -- gy <- readTVarIO tvGY
     -- roster <- readTVarIO tvPM
     -- giverHat <- readTVarIO tvGiverHat
@@ -148,10 +154,18 @@ startNewYear tvGY tvPM tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards = do
   atomically $ writeTVar tvGivee ge
   atomically $ modifyTVar tvDiscards emptyDiscards
 
-selectNewgiver :: TVGiver -> TVGiverHat -> IO ()
-selectNewgiver tvGiver tvGiverHat = do
+selectNewgiver :: TVGiver -> TVGiverHat -> TVDiscards -> TVGiveeHat -> TVGivee -> IO ()
+selectNewgiver tvGiver tvGiverHat tvDiscards tvGiveeHat tvGivee = do
   gr <- readTVarIO tvGiver
+  dc <- readTVarIO tvDiscards
   atomically $ modifyTVar tvGiverHat (removePuckGiver gr)
+  atomically $ modifyTVar tvGiveeHat (returnDiscards dc)
+  grh <- readTVarIO tvGiverHat
+  gr <- drawPuckGiver grh
+  atomically $ writeTVar tvGiver gr
+  geh <- readTVarIO tvGiveeHat
+  ge <- drawPuckGiver geh
+  atomically $ writeTVar tvGivee ge
 
 printGivingRoster :: RName -> RYear -> TVGYear -> TVPlayersMap -> IO ()
 printGivingRoster rn ry tvGY tvPM = do
