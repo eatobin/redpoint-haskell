@@ -23,17 +23,17 @@ drawPuckGiver :: GiverHat -> IO PlrSym
 drawPuckGiver grh =
   fmap (grh !!) (randomRIO (0, length grh - 1))
 
-removePuckGivee :: PlrSym -> GiveeHat -> GiveeHat
-removePuckGivee ps =
-  filter (/= ps)
+removePuckGivee :: Givee -> GiveeHat -> GiveeHat
+removePuckGivee ge =
+  filter (/= ge)
 
-removePuckGiver :: PlrSym -> GiverHat -> GiverHat
-removePuckGiver ps =
-  filter (/= ps)
+removePuckGiver :: Giver -> GiverHat -> GiverHat
+removePuckGiver gr =
+  filter (/= gr)
 
-discardPuckGivee :: PlrSym -> Discards -> Discards
-discardPuckGivee ps d =
-  d ++ [ps]
+discardPuckGivee :: Givee -> Discards -> Discards
+discardPuckGivee ge d =
+  d ++ [ge]
 
 returnDiscards :: Discards -> GiveeHat -> GiveeHat
 returnDiscards d geh =
