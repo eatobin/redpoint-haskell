@@ -30,8 +30,7 @@ main = do
     rosterList <- makeRosterList <$> readFileIntoString "beatles-partial2014.txt"
     let rName = getRosterName rosterList
     let rYear = getRosterYear rosterList
-    let playersMap = makePlayersMap rosterList
-    tvPM <- atomically (newTVar playersMap)
+    tvPM <- atomically $ newTVar $ makePlayersMap rosterList
     tvGiverHat <- atomically (newTVar [])
     tvGiveeHat <- atomically (newTVar [])
     tvDiscards <- atomically (newTVar [])
