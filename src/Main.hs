@@ -18,6 +18,7 @@ type TVGiverHat = TVar Hat
 type TVGiveeHat = TVar Hat
 type TVGiver = TVar Giver
 type TVGivee = TVar Givee
+type TVDiscards = TVar Discards
 
 main :: IO ()
 main = do
@@ -34,6 +35,7 @@ main = do
     tvRoster <- atomically (newTVar playersMap)
     tvGiverHat <- atomically (newTVar [])
     tvGiveeHat <- atomically (newTVar [])
+    tvDiscards <- atomically (newTVar [])
     gy <- readTVarIO tvGY
     --let gy = 0
     -- atomically $ modifyTVar tvRosterPrintString printStringRoster
@@ -76,19 +78,21 @@ main = do
     print giveeHat
     print giver
     print givee
-    startNewYear tvGY tvRoster tvGiverHat tvGiveeHat tvGiver tvGivee
+    startNewYear tvGY tvRoster tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards
     gy <- readTVarIO tvGY
     roster <- readTVarIO tvRoster
     giverHat <- readTVarIO tvGiverHat
     giveeHat <- readTVarIO tvGiveeHat
     giver <- readTVarIO tvGivee
     givee <- readTVarIO tvGiver
+    discards <- readTVarIO tvDiscards
     print gy
     print roster
     print giverHat
     print giveeHat
     print giver
     print givee
+    print discards
     --print giver
     --print givee
     --printGivingRoster rName rYear gy tvRoster
@@ -109,8 +113,8 @@ main = do
 --   gy <- readTVarIO tvgy
 --   atomically $ writeTVar tvgy (gy + 1)
 
-startNewYear :: TVGYear -> TVPlayersMap -> TVGiverHat -> TVGiveeHat -> TVGiver -> TVGivee -> IO ()
-startNewYear tvGY tvRoster tvGiverHat tvGiveeHat tvGiver tvGivee = do
+startNewYear :: TVGYear -> TVPlayersMap -> TVGiverHat -> TVGiveeHat -> TVGiver -> TVGivee -> TVDiscards -> IO ()
+startNewYear tvGY tvRoster tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards = do
   roster <- readTVarIO tvRoster
   let nhgr = makeHat roster
   let nhge = makeHat roster
@@ -122,6 +126,7 @@ startNewYear tvGY tvRoster tvGiverHat tvGiveeHat tvGiver tvGivee = do
   atomically $ writeTVar tvGiveeHat nhge
   atomically $ writeTVar tvGiver gr
   atomically $ writeTVar tvGivee ge
+  atomically $ modifyTVar tvDiscards emptyDiscards
 
 printGivingRoster :: RName -> RYear -> GYear -> TVPlayersMap -> IO ()
 printGivingRoster rn ry gy tvpm = do
