@@ -10,19 +10,19 @@ testHat = ["GeoHar","JohLen","PauMcc","RinSta"]
 
 testMakeHat = (~=?)
   testHat
-  (makeHat roster)
+  (makeHatGivee roster)
 
 testRemovePuck = (~=?)
   ["GeoHar","PauMcc","RinSta"]
-  (removePuck "JohLen" testHat)
+  (removePuckGivee "JohLen" testHat)
 
 testRemovePuckEmpty = (~=?)
   []
-  (removePuck "JohLen" [])
+  (removePuckGivee "JohLen" [])
 
 testDiscardPuck = (~=?)
   ["PauMcc","JohLen"]
-  (discardPuck "JohLen" ["PauMcc"])
+  (discardPuckGivee "JohLen" ["PauMcc"])
 
 testReturnDiscards = (~=?)
   ["PauMcc","JohLen","GeoHar"]

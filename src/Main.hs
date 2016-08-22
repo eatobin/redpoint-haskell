@@ -16,8 +16,8 @@ import           System.Directory
 
 type TVGYear = TVar GYear
 type TVPlayersMap = TVar PlayersMap
-type TVGiverHat = TVar Hat
-type TVGiveeHat = TVar Hat
+type TVGiverHat = TVar GiverHat
+type TVGiveeHat = TVar GiveeHat
 type TVGiver = TVar Giver
 type TVGivee = TVar Givee
 type TVDiscards = TVar Discards
@@ -127,10 +127,10 @@ readFileIntoString f = do
 startNewYear :: TVGYear -> TVPlayersMap -> TVGiverHat -> TVGiveeHat -> TVGiver -> TVGivee -> TVDiscards -> IO ()
 startNewYear tvGY tvPM tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards = do
   roster <- readTVarIO tvPM
-  let nhgr = makeHat roster
-  let nhge = makeHat roster
-  gr <- drawPuck nhgr
-  ge <- drawPuck nhge
+  let nhgr = makeHatGiver roster
+  let nhge = makeHatGivee roster
+  gr <- drawPuckGiver nhgr
+  ge <- drawPuckGivee nhge
   atomically $ modifyTVar tvGY (+1)
   atomically $ modifyTVar tvPM addYearInRoster
   atomically $ writeTVar tvGiverHat nhgr
@@ -138,6 +138,11 @@ startNewYear tvGY tvPM tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards = do
   atomically $ writeTVar tvGiver gr
   atomically $ writeTVar tvGivee ge
   atomically $ modifyTVar tvDiscards emptyDiscards
+
+selectNewgiver :: TVGiver -> TVGiverHat -> IO ()
+selectNewgiver tvGiver tvGiverHat = do
+  gr <- readTVarIO tvGiver
+  atomically $ modifyTVar tvGiverHat (removePuckGiver gr)
 
 printGivingRoster :: RName -> RYear -> TVGYear -> TVPlayersMap -> IO ()
 printGivingRoster rn ry tvGY tvPM = do

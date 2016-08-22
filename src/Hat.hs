@@ -5,27 +5,39 @@ import           Roster
 import           Roster_Utility
 import           System.Random
 
-type Hat = [PlrSym]
-type Discards = [PlrSym]
+type GiveeHat = [Givee]
+type GiverHat = [Giver]
+type Discards = [Givee]
 
-makeHat :: PlayersMap -> Hat
-makeHat = Map.keys
+makeHatGivee :: PlayersMap -> GiveeHat
+makeHatGivee = Map.keys
 
-drawPuck :: Hat -> IO PlrSym
-drawPuck h =
- fmap (h !!) (randomRIO (0, length h - 1))
+makeHatGiver :: PlayersMap -> GiverHat
+makeHatGiver = Map.keys
 
-removePuck :: PlrSym -> Hat -> Hat
-removePuck ps =
+drawPuckGivee :: GiveeHat -> IO PlrSym
+drawPuckGivee geh =
+  fmap (geh !!) (randomRIO (0, length geh - 1))
+
+drawPuckGiver :: GiverHat -> IO PlrSym
+drawPuckGiver grh =
+  fmap (grh !!) (randomRIO (0, length grh - 1))
+
+removePuckGivee :: PlrSym -> GiveeHat -> GiveeHat
+removePuckGivee ps =
   filter (/= ps)
 
-discardPuck :: PlrSym -> Discards -> Discards
-discardPuck ps d =
+removePuckGiver :: PlrSym -> GiverHat -> GiverHat
+removePuckGiver ps =
+  filter (/= ps)
+
+discardPuckGivee :: PlrSym -> Discards -> Discards
+discardPuckGivee ps d =
   d ++ [ps]
 
-returnDiscards :: Discards -> Hat -> Hat
-returnDiscards d h =
-  h ++ d
+returnDiscards :: Discards -> GiveeHat -> GiveeHat
+returnDiscards d geh =
+  geh ++ d
 
 emptyDiscards :: Discards -> Discards
 emptyDiscards d = []
