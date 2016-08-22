@@ -3,6 +3,7 @@ module Main where
 import           All_Tests
 import           Control.Concurrent.STM
 import           Control.Monad
+import qualified Data.ByteString.Char8  as BS
 import qualified Data.Map.Strict        as Map
 import           Hat
 import           Hat_Test
@@ -11,6 +12,7 @@ import           Roster_Test
 import           Roster_Utility
 import           Rules
 import           Rules_Test
+import           System.Directory
 
 type TVGYear = TVar GYear
 type TVPlayersMap = TVar PlayersMap
@@ -25,7 +27,7 @@ main = do
     tvGY <- atomically (newTVar 0)
     tvGiver <- atomically (newTVar "none")
     tvGivee <- atomically (newTVar "none")
-    rosterString <- readFile "beatles2014.txt"
+    rosterString <- readFileIntoString "beatles-partial2014.txt"
     let rosterList = makeRosterList rosterString
     let rosterInfo = makeRosterInfo rosterList
     let playersList = makePlayersList rosterList
@@ -74,11 +76,11 @@ main = do
     givee <- readTVarIO tvGiver
     print gy
     print roster
-    print giverHat
-    print giveeHat
+    -- print giverHat
+    -- print giveeHat
     print giver
     print givee
-    startNewYear tvGY tvRoster tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards
+    -- startNewYear tvGY tvRoster tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards
     gy <- readTVarIO tvGY
     roster <- readTVarIO tvRoster
     giverHat <- readTVarIO tvGiverHat
@@ -88,14 +90,14 @@ main = do
     discards <- readTVarIO tvDiscards
     print gy
     print roster
-    print giverHat
-    print giveeHat
+    -- print giverHat
+    -- print giveeHat
     print giver
     print givee
-    print discards
+    -- print discards
     --print giver
     --print givee
-    --printGivingRoster rName rYear gy tvRoster
+    printGivingRoster rName rYear tvGY tvRoster
     --startNewYear gy
     -- print "Bye"
 
@@ -113,6 +115,19 @@ main = do
 --   gy <- readTVarIO tvgy
 --   atomically $ writeTVar tvgy (gy + 1)
 
+readFileIntoString :: FilePath -> IO String
+readFileIntoString f = do
+  dfe <- doesFileExist f
+  if dfe
+    then do
+      bs <- BS.readFile f
+      let s = BS.unpack bs
+      return s
+    else do
+      let bs = BS.empty
+          s = BS.unpack bs
+      return s
+
 startNewYear :: TVGYear -> TVPlayersMap -> TVGiverHat -> TVGiveeHat -> TVGiver -> TVGivee -> TVDiscards -> IO ()
 startNewYear tvGY tvRoster tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards = do
   roster <- readTVarIO tvRoster
@@ -128,9 +143,10 @@ startNewYear tvGY tvRoster tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards = do
   atomically $ writeTVar tvGivee ge
   atomically $ modifyTVar tvDiscards emptyDiscards
 
-printGivingRoster :: RName -> RYear -> GYear -> TVPlayersMap -> IO ()
-printGivingRoster rn ry gy tvpm = do
-  pm <- readTVarIO tvpm
+printGivingRoster :: RName -> RYear -> TVGYear -> TVPlayersMap -> IO ()
+printGivingRoster rn ry tvGY tvPM = do
+  gy <- readTVarIO tvGY
+  pm <- readTVarIO tvPM
   putStrLn ("\n" ++ rn ++ " - Year " ++ show (ry + gy) ++ " Gifts:\n")
   mapM_ putStrLn
     [ n ++ " is buying for " ++  gen

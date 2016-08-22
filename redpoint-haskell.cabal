@@ -31,3 +31,5 @@ executable redpoint-haskell
                      , MissingH
                      , stm
                      , random
+                     , bytestring
+                     , directory
