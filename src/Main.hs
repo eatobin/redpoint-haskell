@@ -27,8 +27,8 @@ main = do
     tvGY <- atomically (newTVar 0)
     tvGiver <- atomically (newTVar "none")
     tvGivee <- atomically (newTVar "none")
-    rosterString <- readFileIntoString "beatles-partial2014.txt"
-    let rosterList = makeRosterList rosterString
+    -- rosterString <- readFileIntoString "beatles-partial2014.txt"
+    rosterList <- makeRosterList <$> readFileIntoString "beatles-partial2014.txt"
     let rName = getRosterName rosterList
     let rYear = getRosterYear rosterList
     let playersMap = makePlayersMap rosterList
