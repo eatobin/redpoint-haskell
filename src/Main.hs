@@ -30,11 +30,10 @@ main = do
     rosterString <- readFileIntoString "beatles-partial2014.txt"
     let rosterList = makeRosterList rosterString
     let rosterInfo = makeRosterInfo rosterList
-    let playersList = makePlayersList rosterList
     let rName = getRosterName rosterInfo
     let rYear = getRosterYear rosterInfo
     let playersMap = makePlayersMap rosterList
-    tvRoster <- atomically (newTVar playersMap)
+    tvPM <- atomically (newTVar playersMap)
     tvGiverHat <- atomically (newTVar [])
     tvGiveeHat <- atomically (newTVar [])
     tvDiscards <- atomically (newTVar [])
@@ -48,22 +47,22 @@ main = do
 
     --atomically $ modifyTVar tvGY ((+1) tvGY)
     -- print rName
-    -- roster <- readTVarIO tvRoster
+    -- roster <- readTVarIO tvPM
     -- print roster
     -- -- print rYear
     -- -- print playersMap
     -- print (getPlayerInRoster "RinSta" roster)
     -- print (getPlayerNameInRoster "RinSta" roster)
     -- print (getGiveeInRoster "PauMcc" roster gy)
-    -- atomically $ modifyTVar tvRoster (setGiveeInRoster "PauMcc" gy "PauMcc")
-    --roster <- readTVarIO tvRoster
+    -- atomically $ modifyTVar tvPM (setGiveeInRoster "PauMcc" gy "PauMcc")
+    --roster <- readTVarIO tvPM
     -- print (getGiveeInRoster "PauMcc" roster gy)
     -- print (getGiverInRoster "PauMcc" roster gy)
-    -- atomically $ modifyTVar tvRoster (setGiverInRoster "PauMcc" gy "PauMcc")
-    -- roster <- readTVarIO tvRoster
+    -- atomically $ modifyTVar tvPM (setGiverInRoster "PauMcc" gy "PauMcc")
+    -- roster <- readTVarIO tvPM
     -- print (getGiverInRoster "PauMcc" roster gy)
-    -- atomically $ modifyTVar tvRoster addYearInRoster
-    -- roster <- readTVarIO tvRoster
+    -- atomically $ modifyTVar tvPM addYearInRoster
+    -- roster <- readTVarIO tvPM
     -- -- noGivee <- readTVarIO tvNoGivee
     -- -- noGiver <- readTVarIO tvNoGiver
     -- -- rosterPrintString <- readTVarIO tvRosterPrintString
@@ -80,9 +79,9 @@ main = do
     -- print giveeHat
     print giver
     print givee
-    -- startNewYear tvGY tvRoster tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards
+    -- startNewYear tvGY tvPM tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards
     gy <- readTVarIO tvGY
-    roster <- readTVarIO tvRoster
+    roster <- readTVarIO tvPM
     giverHat <- readTVarIO tvGiverHat
     giveeHat <- readTVarIO tvGiveeHat
     giver <- readTVarIO tvGivee
@@ -97,7 +96,7 @@ main = do
     -- print discards
     --print giver
     --print givee
-    printGivingRoster rName rYear tvGY tvRoster
+    printGivingRoster rName rYear tvGY tvPM
     --startNewYear gy
     -- print "Bye"
 
@@ -129,14 +128,14 @@ readFileIntoString f = do
       return s
 
 startNewYear :: TVGYear -> TVPlayersMap -> TVGiverHat -> TVGiveeHat -> TVGiver -> TVGivee -> TVDiscards -> IO ()
-startNewYear tvGY tvRoster tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards = do
-  roster <- readTVarIO tvRoster
+startNewYear tvGY tvPM tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards = do
+  roster <- readTVarIO tvPM
   let nhgr = makeHat roster
   let nhge = makeHat roster
   gr <- drawPuck nhgr
   ge <- drawPuck nhge
   atomically $ modifyTVar tvGY (+1)
-  atomically $ modifyTVar tvRoster addYearInRoster
+  atomically $ modifyTVar tvPM addYearInRoster
   atomically $ writeTVar tvGiverHat nhgr
   atomically $ writeTVar tvGiveeHat nhge
   atomically $ writeTVar tvGiver gr
