@@ -24,7 +24,8 @@ type TVDiscards = TVar Discards
 
 main :: IO ()
 main = do
-  tvGY <- atomically (newTVar 0)
+  -- tvGY <- atomically (newTVar 0)
+  tvGY <- atomically (newTVar (-1))
   tvGiver <- atomically (newTVar "none")
   tvGivee <- atomically (newTVar "none")
   rosterList <- makeRosterList <$> readFileIntoString "beatles2014.txt"
@@ -77,21 +78,37 @@ main = do
     -- print giver
     -- print givee
   startNewYear tvGY tvPM tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards
-  giverHat <- readTVarIO tvGiverHat
-  giveeHat <- readTVarIO tvGiveeHat
+  y <- readTVarIO tvGY
+  pm <- readTVarIO tvPM
+  -- giverHat <- readTVarIO tvGiverHat
+  -- giveeHat <- readTVarIO tvGiveeHat
   giver <- readTVarIO tvGiver
   givee <- readTVarIO tvGivee
+  print y
+  print pm
   -- print giverHat
-  print giveeHat
+  -- print giveeHat
+  print giver
   print givee
-  selectNewgiver tvGiver tvGiverHat tvDiscards tvGiveeHat tvGivee
-    -- giverHat <- readTVarIO tvGiverHat
-  giveeHat <- readTVarIO tvGiveeHat
-    -- giver <- readTVarIO tvGiver
+  giveeIsSuccess tvGiver tvGY tvGivee tvPM
+  y <- readTVarIO tvGY
+  pm <- readTVarIO tvPM
+
+  giver <- readTVarIO tvGiver
   givee <- readTVarIO tvGivee
-    -- print giverHat
-  print giveeHat
+  print y
+  print pm
+
+  print giver
   print givee
+  -- selectNewgiver tvGiver tvGiverHat tvDiscards tvGiveeHat tvGivee
+  --   -- giverHat <- readTVarIO tvGiverHat
+  -- giveeHat <- readTVarIO tvGiveeHat
+  --   -- giver <- readTVarIO tvGiver
+  -- givee <- readTVarIO tvGivee
+    -- print giverHat
+  -- print giveeHat
+  -- print givee
     -- gy <- readTVarIO tvGY
     -- roster <- readTVarIO tvPM
     -- giverHat <- readTVarIO tvGiverHat
@@ -110,7 +127,7 @@ main = do
     --print givee
     -- printGivingRoster rName rYear tvGY tvPM
     --startNewYear gy
-  print "Bye"
+  -- print "Bye"
 
 
 --startNewYear :: TVGYear -> STM ()
@@ -166,6 +183,15 @@ selectNewgiver tvGiver tvGiverHat tvDiscards tvGiveeHat tvGivee = do
   geh <- readTVarIO tvGiveeHat
   ge <- drawPuckGiver geh
   atomically $ writeTVar tvGivee ge
+
+giveeIsSuccess :: TVGiver -> TVGYear -> TVGivee -> TVPlayersMap -> IO ()
+giveeIsSuccess tvGiver tvGY tvGivee tvPM = do
+  ps <- readTVarIO tvGiver
+  gy <- readTVarIO tvGY
+  -- let gy = 0
+  ge <- readTVarIO tvGivee
+  pm <- readTVarIO tvPM
+  atomically $ modifyTVar tvPM (setGiveeInRoster ps gy ge)
 
 printGivingRoster :: RName -> RYear -> TVGYear -> TVPlayersMap -> IO ()
 printGivingRoster rn ry tvGY tvPM = do
