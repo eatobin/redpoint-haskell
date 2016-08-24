@@ -24,16 +24,16 @@ type TVDiscards = TVar Discards
 
 main :: IO ()
 main = do
-    tvGY <- atomically (newTVar 0)
-    tvGiver <- atomically (newTVar "none")
-    tvGivee <- atomically (newTVar "none")
-    rosterList <- makeRosterList <$> readFileIntoString "beatles2014.txt"
-    let rName = getRosterName rosterList
-    let rYear = getRosterYear rosterList
-    tvPM <- atomically $ newTVar $ makePlayersMap rosterList
-    tvGiverHat <- atomically (newTVar [])
-    tvGiveeHat <- atomically (newTVar [])
-    tvDiscards <- atomically (newTVar [])
+  tvGY <- atomically (newTVar 0)
+  tvGiver <- atomically (newTVar "none")
+  tvGivee <- atomically (newTVar "none")
+  rosterList <- makeRosterList <$> readFileIntoString "beatles2014.txt"
+  let rName = getRosterName rosterList
+  let rYear = getRosterYear rosterList
+  tvPM <- atomically $ newTVar $ makePlayersMap rosterList
+  tvGiverHat <- atomically (newTVar [])
+  tvGiveeHat <- atomically (newTVar [])
+  tvDiscards <- atomically (newTVar [])
     -- gy <- readTVarIO tvGY
     --let gy = 0
     -- atomically $ modifyTVar tvRosterPrintString printStringRoster
@@ -76,22 +76,22 @@ main = do
     -- print giveeHat
     -- print giver
     -- print givee
-    startNewYear tvGY tvPM tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards
-    giverHat <- readTVarIO tvGiverHat
-    giveeHat <- readTVarIO tvGiveeHat
-    giver <- readTVarIO tvGiver
-    givee <- readTVarIO tvGivee
-    -- print giverHat
-    print giveeHat
-    print givee
-    selectNewgiver tvGiver tvGiverHat tvDiscards tvGiveeHat tvGivee
+  startNewYear tvGY tvPM tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards
+  giverHat <- readTVarIO tvGiverHat
+  giveeHat <- readTVarIO tvGiveeHat
+  giver <- readTVarIO tvGiver
+  givee <- readTVarIO tvGivee
+  -- print giverHat
+  print giveeHat
+  print givee
+  selectNewgiver tvGiver tvGiverHat tvDiscards tvGiveeHat tvGivee
     -- giverHat <- readTVarIO tvGiverHat
-    giveeHat <- readTVarIO tvGiveeHat
+  giveeHat <- readTVarIO tvGiveeHat
     -- giver <- readTVarIO tvGiver
-    givee <- readTVarIO tvGivee
+  givee <- readTVarIO tvGivee
     -- print giverHat
-    print giveeHat
-    print givee
+  print giveeHat
+  print givee
     -- gy <- readTVarIO tvGY
     -- roster <- readTVarIO tvPM
     -- giverHat <- readTVarIO tvGiverHat
@@ -110,7 +110,7 @@ main = do
     --print givee
     -- printGivingRoster rName rYear tvGY tvPM
     --startNewYear gy
-    print "Bye"
+  print "Bye"
 
 
 --startNewYear :: TVGYear -> STM ()
