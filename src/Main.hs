@@ -13,6 +13,7 @@ import           Roster_Utility
 import           Rules
 import           Rules_Test
 import           System.Directory
+import Data.Char
 
 type TVGYear = TVar GYear
 type TVPlayersMap = TVar PlayersMap
@@ -22,10 +23,32 @@ type TVGiver = TVar Giver
 type TVGivee = TVar Givee
 type TVDiscards = TVar Discards
 
+
+promptLine :: String -> IO String
+promptLine prompt = do
+    putStr prompt
+    getLine
+
+mainly :: IO ()
+mainly = do
+    line <- promptLine "Continue? ('q' to quit): "             -- line :: String
+    if map toLower line == "q"
+        then putStrLn "Thanks. Bye!"
+        else do
+            putStrLn ("I don't have any " ++ line)
+            tvGY <- atomically (newTVar 0)
+            y <- readTVarIO tvGY
+            print y
+
+
+
+
+
+
 main :: IO ()
 main = do
-  -- tvGY <- atomically (newTVar 0)
-  tvGY <- atomically (newTVar (-1))
+  tvGY <- atomically (newTVar 0)
+  -- tvGY <- atomically (newTVar (-1))
   tvGiver <- atomically (newTVar "none")
   tvGivee <- atomically (newTVar "none")
   rosterList <- makeRosterList <$> readFileIntoString "beatles2014.txt"
@@ -77,7 +100,7 @@ main = do
     -- print giveeHat
     -- print giver
     -- print givee
-  startNewYear tvGY tvPM tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards
+  -- startNewYear tvGY tvPM tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards
   y <- readTVarIO tvGY
   pm <- readTVarIO tvPM
   -- giverHat <- readTVarIO tvGiverHat
@@ -88,9 +111,11 @@ main = do
   print pm
   -- print giverHat
   -- print giveeHat
-  print giver
+  -- print giver
   print givee
-  giveeIsSuccess tvGiver tvGY tvGivee tvPM
+  atomically $ writeTVar tvGiver "GeoHar"
+  atomically $ writeTVar tvGivee "GeoHar"
+  giveeIsSuccess tvGiver tvGY tvGivee tvPM tvGiveeHat
   y <- readTVarIO tvGY
   pm <- readTVarIO tvPM
 
@@ -99,7 +124,7 @@ main = do
   print y
   print pm
 
-  print giver
+  -- print giver
   print givee
   -- selectNewgiver tvGiver tvGiverHat tvDiscards tvGiveeHat tvGivee
   --   -- giverHat <- readTVarIO tvGiverHat
@@ -125,23 +150,11 @@ main = do
     -- print discards
     --print giver
     --print givee
-    -- printGivingRoster rName rYear tvGY tvPM
+  printGivingRoster rName rYear tvGY tvPM
     --startNewYear gy
   -- print "Bye"
 
 
---startNewYear :: TVGYear -> STM ()
---startNewYear tvGY = do
---  gy <- readTVar tvGY
---  writeTVar tvGY (gy + 1)
-
--- createGiftYear :: GYear -> IO TVGYear
--- createGiftYear gy = newTVarIO gy
-
--- incrementGYear :: TVGYear -> IO ()
--- incrementGYear tvgy = do
---   gy <- readTVarIO tvgy
---   atomically $ writeTVar tvgy (gy + 1)
 
 readFileIntoString :: FilePath -> IO String
 readFileIntoString f = do
@@ -184,14 +197,28 @@ selectNewgiver tvGiver tvGiverHat tvDiscards tvGiveeHat tvGivee = do
   ge <- drawPuckGiver geh
   atomically $ writeTVar tvGivee ge
 
-giveeIsSuccess :: TVGiver -> TVGYear -> TVGivee -> TVPlayersMap -> IO ()
-giveeIsSuccess tvGiver tvGY tvGivee tvPM = do
-  ps <- readTVarIO tvGiver
+giveeIsSuccess :: TVGiver -> TVGYear -> TVGivee -> TVPlayersMap -> TVGiveeHat-> IO ()
+giveeIsSuccess tvGiver tvGY tvGivee tvPM tvGiveeHat = do
+  gr <- readTVarIO tvGiver
   gy <- readTVarIO tvGY
-  -- let gy = 0
   ge <- readTVarIO tvGivee
-  pm <- readTVarIO tvPM
-  atomically $ modifyTVar tvPM (setGiveeInRoster ps gy ge)
+  -- pm <- readTVarIO tvPM
+  -- geh <- readTVarIO tvGiveeHat
+  atomically $ modifyTVar tvPM (setGiveeInRoster gr gy ge)
+  atomically $ modifyTVar tvPM (setGiverInRoster ge gy gr)
+  atomically $ modifyTVar tvGiveeHat (removePuckGivee ge)
+  atomically $ writeTVar tvGivee "none"
+
+giveeIsFailure :: TVGivee -> TVGiveeHat -> TVDiscards -> IO ()
+giveeIsFailure tvGivee tvGiveeHat tvDiscards = do
+  ge <- readTVarIO tvGivee
+  geh <- readTVarIO tvGiveeHat
+  -- dc <- readTVarIO tvDiscards
+  atomically $ modifyTVar tvGiveeHat (removePuckGivee ge)
+  atomically $ modifyTVar tvDiscards (discardPuckGivee ge)
+  geh <- readTVarIO tvGiveeHat
+  ge <- drawPuckGiver geh
+  atomically $ writeTVar tvGivee ge
 
 printGivingRoster :: RName -> RYear -> TVGYear -> TVPlayersMap -> IO ()
 printGivingRoster rn ry tvGY tvPM = do
