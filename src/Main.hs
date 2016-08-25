@@ -4,6 +4,7 @@ import           All_Tests
 import           Control.Concurrent.STM
 import           Control.Monad
 import qualified Data.ByteString.Char8  as BS
+import           Data.Char
 import qualified Data.Map.Strict        as Map
 import           Hat
 import           Hat_Test
@@ -13,7 +14,6 @@ import           Roster_Utility
 import           Rules
 import           Rules_Test
 import           System.Directory
-import Data.Char
 
 type TVGYear = TVar GYear
 type TVPlayersMap = TVar PlayersMap
@@ -22,28 +22,6 @@ type TVGiveeHat = TVar GiveeHat
 type TVGiver = TVar Giver
 type TVGivee = TVar Givee
 type TVDiscards = TVar Discards
-
-
-promptLine :: String -> IO String
-promptLine prompt = do
-    putStr prompt
-    getLine
-
-mainly :: IO ()
-mainly = do
-    line <- promptLine "Continue? ('q' to quit): "             -- line :: String
-    if map toLower line == "q"
-        then putStrLn "Thanks. Bye!"
-        else do
-            putStrLn ("I don't have any " ++ line)
-            tvGY <- atomically (newTVar 0)
-            y <- readTVarIO tvGY
-            print y
-
-
-
-
-
 
 main :: IO ()
 main = do
@@ -150,9 +128,10 @@ main = do
     -- print discards
     --print giver
     --print givee
-  printGivingRoster rName rYear tvGY tvPM
+  v <- printAndAsk rName rYear tvGY tvPM
     --startNewYear gy
   -- print "Bye"
+  print v
 
 
 
@@ -202,8 +181,6 @@ giveeIsSuccess tvGiver tvGY tvGivee tvPM tvGiveeHat = do
   gr <- readTVarIO tvGiver
   gy <- readTVarIO tvGY
   ge <- readTVarIO tvGivee
-  -- pm <- readTVarIO tvPM
-  -- geh <- readTVarIO tvGiveeHat
   atomically $ modifyTVar tvPM (setGiveeInRoster gr gy ge)
   atomically $ modifyTVar tvPM (setGiverInRoster ge gy gr)
   atomically $ modifyTVar tvGiveeHat (removePuckGivee ge)
@@ -213,12 +190,34 @@ giveeIsFailure :: TVGivee -> TVGiveeHat -> TVDiscards -> IO ()
 giveeIsFailure tvGivee tvGiveeHat tvDiscards = do
   ge <- readTVarIO tvGivee
   geh <- readTVarIO tvGiveeHat
-  -- dc <- readTVarIO tvDiscards
   atomically $ modifyTVar tvGiveeHat (removePuckGivee ge)
   atomically $ modifyTVar tvDiscards (discardPuckGivee ge)
   geh <- readTVarIO tvGiveeHat
   ge <- drawPuckGiver geh
   atomically $ writeTVar tvGivee ge
+
+promptLine :: String -> IO String
+promptLine prompt = do
+  putStr prompt
+  getLine
+
+printAndAsk :: RName -> RYear -> TVGYear -> TVPlayersMap -> IO String
+printAndAsk rn ry tvGY tvPM = do
+  printGivingRoster rn ry tvGY tvPM
+  line <- promptLine "Continue? ('q' to quit): "
+  return line
+
+
+
+
+
+
+
+
+
+
+
+
 
 printGivingRoster :: RName -> RYear -> TVGYear -> TVPlayersMap -> IO ()
 printGivingRoster rn ry tvGY tvPM = do

@@ -15,13 +15,21 @@ makeHatGivee = Map.keys
 makeHatGiver :: PlayersMap -> GiverHat
 makeHatGiver = Map.keys
 
-drawPuckGivee :: GiveeHat -> IO PlrSym
+drawPuckGivee :: GiveeHat -> IO Givee
 drawPuckGivee geh =
-  fmap (geh !!) (randomRIO (0, length geh - 1))
+  if null geh
+    then
+      return "empty"
+    else
+      fmap (geh !!) (randomRIO (0, length geh -1))
 
-drawPuckGiver :: GiverHat -> IO PlrSym
+drawPuckGiver :: GiverHat -> IO Giver
 drawPuckGiver grh =
-  fmap (grh !!) (randomRIO (0, length grh - 1))
+  if null grh
+    then
+      return "empty"
+    else
+      fmap (grh !!) (randomRIO (0, length grh -1))
 
 removePuckGivee :: Givee -> GiveeHat -> GiveeHat
 removePuckGivee ge =
