@@ -15,6 +15,7 @@ import           Rules
 import           Rules_Test
 import           System.Directory
 import           System.Random
+import           Data.Maybe
 
 type TVGYear = TVar GYear
 type TVPlayersMap = TVar PlayersMap
@@ -174,7 +175,7 @@ selectNewgiver :: TVGiver -> TVGiverHat -> TVDiscards -> TVGiveeHat -> TVGivee -
 selectNewgiver tvGiver tvGiverHat tvDiscards tvGiveeHat tvGivee = do
   gr <- readTVarIO tvGiver
   dc <- readTVarIO tvDiscards
-  atomically $ modifyTVar tvGiverHat (removePuckGiver gr)
+  atomically $ modifyTVar tvGiverHat (removePuckGiver (fromJust gr))
   atomically $ modifyTVar tvGiveeHat (returnDiscards dc)
   grh <- readTVarIO tvGiverHat
   gr <- drawPuckGiver grh
@@ -188,17 +189,17 @@ giveeIsSuccess tvGiver tvGY tvGivee tvPM tvGiveeHat = do
   gr <- readTVarIO tvGiver
   gy <- readTVarIO tvGY
   ge <- readTVarIO tvGivee
-  atomically $ modifyTVar tvPM (setGiveeInRoster gr gy ge)
-  atomically $ modifyTVar tvPM (setGiverInRoster ge gy gr)
-  atomically $ modifyTVar tvGiveeHat (removePuckGivee ge)
-  atomically $ writeTVar tvGivee "none"
+  atomically $ modifyTVar tvPM (setGiveeInRoster (fromJust gr) gy (fromJust ge))
+  atomically $ modifyTVar tvPM (setGiverInRoster (fromJust ge) gy (fromJust gr))
+  atomically $ modifyTVar tvGiveeHat (removePuckGivee (fromJust ge))
+  atomically $ writeTVar tvGivee (Just "none")
 
 giveeIsFailure :: TVGivee -> TVGiveeHat -> TVDiscards -> IO ()
 giveeIsFailure tvGivee tvGiveeHat tvDiscards = do
   ge <- readTVarIO tvGivee
   geh <- readTVarIO tvGiveeHat
-  atomically $ modifyTVar tvGiveeHat (removePuckGivee ge)
-  atomically $ modifyTVar tvDiscards (discardPuckGivee ge)
+  atomically $ modifyTVar tvGiveeHat (removePuckGivee (fromJust ge))
+  atomically $ modifyTVar tvDiscards (discardPuckGivee (fromJust ge))
   geh <- readTVarIO tvGiveeHat
   ge <- drawPuckGiver geh
   atomically $ writeTVar tvGivee ge
@@ -255,3 +256,15 @@ printGivingRoster rn ry tvGY tvPM = do
         x <- xs, let n = getPlayerNameInRoster x pm,
                  let gr = getGiverInRoster x pm gy,
                  gr == "none" ]
+
+
+mainly :: IO ()
+mainly = do
+    line <- promptLine "Continue? ('q' to quit): "             -- line :: String
+    if map toLower line == "q"
+        then putStrLn "Thanks. Bye!"
+        else do
+            putStrLn ("I don't have any " ++ line)
+            tvGY <- atomically (newTVar 0)
+            y <- readTVarIO tvGY
+            print y
