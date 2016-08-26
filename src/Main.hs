@@ -14,21 +14,22 @@ import           Roster_Utility
 import           Rules
 import           Rules_Test
 import           System.Directory
+import           System.Random
 
 type TVGYear = TVar GYear
 type TVPlayersMap = TVar PlayersMap
 type TVGiverHat = TVar GiverHat
 type TVGiveeHat = TVar GiveeHat
-type TVGiver = TVar Giver
-type TVGivee = TVar Givee
+type TVGiver = TVar (Maybe Giver)
+type TVGivee = TVar (Maybe Givee)
 type TVDiscards = TVar Discards
 
 main :: IO ()
 main = do
   tvGY <- atomically (newTVar 0)
   -- tvGY <- atomically (newTVar (-1))
-  tvGiver <- atomically (newTVar "none")
-  tvGivee <- atomically (newTVar "none")
+  tvGiver <- atomically (newTVar (Just "none"))
+  tvGivee <- atomically (newTVar (Just "none"))
   rosterList <- makeRosterList <$> readFileIntoString "beatles2014.txt"
   let rName = getRosterName rosterList
   let rYear = getRosterYear rosterList
@@ -91,8 +92,8 @@ main = do
   -- print giveeHat
   -- print giver
   print givee
-  atomically $ writeTVar tvGiver "GeoHar"
-  atomically $ writeTVar tvGivee "GeoHar"
+  atomically $ writeTVar tvGiver (Just "GeoHar")
+  atomically $ writeTVar tvGivee (Just "GeoHar")
   giveeIsSuccess tvGiver tvGY tvGivee tvPM tvGiveeHat
   y <- readTVarIO tvGY
   pm <- readTVarIO tvPM
@@ -133,7 +134,13 @@ main = do
   -- print "Bye"
   print v
 
+drawPuckGivee :: GiveeHat -> IO (Maybe Givee)
+drawPuckGivee [] = return Nothing
+drawPuckGivee geh = Just . (geh !!) <$> (randomRIO (0, length geh -1))
 
+drawPuckGiver :: GiverHat -> IO (Maybe Giver)
+drawPuckGiver [] = return Nothing
+drawPuckGiver grh = Just . (grh !!) <$> (randomRIO (0, length grh -1))
 
 readFileIntoString :: FilePath -> IO String
 readFileIntoString f = do
