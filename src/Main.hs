@@ -295,5 +295,5 @@ logIn5 = do
   tvGiveeHat <- atomically (newTVar [])
   tvDiscards <- atomically (newTVar [])
   whileM_ ((/= "q") <$> map toLower <$> printAndAsk rName rYear tvGY tvPM) $ do
-    putStrLn "% Wrong password!"
+    startNewYear tvGY tvPM tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards
   putStrLn "$ Congratulations!"
