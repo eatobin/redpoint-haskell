@@ -283,6 +283,8 @@ logIn5 = do
   whileM_ ((/= "q") <$> map toLower <$> printAndAsk rName rYear tvGY tvPM) $ do
     startNewYear tvGY tvPM tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards
     gr <- readTVarIO tvGiver
+    ge <- readTVarIO tvGivee
     whileM_ (return (isJust gr)) $ do
+      whileM_ (return (isJust ge)) $ do
         putStrLn "$ Congratulations!!!"
   putStrLn "$ Congratulations!"
