@@ -202,7 +202,7 @@ giveeIsSuccess tvGiver tvGY tvGivee tvPM tvGiveeHat = do
   atomically $ modifyTVar tvPM (setGiveeInRoster (fromJust gr) gy (fromJust ge))
   atomically $ modifyTVar tvPM (setGiverInRoster (fromJust ge) gy (fromJust gr))
   atomically $ modifyTVar tvGiveeHat (removePuckGivee (fromJust ge))
-  atomically $ writeTVar tvGivee (Just "none")
+  atomically $ writeTVar tvGivee Nothing
 
 giveeIsFailure :: TVGivee -> TVGiveeHat -> TVDiscards -> IO ()
 giveeIsFailure tvGivee tvGiveeHat tvDiscards = do
@@ -272,7 +272,7 @@ logIn5 = do
   tvGY <- atomically (newTVar 0)
   tvGiver <- atomically (newTVar (Just "none"))
   tvGivee <- atomically (newTVar (Just "none"))
-  rosterList <- makeRosterList <$> readFileIntoString "beatles2014.txt"
+  rosterList <- makeRosterList <$> readFileIntoString "blackhawks2010.txt"
   let rName = getRosterName rosterList
   let rYear = getRosterYear rosterList
   tvPM <- atomically $ newTVar $ makePlayersMap rosterList
@@ -285,18 +285,28 @@ logIn5 = do
     ge <- readTVarIO tvGivee
     gy <- readTVarIO tvGY
     pm <- readTVarIO tvPM
-    whileM_ (return (isJust gr)) $ do
-      whileM_ (return (isJust ge)) $ do
+    -- print gr
+    -- print ge
+    -- print gy
+    -- print pm
+    -- geh <- readTVarIO tvGiveeHat
+    -- grh <- readTVarIO tvGiverHat
+    -- print geh
+    -- print grh
+    -- dc <- readTVarIO tvDiscards
+    -- print dc
+    whileM_ (fmap isJust (readTVarIO tvGiver)) $ do
+      whileM_ (fmap isJust (readTVarIO tvGivee)) $ do
         if
           giveeNotSelf (fromJust gr) (fromJust ge) &&
           giveeNotRecip (fromJust gr) (fromJust ge) gy pm &&
           giveeNotRepeat (fromJust gr) (fromJust ge) gy pm
         then
-          putStrLn "Success"
-          -- giveeIsSuccess tvGiver tvGY tvGivee tvPM tvGiveeHat
+          -- putStrLn "Success"
+          giveeIsSuccess tvGiver tvGY tvGivee tvPM tvGiveeHat
         else
-          putStrLn "Failure"
-          -- giveeIsFailure tvGivee tvGiveeHat tvDiscards
+          -- putStrLn "Failure"
+          giveeIsFailure tvGivee tvGiveeHat tvDiscards
       selectNewgiver tvGiver tvGiverHat tvDiscards tvGiveeHat tvGivee
     putStrLn ""
   putStrLn ""
