@@ -267,7 +267,6 @@ mainly = do
             y <- readTVarIO tvGY
             print y
 
--- | With operator sectioning and <$>.
 logIn5 :: IO ()
 logIn5 = do
   tvGY <- atomically (newTVar 0)
@@ -284,7 +283,21 @@ logIn5 = do
     startNewYear tvGY tvPM tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards
     gr <- readTVarIO tvGiver
     ge <- readTVarIO tvGivee
+    gy <- readTVarIO tvGY
+    pm <- readTVarIO tvPM
     whileM_ (return (isJust gr)) $ do
       whileM_ (return (isJust ge)) $ do
-        putStrLn "$ Congratulations!!!"
-  putStrLn "$ Congratulations!"
+        if
+          giveeNotSelf (fromJust gr) (fromJust ge) &&
+          giveeNotRecip (fromJust gr) (fromJust ge) gy pm &&
+          giveeNotRepeat (fromJust gr) (fromJust ge) gy pm
+        then
+          putStrLn "Success"
+          -- giveeIsSuccess tvGiver tvGY tvGivee tvPM tvGiveeHat
+        else
+          putStrLn "Failure"
+          -- giveeIsFailure tvGivee tvGiveeHat tvDiscards
+      selectNewgiver tvGiver tvGiverHat tvDiscards tvGiveeHat tvGivee
+    putStrLn ""
+  putStrLn ""
+  putStrLn "This was fun!"
