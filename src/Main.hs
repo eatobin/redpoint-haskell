@@ -153,20 +153,6 @@ drawPuckGiver :: GiverHat -> IO (Maybe Giver)
 drawPuckGiver [] = return Nothing
 drawPuckGiver grh = Just . (grh !!) <$> (randomRIO (0, length grh -1))
 
--- initializeState :: IO ()
--- initializeState = do
---   tvGY <- atomically (newTVar 0)
---   tvGiver <- atomically (newTVar (Just "none"))
---   tvGivee <- atomically (newTVar (Just "none"))
---   rosterList <- makeRosterList <$> readFileIntoString "beatles2014.txt"
---   let rName = getRosterName rosterList
---   let rYear = getRosterYear rosterList
---   tvPM <- atomically $ newTVar $ makePlayersMap rosterList
---   tvGiverHat <- atomically (newTVar [])
---   tvGiveeHat <- atomically (newTVar [])
---   tvDiscards <- atomically (newTVar [])
---   return ()
-
 readFileIntoString :: FilePath -> IO String
 readFileIntoString f = do
   dfe <- doesFileExist f
@@ -296,4 +282,7 @@ logIn5 = do
   tvDiscards <- atomically (newTVar [])
   whileM_ ((/= "q") <$> map toLower <$> printAndAsk rName rYear tvGY tvPM) $ do
     startNewYear tvGY tvPM tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards
+    gr <- readTVarIO tvGiver
+    whileM_ (return (isJust gr)) $ do
+        putStrLn "$ Congratulations!!!"
   putStrLn "$ Congratulations!"
