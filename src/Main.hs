@@ -16,6 +16,7 @@ import           Rules_Test
 import           System.Directory
 import           System.Random
 import           Data.Maybe
+import Control.Monad.Loops (whileM_)
 
 type TVGYear = TVar GYear
 type TVPlayersMap = TVar PlayersMap
@@ -27,8 +28,8 @@ type TVDiscards = TVar Discards
 
 main :: IO ()
 main = do
+  -- initialize state
   tvGY <- atomically (newTVar 0)
-  -- tvGY <- atomically (newTVar (-1))
   tvGiver <- atomically (newTVar (Just "none"))
   tvGivee <- atomically (newTVar (Just "none"))
   rosterList <- makeRosterList <$> readFileIntoString "beatles2014.txt"
@@ -38,7 +39,16 @@ main = do
   tvGiverHat <- atomically (newTVar [])
   tvGiveeHat <- atomically (newTVar [])
   tvDiscards <- atomically (newTVar [])
-    -- gy <- readTVarIO tvGY
+  -- print roster and ask to replay year
+  reply <- printAndAsk rName rYear tvGY tvPM
+  -- while (map toLower reply /= "q") = do
+  --   tvGY <- atomically (newTVar 0)
+    -- y <- readTVarIO tvGY
+    -- print y
+  print "Bye"
+
+  -- -- gy <- readTVarIO tvGY
+  -- return ()
     --let gy = 0
     -- atomically $ modifyTVar tvRosterPrintString printStringRoster
     -- rosterPrintString <- readTVarIO tvRosterPrintString
@@ -81,59 +91,59 @@ main = do
     -- print giver
     -- print givee
   -- startNewYear tvGY tvPM tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards
-  y <- readTVarIO tvGY
-  pm <- readTVarIO tvPM
-  -- giverHat <- readTVarIO tvGiverHat
-  -- giveeHat <- readTVarIO tvGiveeHat
-  giver <- readTVarIO tvGiver
-  givee <- readTVarIO tvGivee
-  print y
-  print pm
-  -- print giverHat
-  -- print giveeHat
-  -- print giver
-  print givee
-  atomically $ writeTVar tvGiver (Just "GeoHar")
-  atomically $ writeTVar tvGivee (Just "GeoHar")
-  giveeIsSuccess tvGiver tvGY tvGivee tvPM tvGiveeHat
-  y <- readTVarIO tvGY
-  pm <- readTVarIO tvPM
-
-  giver <- readTVarIO tvGiver
-  givee <- readTVarIO tvGivee
-  print y
-  print pm
-
-  -- print giver
-  print givee
-  -- selectNewgiver tvGiver tvGiverHat tvDiscards tvGiveeHat tvGivee
-  --   -- giverHat <- readTVarIO tvGiverHat
-  -- giveeHat <- readTVarIO tvGiveeHat
-  --   -- giver <- readTVarIO tvGiver
+  -- y <- readTVarIO tvGY
+  -- pm <- readTVarIO tvPM
+  -- -- giverHat <- readTVarIO tvGiverHat
+  -- -- giveeHat <- readTVarIO tvGiveeHat
+  -- giver <- readTVarIO tvGiver
   -- givee <- readTVarIO tvGivee
-    -- print giverHat
-  -- print giveeHat
+  -- print y
+  -- print pm
+  -- -- print giverHat
+  -- -- print giveeHat
+  -- -- print giver
   -- print givee
-    -- gy <- readTVarIO tvGY
-    -- roster <- readTVarIO tvPM
-    -- giverHat <- readTVarIO tvGiverHat
-    -- giveeHat <- readTVarIO tvGiveeHat
-    -- giver <- readTVarIO tvGivee
-    -- givee <- readTVarIO tvGiver
-    -- discards <- readTVarIO tvDiscards
-    -- print gy
-    -- print roster
-    -- print giverHat
-    -- -- print giveeHat
-    -- print giver
-    -- print givee
-    -- print discards
-    --print giver
-    --print givee
-  v <- printAndAsk rName rYear tvGY tvPM
-    --startNewYear gy
-  -- print "Bye"
-  print v
+  -- atomically $ writeTVar tvGiver (Just "GeoHar")
+  -- atomically $ writeTVar tvGivee (Just "GeoHar")
+  -- giveeIsSuccess tvGiver tvGY tvGivee tvPM tvGiveeHat
+  -- y <- readTVarIO tvGY
+  -- pm <- readTVarIO tvPM
+  --
+  -- giver <- readTVarIO tvGiver
+  -- givee <- readTVarIO tvGivee
+  -- print y
+  -- print pm
+  --
+  -- -- print giver
+  -- print givee
+  -- -- selectNewgiver tvGiver tvGiverHat tvDiscards tvGiveeHat tvGivee
+  -- --   -- giverHat <- readTVarIO tvGiverHat
+  -- -- giveeHat <- readTVarIO tvGiveeHat
+  -- --   -- giver <- readTVarIO tvGiver
+  -- -- givee <- readTVarIO tvGivee
+  --   -- print giverHat
+  -- -- print giveeHat
+  -- -- print givee
+  --   -- gy <- readTVarIO tvGY
+  --   -- roster <- readTVarIO tvPM
+  --   -- giverHat <- readTVarIO tvGiverHat
+  --   -- giveeHat <- readTVarIO tvGiveeHat
+  --   -- giver <- readTVarIO tvGivee
+  --   -- givee <- readTVarIO tvGiver
+  --   -- discards <- readTVarIO tvDiscards
+  --   -- print gy
+  --   -- print roster
+  --   -- print giverHat
+  --   -- -- print giveeHat
+  --   -- print giver
+  --   -- print givee
+  --   -- print discards
+  --   --print giver
+  --   --print givee
+  -- v <- printAndAsk rName rYear tvGY tvPM
+  --   --startNewYear gy
+  -- -- print "Bye"
+  -- print v
 
 drawPuckGivee :: GiveeHat -> IO (Maybe Givee)
 drawPuckGivee [] = return Nothing
@@ -142,6 +152,20 @@ drawPuckGivee geh = Just . (geh !!) <$> (randomRIO (0, length geh -1))
 drawPuckGiver :: GiverHat -> IO (Maybe Giver)
 drawPuckGiver [] = return Nothing
 drawPuckGiver grh = Just . (grh !!) <$> (randomRIO (0, length grh -1))
+
+-- initializeState :: IO ()
+-- initializeState = do
+--   tvGY <- atomically (newTVar 0)
+--   tvGiver <- atomically (newTVar (Just "none"))
+--   tvGivee <- atomically (newTVar (Just "none"))
+--   rosterList <- makeRosterList <$> readFileIntoString "beatles2014.txt"
+--   let rName = getRosterName rosterList
+--   let rYear = getRosterYear rosterList
+--   tvPM <- atomically $ newTVar $ makePlayersMap rosterList
+--   tvGiverHat <- atomically (newTVar [])
+--   tvGiveeHat <- atomically (newTVar [])
+--   tvDiscards <- atomically (newTVar [])
+--   return ()
 
 readFileIntoString :: FilePath -> IO String
 readFileIntoString f = do
@@ -181,7 +205,7 @@ selectNewgiver tvGiver tvGiverHat tvDiscards tvGiveeHat tvGivee = do
   gr <- drawPuckGiver grh
   atomically $ writeTVar tvGiver gr
   geh <- readTVarIO tvGiveeHat
-  ge <- drawPuckGiver geh
+  ge <- drawPuckGivee geh
   atomically $ writeTVar tvGivee ge
 
 giveeIsSuccess :: TVGiver -> TVGYear -> TVGivee -> TVPlayersMap -> TVGiveeHat-> IO ()
@@ -201,7 +225,7 @@ giveeIsFailure tvGivee tvGiveeHat tvDiscards = do
   atomically $ modifyTVar tvGiveeHat (removePuckGivee (fromJust ge))
   atomically $ modifyTVar tvDiscards (discardPuckGivee (fromJust ge))
   geh <- readTVarIO tvGiveeHat
-  ge <- drawPuckGiver geh
+  ge <- drawPuckGivee geh
   atomically $ writeTVar tvGivee ge
 
 promptLine :: String -> IO String
@@ -214,18 +238,6 @@ printAndAsk rn ry tvGY tvPM = do
   printGivingRoster rn ry tvGY tvPM
   line <- promptLine "Continue? ('q' to quit): "
   return line
-
-
-
-
-
-
-
-
-
-
-
-
 
 printGivingRoster :: RName -> RYear -> TVGYear -> TVPlayersMap -> IO ()
 printGivingRoster rn ry tvGY tvPM = do
@@ -268,3 +280,13 @@ mainly = do
             tvGY <- atomically (newTVar 0)
             y <- readTVarIO tvGY
             print y
+
+-- | With operator sectioning and <$>.
+logIn5 :: IO ()
+logIn5 = do
+  putStrLn "% Enter password:"
+  -- reply <- getLine
+  whileM_ ((/= "q") <$>  map toLower <$> getLine) $ do
+    putStrLn "% Wrong password!"
+    putStrLn "% Try again:"
+  putStrLn "$ Congratulations!"
