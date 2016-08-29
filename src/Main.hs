@@ -284,9 +284,16 @@ mainly = do
 -- | With operator sectioning and <$>.
 logIn5 :: IO ()
 logIn5 = do
-  putStrLn "% Enter password:"
-  -- reply <- getLine
-  whileM_ ((/= "q") <$>  map toLower <$> getLine) $ do
+  tvGY <- atomically (newTVar 0)
+  tvGiver <- atomically (newTVar (Just "none"))
+  tvGivee <- atomically (newTVar (Just "none"))
+  rosterList <- makeRosterList <$> readFileIntoString "beatles2014.txt"
+  let rName = getRosterName rosterList
+  let rYear = getRosterYear rosterList
+  tvPM <- atomically $ newTVar $ makePlayersMap rosterList
+  tvGiverHat <- atomically (newTVar [])
+  tvGiveeHat <- atomically (newTVar [])
+  tvDiscards <- atomically (newTVar [])
+  whileM_ ((/= "q") <$> map toLower <$> printAndAsk rName rYear tvGY tvPM) $ do
     putStrLn "% Wrong password!"
-    putStrLn "% Try again:"
   putStrLn "$ Congratulations!"
