@@ -68,11 +68,22 @@ testGiveeNotRepeatFail8 = (~=?)
   False
   (giveeNotRepeat "RinSta" "KarLav" 5 rosterP4)
 
+testGiveePassAll = (~=?)
+  True
+  (giveeNotSelf "RinSta" "JohLen" &&
+   giveeNotRecip "JohLen" "GeoHar" 0 roster &&
+   giveeNotRepeat "RinSta" "GeoHar" 5 rosterP4)
+
+
+
+
+
+
 rulesTests = TestList [ testGiveeNotSelf, testGiveeNotRecipPass
                       , testGiveeNotRecipFail, testGiveeNotRepeatFail1
                       , testGiveeNotRepeatFail2, testGiveeNotRepeatPass3
                       , testGiveeNotRepeatPass4, testGiveeNotRepeatPass5
                       , testGiveeNotRepeatFail6, testGiveeNotRepeatFail7
-                      , testGiveeNotRepeatFail8 ]
+                      , testGiveeNotRepeatFail8, testGiveePassAll ]
 
 runRulesTests = runTestTT $ TestList [ rulesTests ]

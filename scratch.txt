@@ -165,3 +165,101 @@ randomInt = pick [0,1,2]
 
 randomChar :: IO Char
 randomChar = pick ['a'..'z']
+
+-- -- gy <- readTVarIO tvGY
+-- return ()
+  --let gy = 0
+  -- atomically $ modifyTVar tvRosterPrintString printStringRoster
+  -- rosterPrintString <- readTVarIO tvRosterPrintString
+  -- atomically $ writeTVar tvRosterPrintString ("\n" ++ rName ++ " - Year " ++ show rYear ++ " Gifts:\n\n")
+  -- atomically $ writeTVar tvRosterPrintString (printStringRoster rName rYear 0 playersMap)
+  --  atomically $ writeTVar tvRosterPrintString printStringRoster
+
+  --atomically $ modifyTVar tvGY ((+1) tvGY)
+  -- print rName
+  -- roster <- readTVarIO tvPM
+  -- print roster
+  -- -- print rYear
+  -- -- print playersMap
+  -- print (getPlayerInRoster "RinSta" roster)
+  -- print (getPlayerNameInRoster "RinSta" roster)
+  -- print (getGiveeInRoster "PauMcc" roster gy)
+  -- atomically $ modifyTVar tvPM (setGiveeInRoster "PauMcc" gy "PauMcc")
+  --roster <- readTVarIO tvPM
+  -- print (getGiveeInRoster "PauMcc" roster gy)
+  -- print (getGiverInRoster "PauMcc" roster gy)
+  -- atomically $ modifyTVar tvPM (setGiverInRoster "PauMcc" gy "PauMcc")
+  -- roster <- readTVarIO tvPM
+  -- print (getGiverInRoster "PauMcc" roster gy)
+  -- atomically $ modifyTVar tvPM addYearInRoster
+  -- roster <- readTVarIO tvPM
+  -- -- noGivee <- readTVarIO tvNoGivee
+  -- -- noGiver <- readTVarIO tvNoGiver
+  -- -- rosterPrintString <- readTVarIO tvRosterPrintString
+  --giver <- readTVarIO tvGiver
+  --givee <- readTVarIO tvGivee
+  --print roster
+  -- giverHat <- readTVarIO tvGiverHat
+  -- giveeHat <- readTVarIO tvGiveeHat
+  -- giver <- readTVarIO tvGivee
+  -- givee <- readTVarIO tvGiver
+  -- print gy
+  -- print roster
+  -- print giverHat
+  -- print giveeHat
+  -- print giver
+  -- print givee
+-- startNewYear tvGY tvPM tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards
+-- y <- readTVarIO tvGY
+-- pm <- readTVarIO tvPM
+-- -- giverHat <- readTVarIO tvGiverHat
+-- -- giveeHat <- readTVarIO tvGiveeHat
+-- giver <- readTVarIO tvGiver
+-- givee <- readTVarIO tvGivee
+-- print y
+-- print pm
+-- -- print giverHat
+-- -- print giveeHat
+-- -- print giver
+-- print givee
+-- atomically $ writeTVar tvGiver (Just "GeoHar")
+-- atomically $ writeTVar tvGivee (Just "GeoHar")
+-- giveeIsSuccess tvGiver tvGY tvGivee tvPM tvGiveeHat
+-- y <- readTVarIO tvGY
+-- pm <- readTVarIO tvPM
+--
+-- giver <- readTVarIO tvGiver
+-- givee <- readTVarIO tvGivee
+-- print y
+-- print pm
+--
+-- -- print giver
+-- print givee
+-- -- selectNewgiver tvGiver tvGiverHat tvDiscards tvGiveeHat tvGivee
+-- --   -- giverHat <- readTVarIO tvGiverHat
+-- -- giveeHat <- readTVarIO tvGiveeHat
+-- --   -- giver <- readTVarIO tvGiver
+-- -- givee <- readTVarIO tvGivee
+--   -- print giverHat
+-- -- print giveeHat
+-- -- print givee
+--   -- gy <- readTVarIO tvGY
+--   -- roster <- readTVarIO tvPM
+--   -- giverHat <- readTVarIO tvGiverHat
+--   -- giveeHat <- readTVarIO tvGiveeHat
+--   -- giver <- readTVarIO tvGivee
+--   -- givee <- readTVarIO tvGiver
+--   -- discards <- readTVarIO tvDiscards
+--   -- print gy
+--   -- print roster
+--   -- print giverHat
+--   -- -- print giveeHat
+--   -- print giver
+--   -- print givee
+--   -- print discards
+--   --print giver
+--   --print givee
+-- v <- printAndAsk rName rYear tvGY tvPM
+--   --startNewYear gy
+-- -- print "Bye"
+-- print v
