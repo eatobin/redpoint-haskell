@@ -281,10 +281,10 @@ logIn5 = do
   tvDiscards <- atomically (newTVar [])
   whileM_ ((/= "q") <$> map toLower <$> printAndAsk rName rYear tvGY tvPM) $ do
     startNewYear tvGY tvPM tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards
-    gr <- readTVarIO tvGiver
-    ge <- readTVarIO tvGivee
-    gy <- readTVarIO tvGY
-    pm <- readTVarIO tvPM
+    -- gr <- readTVarIO tvGiver
+    -- ge <- readTVarIO tvGivee
+    -- gy <- readTVarIO tvGY
+    -- pm <- readTVarIO tvPM
     -- print gr
     -- print ge
     -- print gy
@@ -297,6 +297,10 @@ logIn5 = do
     -- print dc
     whileM_ (fmap isJust (readTVarIO tvGiver)) $ do
       whileM_ (fmap isJust (readTVarIO tvGivee)) $ do
+        gr <- readTVarIO tvGiver
+        ge <- readTVarIO tvGivee
+        gy <- readTVarIO tvGY
+        pm <- readTVarIO tvPM
         if
           giveeNotSelf (fromJust gr) (fromJust ge) &&
           giveeNotRecip (fromJust gr) (fromJust ge) gy pm &&
