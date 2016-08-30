@@ -181,8 +181,8 @@ startNewYear tvGY tvPM tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards = do
   atomically $ writeTVar tvGivee ge
   atomically $ modifyTVar tvDiscards emptyDiscards
 
-selectNewgiver :: TVGiver -> TVGiverHat -> TVDiscards -> TVGiveeHat -> TVGivee -> IO ()
-selectNewgiver tvGiver tvGiverHat tvDiscards tvGiveeHat tvGivee = do
+selectNewGiver :: TVGiver -> TVGiverHat -> TVDiscards -> TVGiveeHat -> TVGivee -> IO ()
+selectNewGiver tvGiver tvGiverHat tvDiscards tvGiveeHat tvGivee = do
   gr <- readTVarIO tvGiver
   dc <- readTVarIO tvDiscards
   atomically $ modifyTVar tvGiverHat (removePuckGiver (fromJust gr))
@@ -307,7 +307,7 @@ logIn5 = do
         else
           -- putStrLn "Failure"
           giveeIsFailure tvGivee tvGiveeHat tvDiscards
-      selectNewgiver tvGiver tvGiverHat tvDiscards tvGiveeHat tvGivee
+      selectNewGiver tvGiver tvGiverHat tvDiscards tvGiveeHat tvGivee
     putStrLn ""
   putStrLn ""
   putStrLn "This was fun!"
