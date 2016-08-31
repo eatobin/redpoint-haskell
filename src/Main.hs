@@ -38,7 +38,7 @@ main = do
   tvGiverHat <- atomically (newTVar [])
   tvGiveeHat <- atomically (newTVar [])
   tvDiscards <- atomically (newTVar [])
-  whileM_ ((/= "q") <$> map toLower <$> printAndAsk rName rYear tvGY tvPM) $ do
+  whileM_ ((/= "q") . map toLower <$> printAndAsk rName rYear tvGY tvPM) $ do
     startNewYear tvGY tvPM tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards
     whileM_ (fmap isJust (readTVarIO tvGiver)) $ do
       whileM_ (fmap isJust (readTVarIO tvGivee)) $ do
@@ -65,11 +65,11 @@ main = do
 
 drawPuckGivee :: GiveeHat -> IO (Maybe Givee)
 drawPuckGivee [] = return Nothing
-drawPuckGivee geh = Just . (geh !!) <$> (randomRIO (0, length geh -1))
+drawPuckGivee geh = Just . (geh !!) <$> randomRIO (0, length geh -1)
 
 drawPuckGiver :: GiverHat -> IO (Maybe Giver)
 drawPuckGiver [] = return Nothing
-drawPuckGiver grh = Just . (grh !!) <$> (randomRIO (0, length grh -1))
+drawPuckGiver grh = Just . (grh !!) <$> randomRIO (0, length grh -1)
 
 readFileIntoString :: FilePath -> IO String
 readFileIntoString f = do
@@ -99,6 +99,11 @@ startNewYear tvGY tvPM tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards = do
   atomically $ writeTVar tvGivee ge
   atomically $ modifyTVar tvDiscards emptyDiscards
 
+hatAndPuck :: TVGiveeHat -> IO (Maybe Givee)
+hatAndPuck tvGiveeHat = do
+  geh <- readTVarIO tvGiveeHat
+  drawPuckGivee geh
+
 selectNewGiver :: TVGiver -> TVGiverHat -> TVDiscards -> TVGiveeHat -> TVGivee -> IO ()
 selectNewGiver tvGiver tvGiverHat tvDiscards tvGiveeHat tvGivee = do
   gr <- readTVarIO tvGiver
@@ -109,8 +114,7 @@ selectNewGiver tvGiver tvGiverHat tvDiscards tvGiveeHat tvGivee = do
   grh <- readTVarIO tvGiverHat
   gr <- drawPuckGiver grh
   atomically $ writeTVar tvGiver gr
-  geh <- readTVarIO tvGiveeHat
-  ge <- drawPuckGivee geh
+  ge <- hatAndPuck tvGiveeHat
   atomically $ writeTVar tvGivee ge
 
 giveeIsSuccess :: TVGiver -> TVGYear -> TVGivee -> TVPlayersMap -> TVGiveeHat-> IO ()
@@ -129,8 +133,7 @@ giveeIsFailure tvGivee tvGiveeHat tvDiscards = do
   geh <- readTVarIO tvGiveeHat
   atomically $ modifyTVar tvGiveeHat (removePuckGivee (fromJust ge))
   atomically $ modifyTVar tvDiscards (discardPuckGivee (fromJust ge))
-  geh <- readTVarIO tvGiveeHat
-  ge <- drawPuckGivee geh
+  ge <- hatAndPuck tvGiveeHat
   atomically $ writeTVar tvGivee ge
 
 promptLine :: String -> IO String
@@ -141,8 +144,7 @@ promptLine prompt = do
 printAndAsk :: RName -> RYear -> TVGYear -> TVPlayersMap -> IO String
 printAndAsk rn ry tvGY tvPM = do
   printGivingRoster rn ry tvGY tvPM
-  line <- promptLine "\nContinue? ('q' to quit): "
-  return line
+  promptLine "\nContinue? ('q' to quit): "
 
 printGivingRoster :: RName -> RYear -> TVGYear -> TVPlayersMap -> IO ()
 printGivingRoster rn ry tvGY tvPM = do
