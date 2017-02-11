@@ -39,7 +39,7 @@ type PlayersMap = Map PlrSym Player
 
 makeRosterList :: RosterString -> RosterList
 makeRosterList rosterString =
-  map (split ", ") rosterLines
+  fmap (split ", ") rosterLines
     where rosterLines = lines rosterString
 
 makeRosterInfo :: RosterList -> RosterLine
@@ -61,7 +61,7 @@ makePlayerKV [s, pn, ge, gr] =
           plr = makePlayer pn (Seq.singleton gp)
 
 makePlayersKVList :: RosterList -> PlayersKVList
-makePlayersKVList = map makePlayerKV
+makePlayersKVList = fmap makePlayerKV
 
 makePlayersMapList :: PlayersKVList -> PlayersMap
 makePlayersMapList  = Map.fromList

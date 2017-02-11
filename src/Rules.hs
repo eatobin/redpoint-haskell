@@ -17,8 +17,8 @@ giveeNotRecip ps ge gy pm =
 giveeNotRepeat :: PlrSym -> Givee -> GYear -> PlayersMap -> Bool
 giveeNotRepeat ps ge gy pm =
   let
-    past = filter (>= 0) $ takeWhile (>= (gy - 3)) $ iterate (subtract 1) (gy - 1)
+    past = filter (>= 0) . takeWhile (>= (gy - 3)) $ iterate (subtract 1) (gy - 1)
     geY = getGiveeInRoster ps pm
-    geYrs = map geY past
+    geYrs = fmap geY past
   in
     notElem ge geYrs
