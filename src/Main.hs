@@ -1,6 +1,5 @@
 module Main where
 
-import           All_Tests
 import           Control.Concurrent.STM
 import           Control.Monad
 import           Control.Monad.Loops    (whileM_)
@@ -9,12 +8,9 @@ import           Data.Char
 import qualified Data.Map.Strict        as Map
 import           Data.Maybe
 import           Hat
-import           Hat_Test
 import           Roster
-import           Roster_Test
 import           Roster_Utility
 import           Rules
-import           Rules_Test
 import           System.Directory
 import           System.Random
 
@@ -34,11 +30,11 @@ main = do
   rosterList <- makeRosterList <$> readFileIntoString "blackhawks2010.txt"
   let rName = getRosterName rosterList
   let rYear = getRosterYear rosterList
-  tvPM <- atomically $ newTVar $ makePlayersMap rosterList
+  tvPM <- atomically . newTVar $ makePlayersMap rosterList
   tvGiverHat <- atomically (newTVar [])
   tvGiveeHat <- atomically (newTVar [])
   tvDiscards <- atomically (newTVar [])
-  whileM_ ((/= "q") . map toLower <$> printAndAsk rName rYear tvGY tvPM) $ do
+  whileM_ ((/= "q") . fmap toLower <$> printAndAsk rName rYear tvGY tvPM) $ do
     startNewYear tvGY tvPM tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards
     whileM_ (fmap isJust (readTVarIO tvGiver)) $ do
       whileM_ (fmap isJust (readTVarIO tvGivee)) $ do
@@ -64,11 +60,11 @@ main = do
   putStrLn ""
 
 drawPuckGivee :: GiveeHat -> IO (Maybe Givee)
-drawPuckGivee [] = return Nothing
+drawPuckGivee []  = return Nothing
 drawPuckGivee geh = Just . (geh !!) <$> randomRIO (0, length geh -1)
 
 drawPuckGiver :: GiverHat -> IO (Maybe Giver)
-drawPuckGiver [] = return Nothing
+drawPuckGiver []  = return Nothing
 drawPuckGiver grh = Just . (grh !!) <$> randomRIO (0, length grh -1)
 
 readFileIntoString :: FilePath -> IO String
@@ -112,8 +108,8 @@ selectNewGiver tvGiver tvGiverHat tvDiscards tvGiveeHat tvGivee = do
   atomically $ modifyTVar tvGiveeHat (returnDiscards dc)
   atomically $ modifyTVar tvDiscards emptyDiscards
   grh <- readTVarIO tvGiverHat
-  gr <- drawPuckGiver grh
-  atomically $ writeTVar tvGiver gr
+  gr1 <- drawPuckGiver grh
+  atomically $ writeTVar tvGiver gr1
   ge <- hatAndPuck tvGiveeHat
   atomically $ writeTVar tvGivee ge
 
@@ -130,11 +126,11 @@ giveeIsSuccess tvGiver tvGY tvGivee tvPM tvGiveeHat = do
 giveeIsFailure :: TVGivee -> TVGiveeHat -> TVDiscards -> IO ()
 giveeIsFailure tvGivee tvGiveeHat tvDiscards = do
   ge <- readTVarIO tvGivee
-  geh <- readTVarIO tvGiveeHat
+  --geh <- readTVarIO tvGiveeHat
   atomically $ modifyTVar tvGiveeHat (removePuckGivee (fromJust ge))
   atomically $ modifyTVar tvDiscards (discardPuckGivee (fromJust ge))
-  ge <- hatAndPuck tvGiveeHat
-  atomically $ writeTVar tvGivee ge
+  ge1 <- hatAndPuck tvGiveeHat
+  atomically $ writeTVar tvGivee ge1
 
 promptLine :: String -> IO String
 promptLine prompt = do
@@ -150,9 +146,9 @@ printGivingRoster :: RName -> RYear -> TVGYear -> TVPlayersMap -> IO ()
 printGivingRoster rn ry tvGY tvPM = do
   gy <- readTVarIO tvGY
   pm <- readTVarIO tvPM
-  putStrLn ("\n" ++ rn ++ " - Year " ++ show (ry + gy) ++ " Gifts:\n")
+  putStrLn ("\n" `mappend` rn `mappend` " - Year " `mappend` show (ry + gy) `mappend` " Gifts:\n")
   mapM_ putStrLn
-    [ n ++ " is buying for " ++  gen
+    [ n `mappend` " is buying for " `mappend` gen
       |          let xs = Map.keys pm,
         x <- xs, let n = getPlayerNameInRoster x pm,
                  let ge = getGiveeInRoster x pm gy,
@@ -163,14 +159,14 @@ printGivingRoster rn ry tvGY tvPM = do
   when errors $ putStrLn "\nThere is a logic error in this year's pairings.\nDo you see it?\nIf not... call me and I'll explain!\n"
 
   mapM_ putStrLn
-    [ n ++ " is buying for no one."
+    [ n `mappend` " is buying for no one."
       |          let xs = Map.keys pm,
         x <- xs, let n = getPlayerNameInRoster x pm,
                  let ge = getGiveeInRoster x pm gy,
                  ge == "none" ]
 
   mapM_ putStrLn
-    [ n ++ " is receiving from no one."
+    [ n `mappend` " is receiving from no one."
       |          let xs = Map.keys pm,
         x <- xs, let n = getPlayerNameInRoster x pm,
                  let gr = getGiverInRoster x pm gy,

@@ -96,8 +96,12 @@ setGiftPairInGiftHistory :: GYear -> GiftPair -> GiftHist -> GiftHist
 setGiftPairInGiftHistory =
   Seq.update
 
+-- setName :: Name -> Borrower -> Borrower
+-- setName n br = br {name = n}
+
 setGiftHistoryInPlayer :: GiftHist -> Player -> Player
-setGiftHistoryInPlayer gh plr@Player {giftHist} = plr {giftHist = gh}
+setGiftHistoryInPlayer gh plr = plr {giftHist = gh}
+--setGiftHistoryInPlayer gh plr@Player {giftHist} = plr {giftHist = gh}
 
 setGiftPairInRoster :: PlrSym -> GYear -> GiftPair -> PlayersMap -> PlayersMap
 setGiftPairInRoster ps gy gp pm =

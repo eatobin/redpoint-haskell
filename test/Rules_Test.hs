@@ -2,7 +2,7 @@ module Rules_Test where
 
 import qualified Data.Map.Strict as Map
 import qualified Data.Sequence   as Seq
-import           Hat
+--import           Hat
 import           Roster
 import           Roster_Test
 import           Roster_Utility

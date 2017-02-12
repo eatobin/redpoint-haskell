@@ -1,6 +1,5 @@
 module Rules where
 
-import           Hat
 import           Roster
 import           Roster_Utility
 
@@ -10,9 +9,9 @@ giveeNotSelf ps ge =
 
 giveeNotRecip :: PlrSym -> Givee -> GYear -> PlayersMap -> Bool
 giveeNotRecip ps ge gy pm =
-  ps /= recip
+  ps /= myRecip
     where
-      recip = getGiveeInRoster ge pm gy
+      myRecip = getGiveeInRoster ge pm gy
 
 giveeNotRepeat :: PlrSym -> Givee -> GYear -> PlayersMap -> Bool
 giveeNotRepeat ps ge gy pm =

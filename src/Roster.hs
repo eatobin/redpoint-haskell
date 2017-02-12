@@ -2,7 +2,6 @@
 
 module Roster where
 
-import qualified Data.Map.Strict as Map
 import           Roster_Utility
 
 getRosterName :: RosterList -> RName

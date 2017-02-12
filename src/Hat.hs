@@ -1,7 +1,6 @@
 module Hat where
 
 import qualified Data.Map.Strict as Map
-import           Roster
 import           Roster_Utility
 
 type GiveeHat = [Givee]
@@ -24,11 +23,11 @@ removePuckGiver gr =
 
 discardPuckGivee :: Givee -> Discards -> Discards
 discardPuckGivee ge d =
-  d ++ [ge]
+  d `mappend` [ge]
 
 returnDiscards :: Discards -> GiveeHat -> GiveeHat
 returnDiscards d geh =
-  geh ++ d
+  geh `mappend` d
 
 emptyDiscards :: Discards -> Discards
-emptyDiscards d = []
+emptyDiscards _ = []
