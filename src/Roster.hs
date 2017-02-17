@@ -8,6 +8,7 @@ getRosterName :: RosterList -> RName
 getRosterName list =
   let line = makeRosterInfo list
   in case line of
+    []    -> "Error"
     (x:_) -> x
 
 getRosterYear :: RosterList -> RYear
@@ -15,6 +16,7 @@ getRosterYear list =
   let line = makeRosterInfo list
   in case line of
     (_:y:_) -> read y
+    _       -> 0
 
 getPlayerNameInRoster :: PlrSym -> PlayersMap -> PName
 getPlayerNameInRoster ps pm =
