@@ -23,11 +23,11 @@ removePuckGiver gr =
 
 discardPuckGivee :: Givee -> Discards -> Discards
 discardPuckGivee ge d =
-  d `mappend` [ge]
+  d ++ [ge]
 
 returnDiscards :: Discards -> GiveeHat -> GiveeHat
 returnDiscards d geh =
-  geh `mappend` d
+  geh ++ d
 
 emptyDiscards :: Discards -> Discards
 emptyDiscards _ = []

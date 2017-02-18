@@ -146,9 +146,9 @@ printGivingRoster :: RName -> RYear -> TVGYear -> TVPlayersMap -> IO ()
 printGivingRoster rn ry tvGY tvPM = do
   gy <- readTVarIO tvGY
   pm <- readTVarIO tvPM
-  putStrLn ("\n" `mappend` rn `mappend` " - Year " `mappend` show (ry + gy) `mappend` " Gifts:\n")
+  putStrLn ("\n" ++ rn ++ " - Year " ++ show (ry + gy) ++ " Gifts:\n")
   mapM_ putStrLn
-    [ n `mappend` " is buying for " `mappend` gen
+    [ n ++ " is buying for " ++ gen
       |          let xs = Map.keys pm,
         x <- xs, let n = getPlayerNameInRoster x pm,
                  let ge = getGiveeInRoster x pm gy,
@@ -159,14 +159,14 @@ printGivingRoster rn ry tvGY tvPM = do
   when errors $ putStrLn "\nThere is a logic error in this year's pairings.\nDo you see it?\nIf not... call me and I'll explain!\n"
 
   mapM_ putStrLn
-    [ n `mappend` " is buying for no one."
+    [ n ++ " is buying for no one."
       |          let xs = Map.keys pm,
         x <- xs, let n = getPlayerNameInRoster x pm,
                  let ge = getGiveeInRoster x pm gy,
                  ge == "none" ]
 
   mapM_ putStrLn
-    [ n `mappend` " is receiving from no one."
+    [ n ++ " is receiving from no one."
       |          let xs = Map.keys pm,
         x <- xs, let n = getPlayerNameInRoster x pm,
                  let gr = getGiverInRoster x pm gy,
