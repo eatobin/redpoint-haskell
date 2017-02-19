@@ -1,4 +1,5 @@
 {-# LANGUAGE NamedFieldPuns #-}
+{-# OPTIONS -Wall #-}
 
 module Roster_Utility where
 
