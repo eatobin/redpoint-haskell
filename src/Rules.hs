@@ -1,3 +1,5 @@
+{-# OPTIONS -Wall #-}
+
 module Rules where
 
 import           Roster

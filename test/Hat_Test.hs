@@ -1,3 +1,5 @@
+{-# OPTIONS -Wall #-}
+
 module Hat_Test where
 
 import           Hat

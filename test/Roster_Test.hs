@@ -1,3 +1,5 @@
+{-# OPTIONS -Wall #-}
+
 module Roster_Test where
 
 import qualified Data.Map.Strict as Map

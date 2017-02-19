@@ -1,3 +1,5 @@
+{-# OPTIONS -Wall #-}
+
 module Hat where
 
 import qualified Data.Map.Strict as Map
