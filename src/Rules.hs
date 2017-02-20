@@ -20,6 +20,6 @@ giveeNotRepeat ps ge gy pm =
   let
     past = filter (>= 0) . takeWhile (>= (gy - 3)) $ iterate (subtract 1) (gy - 1)
     geY = getGiveeInRoster ps pm
-    geYrs = fmap geY past
+    geYrs = map geY past
   in
     notElem ge geYrs

@@ -36,7 +36,7 @@ main = do
   tvGiverHat <- atomically (newTVar [])
   tvGiveeHat <- atomically (newTVar [])
   tvDiscards <- atomically (newTVar [])
-  whileM_ ((/= "q") . fmap toLower <$> printAndAsk rName rYear tvGY tvPM) $ do
+  whileM_ ((/= "q") . map toLower <$> printAndAsk rName rYear tvGY tvPM) $ do
     startNewYear tvGY tvPM tvGiverHat tvGiveeHat tvGiver tvGivee tvDiscards
     whileM_ (fmap isJust (readTVarIO tvGiver)) $ do
       whileM_ (fmap isJust (readTVarIO tvGivee)) $ do

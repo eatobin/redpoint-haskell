@@ -40,7 +40,7 @@ type PlayersMap = Map PlrSym Player
 
 makeRosterList :: RosterString -> RosterList
 makeRosterList rosterString =
-  fmap (split ", ") rosterLines
+  map (split ", ") rosterLines
     where rosterLines = lines rosterString
 
 makeRosterInfo :: RosterList -> RosterLine
@@ -68,7 +68,7 @@ makePlayerKV _ =
   ("error", Player {pName = "error", giftHist = Seq.fromList [GiftPair {giver = "error", givee = "error"}]})
 
 makePlayersKVList :: RosterList -> PlayersKVList
-makePlayersKVList = fmap makePlayerKV
+makePlayersKVList = map makePlayerKV
 
 makePlayersMapList :: PlayersKVList -> PlayersMap
 makePlayersMapList  = Map.fromList
