@@ -61,3 +61,6 @@ fromList [("GeoHar",Player {name = "George Harrison", giftHist = [GiftPair {give
 
 fromList [("PauMcc",Player {name = "Paul McCartney", giftHist = [GiftPair {givee = "GeoHar", giver = "JohLen"}]})]
 fromList [("RinSta",Player {name = "Ringo Starr", giftHist = [GiftPair {givee = "JohLen", giver = "GeoHar"}]})]
+
+*Main All_Tests Hat Hat_Test Roster Roster_Test Roster_Utility Rules Rules_Test> makeRosterList "The Beatles, 2014\nRinSta, Ringo Starr, JohLen, GeoHar\nJohLen, John Lennon, PauMcc, RinSta\nGeoHar, George Harrison, RinSta, PauMcc\nPauMcc, Paul McCartney, GeoHar, JohLen"
+[["The Beatles","2014"],["RinSta","Ringo Starr","JohLen","GeoHar"],["JohLen","John Lennon","PauMcc","RinSta"],["GeoHar","George Harrison","RinSta","PauMcc"],["PauMcc","Paul McCartney","GeoHar","JohLen"]]
