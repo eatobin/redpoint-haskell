@@ -1,7 +1,8 @@
+{-# OPTIONS -Wall #-}
+
 module Hat where
 
 import qualified Data.Map.Strict as Map
-import           Roster
 import           Roster_Utility
 
 type GiveeHat = [Givee]
@@ -31,4 +32,4 @@ returnDiscards d geh =
   geh ++ d
 
 emptyDiscards :: Discards -> Discards
-emptyDiscards d = []
+emptyDiscards _ = []

@@ -1,4 +1,5 @@
 {-# LANGUAGE NamedFieldPuns #-}
+{-# OPTIONS -Wall #-}
 
 module Roster_Utility where
 
@@ -44,9 +45,13 @@ makeRosterList rosterString =
 
 makeRosterInfo :: RosterList -> RosterLine
 makeRosterInfo (x:_) = x
+makeRosterInfo _     = ["Is", "Empty!"]
 
 makePlayersList :: RosterList -> RosterList
-makePlayersList (_:xs) = xs
+makePlayersList rl =
+  case rl of
+    (_:xs) -> xs
+    _      -> [["Is"], ["Empty!"]]
 
 makeGiftPair :: Givee -> Giver -> GiftPair
 makeGiftPair = GiftPair
@@ -59,6 +64,8 @@ makePlayerKV [s, pn, ge, gr] =
   (s, plr)
     where gp = makeGiftPair ge gr
           plr = makePlayer pn (Seq.singleton gp)
+makePlayerKV _ =
+  ("error", Player {pName = "error", giftHist = Seq.fromList [GiftPair {giver = "error", givee = "error"}]})
 
 makePlayersKVList :: RosterList -> PlayersKVList
 makePlayersKVList = map makePlayerKV
@@ -97,7 +104,7 @@ setGiftPairInGiftHistory =
   Seq.update
 
 setGiftHistoryInPlayer :: GiftHist -> Player -> Player
-setGiftHistoryInPlayer gh plr@Player {giftHist} = plr {giftHist = gh}
+setGiftHistoryInPlayer gh plr = plr {giftHist = gh}
 
 setGiftPairInRoster :: PlrSym -> GYear -> GiftPair -> PlayersMap -> PlayersMap
 setGiftPairInRoster ps gy gp pm =
