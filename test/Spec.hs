@@ -1,3 +1,5 @@
+{-# OPTIONS -Wall #-}
+
 import   Test.Hspec
 
 import Roster_Utility
