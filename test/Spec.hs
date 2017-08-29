@@ -10,12 +10,17 @@ bs = "The Beatles, 2014\nRinSta, Ringo Starr, JohLen, GeoHar\nJohLen, John Lenno
 rl :: RosterList
 rl = [["The Beatles","2014"],["RinSta","Ringo Starr","JohLen","GeoHar"],["JohLen","John Lennon","PauMcc","RinSta"],["GeoHar","George Harrison","RinSta","PauMcc"],["PauMcc","Paul McCartney","GeoHar","JohLen"]]
 
+pl :: RosterList
+pl = [["RinSta","Ringo Starr","JohLen","GeoHar"],["JohLen","John Lennon","PauMcc","RinSta"],["GeoHar","George Harrison","RinSta","PauMcc"],["PauMcc","Paul McCartney","GeoHar","JohLen"]]
 
 main :: IO ()
 main = hspec $
-  describe "Roster tests" $ do
+  describe "Roster_Utility tests" $ do
     it "testmakeRosterList" $
       makeRosterList bs `shouldBe` rl
 
-    it "testmakeRosterList" $
-      makeRosterList bs `shouldBe` rl
+    it "testmakeRosterInfo" $
+      makeRosterInfo rl `shouldBe` ["The Beatles","2014"]
+
+    it "testmakePlayersList" $
+      makePlayersList rl `shouldBe` pl
