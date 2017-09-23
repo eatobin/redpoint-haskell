@@ -1,8 +1,8 @@
 {-# OPTIONS -Wall #-}
 
-import   Test.Hspec
+import           Test.Hspec
 
-import Roster_Utility
+import           Roster_Utility
 
 bs :: String
 bs = "The Beatles, 2014\nRinSta, Ringo Starr, JohLen, GeoHar\nJohLen, John Lennon, PauMcc, RinSta\nGeoHar, George Harrison, RinSta, PauMcc\nPauMcc, Paul McCartney, GeoHar, JohLen"
