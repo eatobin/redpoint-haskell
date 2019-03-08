@@ -34,6 +34,7 @@ executable redpoint-haskell
                      , bytestring
                      , directory
                      , monad-loops
+                     , Cabal
 
 test-suite redpoint-haskell-test
   type:                exitcode-stdio-1.0
