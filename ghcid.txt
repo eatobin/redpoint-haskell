@@ -1,2 +1,8 @@
-stack build --copy-compiler-tool ghcid
-stack exec -- ghcid
+Correct way to run ghcid
+
+Build/install:
+[eric@linux-x2vq redpoint-haskell](master)$ stack build --copy-compiler-tool ghcid
+[eric@linux-x2vq redpoint-haskell](master)$ stack exec -- which ghcid
+
+Run:
+[eric@linux-x2vq redpoint-haskell](master)$ stack exec -- ghcid -c "stack ghci redpoint-haskell"
