@@ -1,20 +1,21 @@
-module Gift_History (giftHistoryJsonStringToGiftHistory, giftHistoryGiftHistoryToJsonString) where
+module Gift_History (giftHistoryJsonStringToGiftHistory, giftHistoryGiftHistoryToJsonString, giftHistoryAddYear) where
 
 import Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.ByteString.Lazy as BL
-import qualified Data.Sequence as Seq
+import Data.Sequence (Seq (..), (|>))
 import Gift_Pair
 
-type GiftHistory = Seq.Seq GiftPair
+type GiftHistory = Seq GiftPair
 
 type JsonString = String
 
---giftPairUpdateGivee :: Givee -> GiftPair -> GiftPair
---giftPairUpdateGivee gee giftPair = giftPair {givee = gee}
+type PlayerKey = String
 
---giftPairUpdateGiver :: Giver -> GiftPair -> GiftPair
---giftPairUpdateGiver ger giftPair = giftPair {giver = ger}
+giftHistoryAddYear :: GiftHistory -> PlayerKey -> GiftHistory
+giftHistoryAddYear giftHistory playerKey = giftHistory |> (GiftPair {givee = playerKey, giver = playerKey})
+
+
 
 giftHistoryJsonStringToGiftHistory :: JsonString -> Maybe GiftHistory
 giftHistoryJsonStringToGiftHistory js = A.decodeStrict (BS.pack js) :: Maybe GiftHistory
