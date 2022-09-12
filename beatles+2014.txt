@@ -1,7 +1,0 @@
-The Beatles, 2014
-RinSta, Ringo Starr, JohLen, KarLav
-JohLen, John Lennon, GeoHar, RinSta
-GeoHar, George Harrison, PauMcc, JohLen
-PauMcc, Paul McCartney, EriTob, GeoHar
-EriTob, Eric Tobin, KarLav, PauMcc
-KarLav, Karen Lavengood, RinSta, EriTob
