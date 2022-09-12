@@ -25,8 +25,8 @@ gh1 = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}]
 gh2 :: Seq.Seq GiftPair
 gh2 = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}, GiftPair {givee = "Yippee", giver = "Yippee"}]
 
--- brs1 :: [Borrower]
--- brs1 = [br1, br2]
+gh3 :: Seq.Seq GiftPair
+gh3 = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}, GiftPair {givee = "Givee1", giver = "Giver1"}]
 
 -- brs2 :: [Borrower]
 -- brs2 = [br3, br1, br2]
@@ -79,6 +79,7 @@ main = hspec $ do
     it "testGiftHistoryJsonStringToGiftHistory" $ giftHistoryJsonStringToGiftHistory jsonStringGiftHistory `shouldBe` Just gh1
     it "testGiftHistoryGiftHistoryToJsonString" $ giftHistoryGiftHistoryToJsonString gh1 `shouldBe` jsonStringGiftHistory
     it "testGiftHistoryAddYear" $ giftHistoryAddYear gh1 "Yippee" `shouldBe` gh2
+    it "testGiftHistoryUpdateGiftHistory" $ giftHistoryUpdateGiftHistory 1 gp1 gh2 `shouldBe` gh3
 
 --   it "testBookSomeone" $
 --     Book "Title1" "Author1" (Just (Borrower "Borrower1" 1))
