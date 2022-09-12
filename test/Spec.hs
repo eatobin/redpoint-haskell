@@ -1,9 +1,6 @@
--- λ> :load test/Spec.hs src/Gift_Pair.hs
+-- λ> :load test/Spec.hs src/Gift_Pair.hs src/Gift_History.hs
 -- λ> jsonStringGiftPair
 -- λ> gp1
-
----- import Borrower
----- import Library
 
 import qualified Data.Sequence as Seq
 import Gift_History

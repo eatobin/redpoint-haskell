@@ -1,4 +1,4 @@
-module Gift_History (giftHistoryJsonStringToGiftHistory, giftHistoryGiftHistoryToJsonString, giftHistoryAddYear, giftHistoryUpdateGiftHistory) where
+module Gift_History (giftHistoryAddYear, giftHistoryUpdateGiftHistory, giftHistoryJsonStringToGiftHistory, giftHistoryGiftHistoryToJsonString) where
 
 import Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
@@ -9,11 +9,11 @@ import Gift_Pair
 
 type GiftHistory = Seq GiftPair
 
-type JsonString = String
-
 type PlayerKey = String
 
 type GiftYear = Int
+
+type JsonString = String
 
 giftHistoryAddYear :: GiftHistory -> PlayerKey -> GiftHistory
 giftHistoryAddYear giftHistory playerKey = giftHistory |> (GiftPair {givee = playerKey, giver = playerKey})
