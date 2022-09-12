@@ -5,6 +5,7 @@
 import qualified Data.Sequence as Seq
 import Gift_History
 import Gift_Pair
+import Player
 import Test.Hspec
 
 jsonStringGiftPair :: String
@@ -25,8 +26,11 @@ gh2 = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}, GiftPair {giv
 gh3 :: Seq.Seq GiftPair
 gh3 = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}, GiftPair {givee = "Givee1", giver = "Giver1"}]
 
--- brs2 :: [Borrower]
--- brs2 = [br3, br1, br2]
+jsonStringPlayer :: String
+jsonStringPlayer = "{\"playerName\":\"Paul McCartney\",\"giftHistory\":[{\"givee\":\"GeoHar\",\"giver\":\"JohLen\"}]}"
+
+plr1 :: Player
+plr1 = Player {playerName = "Paul McCartney", giftHistory = Seq.fromList [GiftPair {giver = "JohLen", givee = "GeoHar"}]}
 
 -- bk1 :: Book
 -- bk1 = Book {title = "Title1", author = "Author1", borrower = Just br1}
@@ -78,9 +82,10 @@ main = hspec $ do
     it "testGiftHistoryAddYear" $ giftHistoryAddYear gh1 "Yippee" `shouldBe` gh2
     it "testGiftHistoryUpdateGiftHistory" $ giftHistoryUpdateGiftHistory 1 gp1 gh2 `shouldBe` gh3
 
---   it "testBookSomeone" $
---     Book "Title1" "Author1" (Just (Borrower "Borrower1" 1))
---       `shouldBe` bk1
+  describe "Player tests" $ do
+    it "testPlayerJsonStringToPlayer" $ playerJsonStringToPlayer jsonStringPlayer `shouldBe` Just plr1
+
+--    it "testGiftHistoryGiftHistoryToJsonString" $ giftHistoryGiftHistoryToJsonString gh1 `shouldBe` jsonStringGiftHistory
 
 --   it "testGetTitle" $ getTitle bk1 `shouldBe` "Title1"
 
