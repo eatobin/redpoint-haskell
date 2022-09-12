@@ -19,6 +19,8 @@ giftHistoryAddYear :: GiftHistory -> PlayerKey -> GiftHistory
 giftHistoryAddYear giftHistory playerKey = giftHistory |> (GiftPair {givee = playerKey, giver = playerKey})
 
 giftHistoryUpdateGiftHistory :: GiftYear -> GiftPair -> GiftHistory -> GiftHistory
+-- giftHistoryUpdateGiftHistory giftYear giftPair giftHistory = Seq.update giftYear giftPair giftHistory
+-- or in ETA reduction (https://sookocheff.com/post/fp/eta-conversion/):
 giftHistoryUpdateGiftHistory = Seq.update
 
 giftHistoryJsonStringToGiftHistory :: JsonString -> Maybe GiftHistory
