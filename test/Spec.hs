@@ -1,4 +1,4 @@
--- λ> :load test/Spec.hs src/Gift_Pair.hs src/Gift_History.hs
+-- λ> :load test/Spec.hs src/Gift_Pair.hs src/Gift_History.hs src/Player.hs
 -- λ> jsonStringGiftPair
 -- λ> gp1
 
@@ -85,6 +85,12 @@ main = hspec $ do
   describe "Player tests" $ do
     it "testPlayerJsonStringToPlayer" $ playerJsonStringToPlayer jsonStringPlayer `shouldBe` Just plr1
     it "testPlayerPlayerToJsonString" $ playerPlayerToJsonString plr1 `shouldBe` jsonStringPlayer
+    it "testPlayerUpdateGiftHistory" $
+      playerUpdateGiftHistory gh2 plr1
+        `shouldBe` Player
+          { playerName = "Paul McCartney",
+            giftHistory = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}, GiftPair {givee = "Yippee", giver = "Yippee"}]
+          }
 
 --   it "testGetTitle" $ getTitle bk1 `shouldBe` "Title1"
 
