@@ -2,9 +2,12 @@
 -- λ> jsonStringGiftPair
 -- λ> gp1
 
-import Gift_Pair
 ---- import Borrower
 ---- import Library
+
+import qualified Data.Sequence as Seq
+import Gift_History
+import Gift_Pair
 import Test.Hspec
 
 jsonStringGiftPair :: String
@@ -13,11 +16,11 @@ jsonStringGiftPair = "{\"giver\":\"Giver1\",\"givee\":\"Givee1\"}"
 gp1 :: GiftPair
 gp1 = GiftPair {givee = "Givee1", giver = "Giver1"}
 
--- br2 :: Borrower
--- br2 = Borrower "Borrower2" 2
+jsonStringGiftHistory :: String
+jsonStringGiftHistory = "[{\"giver\":\"JohLen\",\"givee\":\"GeoHar\"}]"
 
--- br3 :: Borrower
--- br3 = Borrower "Borrower3" 3
+gh1 :: Seq.Seq GiftPair
+gh1 = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}]
 
 -- brs1 :: [Borrower]
 -- brs1 = [br1, br2]
@@ -72,8 +75,9 @@ main = hspec $ do
 
     it "testGiftPairUpdateGiver" $ giftPairUpdateGiver "Giver1" GiftPair {givee = "Givee1", giver = "BadGiver"} `shouldBe` gp1
 
--- describe "Book tests" $ do
---   it "testBookNothing" $ Book "Title2" "Author2" Nothing `shouldBe` bk2
+  describe "GiftHistory tests" $ do
+    it "testGiftHistoryJsonStringToGiftHistory" $ giftHistoryJsonStringToGiftHistory jsonStringGiftHistory `shouldBe` Just gh1
+    it "testGiftHistoryGiftHistoryToJsonString" $ giftHistoryGiftHistoryToJsonString gh1 `shouldBe` jsonStringGiftHistory
 
 --   it "testBookSomeone" $
 --     Book "Title1" "Author1" (Just (Borrower "Borrower1" 1))
