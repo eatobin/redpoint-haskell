@@ -27,7 +27,7 @@ gh3 :: Seq.Seq GiftPair
 gh3 = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}, GiftPair {givee = "Givee1", giver = "Giver1"}]
 
 jsonStringPlayer :: String
-jsonStringPlayer = "{\"playerName\":\"Paul McCartney\",\"giftHistory\":[{\"givee\":\"GeoHar\",\"giver\":\"JohLen\"}]}"
+jsonStringPlayer = "{\"playerName\":\"Paul McCartney\",\"giftHistory\":[{\"giver\":\"JohLen\",\"givee\":\"GeoHar\"}]}"
 
 plr1 :: Player
 plr1 = Player {playerName = "Paul McCartney", giftHistory = Seq.fromList [GiftPair {giver = "JohLen", givee = "GeoHar"}]}
@@ -84,8 +84,7 @@ main = hspec $ do
 
   describe "Player tests" $ do
     it "testPlayerJsonStringToPlayer" $ playerJsonStringToPlayer jsonStringPlayer `shouldBe` Just plr1
-
---    it "testGiftHistoryGiftHistoryToJsonString" $ giftHistoryGiftHistoryToJsonString gh1 `shouldBe` jsonStringGiftHistory
+    it "testPlayerPlayerToJsonString" $ playerPlayerToJsonString plr1 `shouldBe` jsonStringPlayer
 
 --   it "testGetTitle" $ getTitle bk1 `shouldBe` "Title1"
 
