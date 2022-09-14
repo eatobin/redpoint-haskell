@@ -16,20 +16,20 @@ type JsonString = String
 jsonStringGiftPair :: JsonString
 jsonStringGiftPair = "{\"giver\":\"Giver1\",\"givee\":\"Givee1\"}"
 
-gp1 :: GiftPair
-gp1 = GiftPair {givee = "Givee1", giver = "Giver1"}
+giftPair1 :: GiftPair
+giftPair1 = GiftPair {givee = "Givee1", giver = "Giver1"}
 
 jsonStringGiftHistory :: JsonString
 jsonStringGiftHistory = "[{\"giver\":\"JohLen\",\"givee\":\"GeoHar\"}]"
 
-gh1 :: Seq.Seq GiftPair
-gh1 = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}]
+giftHistory1 :: Seq.Seq GiftPair
+giftHistory1 = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}]
 
-gh2 :: Seq.Seq GiftPair
-gh2 = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}, GiftPair {givee = "Yippee", giver = "Yippee"}]
+giftHistory2 :: Seq.Seq GiftPair
+giftHistory2 = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}, GiftPair {givee = "Yippee", giver = "Yippee"}]
 
-gh3 :: Seq.Seq GiftPair
-gh3 = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}, GiftPair {givee = "Givee1", giver = "Giver1"}]
+giftHistory3 :: Seq.Seq GiftPair
+giftHistory3 = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}, GiftPair {givee = "Givee1", giver = "Giver1"}]
 
 jsonStringPlayer :: JsonString
 jsonStringPlayer = "{\"playerName\":\"Paul McCartney\",\"giftHistory\":[{\"giver\":\"JohLen\",\"givee\":\"GeoHar\"}]}"
@@ -82,22 +82,22 @@ players1 =
 main :: IO ()
 main = hspec $ do
   describe "GiftPair tests" $ do
-    it "testGiftPairJsonStringToGiftPair" $ giftPairJsonStringToGiftPair jsonStringGiftPair `shouldBe` Just gp1
-    it "testGiftPairGiftPairToJsonString" $ giftPairGiftPairToJsonString gp1 `shouldBe` jsonStringGiftPair
-    it "testGiftPairUpdateGivee" $ giftPairUpdateGivee "Givee1" GiftPair {givee = "BadGivee", giver = "Giver1"} `shouldBe` gp1
-    it "testGiftPairUpdateGiver" $ giftPairUpdateGiver "Giver1" GiftPair {givee = "Givee1", giver = "BadGiver"} `shouldBe` gp1
+    it "testGiftPairJsonStringToGiftPair" $ giftPairJsonStringToGiftPair jsonStringGiftPair `shouldBe` Just giftPair1
+    it "testGiftPairGiftPairToJsonString" $ giftPairGiftPairToJsonString giftPair1 `shouldBe` jsonStringGiftPair
+    it "testGiftPairUpdateGivee" $ giftPairUpdateGivee "Givee1" GiftPair {givee = "BadGivee", giver = "Giver1"} `shouldBe` giftPair1
+    it "testGiftPairUpdateGiver" $ giftPairUpdateGiver "Giver1" GiftPair {givee = "Givee1", giver = "BadGiver"} `shouldBe` giftPair1
 
   describe "GiftHistory tests" $ do
-    it "testGiftHistoryJsonStringToGiftHistory" $ giftHistoryJsonStringToGiftHistory jsonStringGiftHistory `shouldBe` Just gh1
-    it "testGiftHistoryGiftHistoryToJsonString" $ giftHistoryGiftHistoryToJsonString gh1 `shouldBe` jsonStringGiftHistory
-    it "testGiftHistoryAddYear" $ giftHistoryAddYear gh1 "Yippee" `shouldBe` gh2
-    it "testGiftHistoryUpdateGiftHistory" $ giftHistoryUpdateGiftHistory 1 gp1 gh2 `shouldBe` gh3
+    it "testGiftHistoryJsonStringToGiftHistory" $ giftHistoryJsonStringToGiftHistory jsonStringGiftHistory `shouldBe` Just giftHistory1
+    it "testGiftHistoryGiftHistoryToJsonString" $ giftHistoryGiftHistoryToJsonString giftHistory1 `shouldBe` jsonStringGiftHistory
+    it "testGiftHistoryAddYear" $ giftHistoryAddYear giftHistory1 "Yippee" `shouldBe` giftHistory2
+    it "testGiftHistoryUpdateGiftHistory" $ giftHistoryUpdateGiftHistory 1 giftPair1 giftHistory2 `shouldBe` giftHistory3
 
   describe "Player tests" $ do
     it "testPlayerJsonStringToPlayer" $ playerJsonStringToPlayer jsonStringPlayer `shouldBe` Just player1
     it "testPlayerPlayerToJsonString" $ playerPlayerToJsonString player1 `shouldBe` jsonStringPlayer
     it "testPlayerUpdateGiftHistory" $
-      playerUpdateGiftHistory gh2 player1
+      playerUpdateGiftHistory giftHistory2 player1
         `shouldBe` Player
           { playerName = "Paul McCartney",
             giftHistory = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}, GiftPair {givee = "Yippee", giver = "Yippee"}]
