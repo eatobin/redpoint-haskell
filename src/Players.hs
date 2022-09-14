@@ -8,10 +8,13 @@ import Gift_Pair
 import Player
 import Prelude hiding (lookup)
 
---type PlrSym = String
-type Players = Map PlrSym Player
+type Players = Map PlayerSymbol Player
 
 type JsonString = String
+
+--playersUpdatePlayer ::
+--def playersUpdatePlayer(playerKey: String, player: Player, players: Map[String, Player]): Map[String, Player] =
+--    players.updated(playerKey, player)
 
 playersJsonStringToPlayers :: JsonString -> Maybe Players
 playersJsonStringToPlayers js = A.decodeStrict (BS.pack js) :: Maybe Players

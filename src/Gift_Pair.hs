@@ -5,18 +5,18 @@
 -- "ger"
 {-# LANGUAGE DeriveGeneric #-}
 
-module Gift_Pair (PlrSym, Givee, Giver, GiftPair (..), giftPairUpdateGivee, giftPairUpdateGiver, giftPairJsonStringToGiftPair, giftPairGiftPairToJsonString) where
+module Gift_Pair (PlayerSymbol, Givee, Giver, GiftPair (..), giftPairUpdateGivee, giftPairUpdateGiver, giftPairJsonStringToGiftPair, giftPairGiftPairToJsonString) where
 
 import Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.ByteString.Lazy as BL
 import GHC.Generics
 
-type PlrSym = String
+type PlayerSymbol = String
 
-type Givee = PlrSym
+type Givee = PlayerSymbol
 
-type Giver = PlrSym
+type Giver = PlayerSymbol
 
 type JsonString = String
 
