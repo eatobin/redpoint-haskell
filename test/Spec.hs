@@ -10,6 +10,7 @@ import Gift_Pair
 import Player
 import Players
 import Test.Hspec
+import Prelude hiding (lookup)
 
 type JsonString = String
 
