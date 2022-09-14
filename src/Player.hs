@@ -11,10 +11,12 @@ import Gift_Pair
 
 type GiftHistory = Seq GiftPair
 
+type PlayerName = String
+
 type JsonString = String
 
 data Player = Player
-  { playerName :: String,
+  { playerName :: PlayerName,
     giftHistory :: GiftHistory
   }
   deriving (Show, Eq, Generic)
