@@ -1,4 +1,4 @@
--- λ> :load test/Spec.hs src/Gift_Pair.hs src/Gift_History.hs src/Player.hs
+-- λ> :load test/Spec.hs src/Gift_Pair.hs src/Gift_History.hs src/Player.hs src/Players
 -- λ> jsonStringGiftPair
 -- λ> gp1
 
