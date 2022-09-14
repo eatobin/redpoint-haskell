@@ -10,6 +10,7 @@ import Gift_Pair
 import Player
 import Players
 import Test.Hspec
+
 --import Prelude hiding (lookup)
 
 type JsonString = String
@@ -116,3 +117,5 @@ main = hspec $ do
   describe "Players tests" $ do
     it "testPlayersJsonStringToPlayers" $ playersJsonStringToPlayers jsonStringPlayers `shouldBe` Just players1
     it "testPlayersUpdatePlayer" $ playersUpdatePlayer "RinSta" Player {playerName = "New Bee", giftHistory = Seq.fromList [GiftPair {giver = "NewBee", givee = "NewBee"}]} players1 `shouldBe` newBeePlayers
+    it "testPlayersGetPlayerNameFound" $ playersGetPlayerName "RinSta" newBeePlayers `shouldBe` "New Bee"
+    it "testPlayersGetPlayerNameNotFound" $ playersGetPlayerName "NotThere" newBeePlayers `shouldBe` "Error Finding Player"
