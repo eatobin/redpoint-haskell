@@ -2,19 +2,24 @@
 -- λ> jsonStringGiftPair
 -- λ> gp1
 
+import Data.Map.Strict (Map)
+import qualified Data.Map.Strict as Map
 import qualified Data.Sequence as Seq
 import Gift_History
 import Gift_Pair
 import Player
+import Players
 import Test.Hspec
 
-jsonStringGiftPair :: String
+type JsonString = String
+
+jsonStringGiftPair :: JsonString
 jsonStringGiftPair = "{\"giver\":\"Giver1\",\"givee\":\"Givee1\"}"
 
 gp1 :: GiftPair
 gp1 = GiftPair {givee = "Givee1", giver = "Giver1"}
 
-jsonStringGiftHistory :: String
+jsonStringGiftHistory :: JsonString
 jsonStringGiftHistory = "[{\"giver\":\"JohLen\",\"givee\":\"GeoHar\"}]"
 
 gh1 :: Seq.Seq GiftPair
@@ -26,17 +31,23 @@ gh2 = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}, GiftPair {giv
 gh3 :: Seq.Seq GiftPair
 gh3 = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}, GiftPair {givee = "Givee1", giver = "Giver1"}]
 
-jsonStringPlayer :: String
+jsonStringPlayer :: JsonString
 jsonStringPlayer = "{\"playerName\":\"Paul McCartney\",\"giftHistory\":[{\"giver\":\"JohLen\",\"givee\":\"GeoHar\"}]}"
 
-plr1 :: Player
-plr1 = Player {playerName = "Paul McCartney", giftHistory = Seq.fromList [GiftPair {giver = "JohLen", givee = "GeoHar"}]}
+player1 :: Player
+player1 = Player {playerName = "Paul McCartney", giftHistory = Seq.fromList [GiftPair {giver = "JohLen", givee = "GeoHar"}]}
 
--- bk1 :: Book
--- bk1 = Book {title = "Title1", author = "Author1", borrower = Just br1}
+jsonStringPlayers :: JsonString
+jsonStringPlayers = "{\"PauMcc\":{\"playerName\":\"Paul McCartney\",\"giftHistory\":[{\"givee\":\"GeoHar\",\"giver\":\"JohLen\"}]},\"GeoHar\":{\"playerName\":\"George Harrison\",\"giftHistory\":[{\"givee\":\"RinSta\",\"giver\":\"PauMcc\"}]},\"JohLen\":{\"playerName\":\"John Lennon\",\"giftHistory\":[{\"givee\":\"PauMcc\",\"giver\":\"RinSta\"}]},\"RinSta\":{\"playerName\":\"Ringo Starr\",\"giftHistory\":[{\"givee\":\"JohLen\",\"giver\":\"GeoHar\"}]}}"
 
--- bk2 :: Book
--- bk2 = Book "Title2" "Author2" Nothing
+players1 :: Map String Player
+players1 =
+  Map.fromList
+    [ ("GeoHar", Player {playerName = "George Harrison", giftHistory = Seq.fromList [GiftPair {givee = "RinSta", giver = "PauMcc"}]}),
+      ("JohLen", Player {playerName = "John Lennon", giftHistory = Seq.fromList [GiftPair {givee = "PauMcc", giver = "RinSta"}]}),
+      ("PauMcc", Player {playerName = "Paul McCartney", giftHistory = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}]}),
+      ("RinSta", Player {playerName = "Ringo Starr", giftHistory = Seq.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}]})
+    ]
 
 -- bk3 :: Book
 -- bk3 = Book "Title3" "Author3" (Just br3)
@@ -83,291 +94,13 @@ main = hspec $ do
     it "testGiftHistoryUpdateGiftHistory" $ giftHistoryUpdateGiftHistory 1 gp1 gh2 `shouldBe` gh3
 
   describe "Player tests" $ do
-    it "testPlayerJsonStringToPlayer" $ playerJsonStringToPlayer jsonStringPlayer `shouldBe` Just plr1
-    it "testPlayerPlayerToJsonString" $ playerPlayerToJsonString plr1 `shouldBe` jsonStringPlayer
+    it "testPlayerJsonStringToPlayer" $ playerJsonStringToPlayer jsonStringPlayer `shouldBe` Just player1
+    it "testPlayerPlayerToJsonString" $ playerPlayerToJsonString player1 `shouldBe` jsonStringPlayer
     it "testPlayerUpdateGiftHistory" $
-      playerUpdateGiftHistory gh2 plr1
+      playerUpdateGiftHistory gh2 player1
         `shouldBe` Player
           { playerName = "Paul McCartney",
             giftHistory = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}, GiftPair {givee = "Yippee", giver = "Yippee"}]
           }
-
---   it "testGetTitle" $ getTitle bk1 `shouldBe` "Title1"
-
---   it "testGetAuthor" $ getAuthor bk2 `shouldBe` "Author2"
-
---   it "testGetBorrowerNothing" $ getBorrower bk2 `shouldBe` Nothing
-
---   it "testGetBorrowerSomeone" $
---     getBorrower bk1
---       `shouldBe` Just
---         Borrower
---           { name = "Borrower1",
---             maxBooks = 1
---           }
-
---   it "testSetBorrowerSomeone" $
---     setBorrower (Just (Borrower "BorrowerNew" 111)) bk2
---       `shouldBe` Book
---         { title = "Title2",
---           author = "Author2",
---           borrower =
---             Just
---               Borrower
---                 { name = "BorrowerNew",
---                   maxBooks = 111
---                 }
---         }
-
---   it "testSetBorrowerNothing" $
---     setBorrower Nothing bk1
---       `shouldBe` Book
---         { title = "Title1",
---           author = "Author1",
---           borrower = Nothing
---         }
-
---   it "testBookToStringSomeone" $
---     bookToString bk1
---       `shouldBe` "Title1 by Author1; Checked out to Borrower1"
-
---   it "testBookToStringNothing" $
---     bookToString bk2
---       `shouldBe` "Title2 by Author2; Available"
-
--- describe "Library tests" $ do
---   it "testAddBorrowerPass" $ addItem br3 brs1 `shouldBe` brs2
-
---   it "testAddBorrowerFail" $ addItem br2 brs2 `shouldBe` brs2
-
---   it "testAddBookPass" $ addItem bk3 bks1 `shouldBe` bks2
-
---   it "testAddBookFail" $ addItem bk3 bks3 `shouldBe` bks3
-
---   it "testRemoveBookPass" $ removeBook bk3 bks2 `shouldBe` bks1
-
---   it "testRemoveBookFail" $ removeBook bk4 bks2 `shouldBe` bks5
-
---   it "testFindBookPass" $ findItem "Title4" bks3 getTitle `shouldBe` Just bk4
-
---   it "testFindBookFail" $ findItem "Title4" bks2 getTitle `shouldBe` Nothing
-
---   it "testFindBorrowerPass" $
---     findItem "Borrower3" brs2 getName
---       `shouldBe` Just br3
-
---   it "testFindBorrowerFail" $
---     findItem "Borrower3" brs1 getName
---       `shouldBe` Nothing
-
---   it "testGetBooksForBorrower0books" $
---     getBooksForBorrower br2 bks2
---       `shouldBe` []
-
---   it "testGetBooksForBorrower1book" $
---     getBooksForBorrower br1 bks2
---       `shouldBe` [bk1]
-
---   it "testGetBooksForBorrower2books" $
---     getBooksForBorrower br3 bks3
---       `shouldBe` [bk3, bk4]
-
---   it "testCheckOutFailCheckedOut" $
---     checkOut "Borrower3" "Title1" brs2 bks1
---       `shouldBe` [ Book
---                      { title = "Title1",
---                        author = "Author1",
---                        borrower =
---                          Just
---                            Borrower
---                              { name = "Borrower1",
---                                maxBooks = 1
---                              }
---                      },
---                    Book
---                      { title = "Title2",
---                        author = "Author2",
---                        borrower = Nothing
---                      }
---                  ]
-
---   it "testCheckOutFailBadBook" $
---     checkOut "Borrower3" "NoTitle" brs2 bks1
---       `shouldBe` [ Book
---                      { title = "Title1",
---                        author = "Author1",
---                        borrower =
---                          Just
---                            Borrower
---                              { name = "Borrower1",
---                                maxBooks = 1
---                              }
---                      },
---                    Book
---                      { title = "Title2",
---                        author = "Author2",
---                        borrower = Nothing
---                      }
---                  ]
-
---   it "testCheckOutFailBadBorrower" $
---     checkOut "NoName" "Title1" brs2 bks1
---       `shouldBe` [ Book
---                      { title = "Title1",
---                        author = "Author1",
---                        borrower =
---                          Just
---                            Borrower
---                              { name = "Borrower1",
---                                maxBooks = 1
---                              }
---                      },
---                    Book
---                      { title = "Title2",
---                        author = "Author2",
---                        borrower = Nothing
---                      }
---                  ]
-
---   it "testCheckOutFailOverLimit" $
---     checkOut "Borrower1" "Title2" brs2 bks1
---       `shouldBe` [ Book
---                      { title = "Title1",
---                        author = "Author1",
---                        borrower =
---                          Just
---                            Borrower
---                              { name = "Borrower1",
---                                maxBooks = 1
---                              }
---                      },
---                    Book
---                      { title = "Title2",
---                        author = "Author2",
---                        borrower = Nothing
---                      }
---                  ]
-
---   it "testCheckOutPass" $
---     checkOut "Borrower3" "Title2" brs2 bks3
---       `shouldBe` [ Book
---                      { title = "Title2",
---                        author = "Author2",
---                        borrower =
---                          Just
---                            Borrower
---                              { name = "Borrower3",
---                                maxBooks = 3
---                              }
---                      },
---                    Book
---                      { title = "Title1",
---                        author = "Author1",
---                        borrower =
---                          Just
---                            Borrower
---                              { name = "Borrower1",
---                                maxBooks = 1
---                              }
---                      },
---                    Book
---                      { title = "Title3",
---                        author = "Author3",
---                        borrower =
---                          Just
---                            Borrower
---                              { name = "Borrower3",
---                                maxBooks = 3
---                              }
---                      },
---                    Book
---                      { title = "Title4",
---                        author = "Author4",
---                        borrower =
---                          Just
---                            Borrower
---                              { name = "Borrower3",
---                                maxBooks = 3
---                              }
---                      }
---                  ]
-
---   it "testCheckInPass" $
---     checkIn "Title1" bks1
---       `shouldBe` [ Book
---                      { title = "Title1",
---                        author = "Author1",
---                        borrower = Nothing
---                      },
---                    Book
---                      { title = "Title2",
---                        author = "Author2",
---                        borrower = Nothing
---                      }
---                  ]
-
---   it "testCheckInFailCheckedIn" $
---     checkIn "Title2" bks1
---       `shouldBe` [ Book
---                      { title = "Title1",
---                        author = "Author1",
---                        borrower =
---                          Just
---                            Borrower
---                              { name = "Borrower1",
---                                maxBooks = 1
---                              }
---                      },
---                    Book
---                      { title = "Title2",
---                        author = "Author2",
---                        borrower = Nothing
---                      }
---                  ]
-
---   it "testCheckInFailBadBook" $
---     checkIn "NoTitle" bks1
---       `shouldBe` [ Book
---                      { title = "Title1",
---                        author = "Author1",
---                        borrower =
---                          Just
---                            Borrower
---                              { name = "Borrower1",
---                                maxBooks = 1
---                              }
---                      },
---                    Book
---                      { title = "Title2",
---                        author = "Author2",
---                        borrower = Nothing
---                      }
---                  ]
-
---   it "testJsonStringToBorrowersFail" $
---     jsonStringToBorrowers (Right jsonStringBorrowersBad)
---       `shouldBe` Left "JSON parse error."
-
---   it "testJsonStringToBorrowersPass" $
---     jsonStringToBorrowers (Right jsonStringBorrowers)
---       `shouldBe` Right brs1
-
---   it "testJsonStringToBooks" $
---     jsonStringToBooks (Right jsonStringBooks)
---       `shouldBe` Right bks1
-
---   it "testBorrowersToJsonString" $
---     borrowersToJsonString brs1
---       `shouldBe` jsonStringBorrowers
-
---   it "testBooksToJsonString" $
---     booksToJsonString bks1
---       `shouldBe` jsonStringBooks
-
---   it "testLibraryToString" $
---     libraryToString bks1 brs2
---       `shouldBe` "Test Library: 2 books; 3 borrowers."
-
---   it "testStatusToString" $
---     statusToString bks2 brs2
---       `shouldBe` "\n--- Status Report of Test Library ---\n\nTest Library: 3 books; 3 borrowers.\nTitle3 by Author3; Checked out to Borrower3\nTitle1 by Author1; Checked out to Borrower1\nTitle2 by Author2; Available\n\nBorrower3 (3 books)\nBorrower1 (1 books)\nBorrower2 (2 books)\n\n--- End of Status Report ---\n"
+  describe "Players tests" $ do
+    it "testPlayersJsonStringToPlayers" $ playersJsonStringToPlayers jsonStringPlayers `shouldBe` Just players1

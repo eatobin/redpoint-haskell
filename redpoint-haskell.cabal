@@ -29,6 +29,7 @@ library
       Gift_Pair
       Lib
       Player
+      Players
   other-modules:
       Paths_redpoint_haskell
   hs-source-dirs:
