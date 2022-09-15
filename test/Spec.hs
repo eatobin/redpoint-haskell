@@ -127,3 +127,6 @@ main = hspec $ do
     it "testPlayersGetGiveePass" $ playersGetGivee "JohLen" players1 0 `shouldBe` "PauMcc"
     it "testPlayersGetGiveeFailPlayer" $ playersGetGivee "Nope" players1 0 `shouldBe` "Error Finding Player"
     it "testPlayersGetGiveeFailGiftYear" $ playersGetGivee "JohLen" players1 99 `shouldBe` "Error Finding GiftYear"
+    it "testPlayersGetGiverPass" $ playersGetGiver "JohLen" players1 0 `shouldBe` "RinSta"
+    it "testPlayersGetGiverFailPlayer" $ playersGetGiver "Nope" players1 0 `shouldBe` "Error Finding Player"
+    it "testPlayersGetGiverFailGiftYear" $ playersGetGiver "JohLen" players1 99 `shouldBe` "Error Finding GiftYear"

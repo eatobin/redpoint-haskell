@@ -1,4 +1,4 @@
-module Players (playersUpdatePlayer, playersGetPlayerName, playersAddYear, playersGetGivee, playersJsonStringToPlayers) where
+module Players (playersUpdatePlayer, playersGetPlayerName, playersAddYear, playersGetGivee, playersGetGiver, playersJsonStringToPlayers) where
 
 import Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
@@ -52,6 +52,14 @@ playersGetGivee selfKey players giftYear =
     (Just plr) -> case Seq.lookup giftYear (giftHistory plr) of
       Nothing -> "Error Finding GiftYear"
       (Just giftPair) -> givee giftPair
+
+playersGetGiver :: SelfKey -> Players -> GiftYear -> PlayerName
+playersGetGiver selfKey players giftYear =
+  case Map.lookup selfKey players of
+    Nothing -> "Error Finding Player"
+    (Just plr) -> case Seq.lookup giftYear (giftHistory plr) of
+      Nothing -> "Error Finding GiftYear"
+      (Just giftPair) -> giver giftPair
 
 playersJsonStringToPlayers :: JsonString -> Maybe Players
 playersJsonStringToPlayers js = A.decodeStrict (BS.pack js) :: Maybe Players
