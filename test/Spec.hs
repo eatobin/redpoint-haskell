@@ -125,3 +125,4 @@ main = hspec $ do
     it "testPlayersGetPlayerNameNotFound" $ playersGetPlayerName "NotThere" newBeePlayers `shouldBe` "Error Finding Player"
     it "testPlayersAddYear" $ playersAddYear players1 `shouldBe` extendedPlayers
     it "testPlayersGetGiveePass" $ playersGetGivee "JohLen" players1 0 `shouldBe` "PauMcc"
+    it "testPlayersGetGiveeFailPlayer" $ playersGetGivee "Nope" players1 0 `shouldBe` "Error Finding Player"
