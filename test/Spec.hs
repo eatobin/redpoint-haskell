@@ -58,8 +58,14 @@ newBeePlayers =
       ("RinSta", Player {playerName = "New Bee", giftHistory = Seq.fromList [GiftPair {giver = "NewBee", givee = "NewBee"}]})
     ]
 
--- bk3 :: Book
--- bk3 = Book "Title3" "Author3" (Just br3)
+extendedPlayers :: Map String Player
+extendedPlayers =
+  Map.fromList
+    [ ("GeoHar", Player {playerName = "George Harrison", giftHistory = Seq.fromList [GiftPair {givee = "RinSta", giver = "PauMcc"}, GiftPair {givee = "GeoHar", giver = "GeoHar"}]}),
+      ("JohLen", Player {playerName = "John Lennon", giftHistory = Seq.fromList [GiftPair {givee = "PauMcc", giver = "RinSta"}, GiftPair {givee = "JohLen", giver = "JohLen"}]}),
+      ("PauMcc", Player {playerName = "Paul McCartney", giftHistory = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}, GiftPair {givee = "PauMcc", giver = "PauMcc"}]}),
+      ("RinSta", Player {playerName = "Ringo Starr", giftHistory = Seq.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}, GiftPair {givee = "RinSta", giver = "RinSta"}]})
+    ]
 
 -- bk4 :: Book
 -- bk4 = Book "Title4" "Author4" (Just br3)
@@ -117,3 +123,4 @@ main = hspec $ do
     it "testPlayersUpdatePlayer" $ playersUpdatePlayer "RinSta" Player {playerName = "New Bee", giftHistory = Seq.fromList [GiftPair {giver = "NewBee", givee = "NewBee"}]} players1 `shouldBe` newBeePlayers
     it "testPlayersGetPlayerNameFound" $ playersGetPlayerName "RinSta" newBeePlayers `shouldBe` "New Bee"
     it "testPlayersGetPlayerNameNotFound" $ playersGetPlayerName "NotThere" newBeePlayers `shouldBe` "Error Finding Player"
+    it "testPlayersAddYear" $ playersAddYear players1 `shouldBe` extendedPlayers
