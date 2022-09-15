@@ -126,3 +126,4 @@ main = hspec $ do
     it "testPlayersAddYear" $ playersAddYear players1 `shouldBe` extendedPlayers
     it "testPlayersGetGiveePass" $ playersGetGivee "JohLen" players1 0 `shouldBe` "PauMcc"
     it "testPlayersGetGiveeFailPlayer" $ playersGetGivee "Nope" players1 0 `shouldBe` "Error Finding Player"
+    it "testPlayersGetGiveeFailGiftYear" $ playersGetGivee "JohLen" players1 99 `shouldBe` "Error Finding GiftYear"
