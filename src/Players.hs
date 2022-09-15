@@ -13,8 +13,6 @@ import Prelude hiding (lookup)
 
 type PlayerKey = String
 
---type GiftHistory = Seq GiftPair
-
 type SelfKey = String
 
 type PlayerName = String
@@ -71,6 +69,11 @@ playersSetGiftPair playerKey players giftYear giftPair =
       let ngh = giftHistoryUpdateGiftHistory giftYear giftPair (giftHistory plr)
       let nplr = playerUpdateGiftHistory ngh plr
       Just (playersUpdatePlayer playerKey nplr players)
+
+--def playersUpdateGivee(selfKey: String, giftYear: Int, givee: String, players: Map[JsonString, Player]): Map[String, Player] = {
+--    val ngp = GiftPair.giftPairUpdateGivee(givee, players(selfKey).giftHistory(giftYear))
+--    playersSetGiftPair(selfKey, giftYear, ngp, players)
+--  }
 
 playersJsonStringToPlayers :: JsonString -> Maybe Players
 playersJsonStringToPlayers js = A.decodeStrict (BS.pack js) :: Maybe Players
