@@ -1,4 +1,4 @@
-module Players (playersUpdatePlayer, playersGetPlayerName, playersAddYear, playersGetGivee, playersGetGiver, playersSetGiftPair, playersJsonStringToPlayers) where
+module Players (playersUpdatePlayer, playersGetPlayerName, playersAddYear, playersGetGivee, playersGetGiver, playersSetGiftPair, playersUpdateGivee, playersJsonStringToPlayers) where
 
 import Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
@@ -22,6 +22,11 @@ type GiftYear = Int
 type Players = Map PlayerKey Player
 
 type JsonString = String
+
+emptyPlayers :: Map String Player
+emptyPlayers =
+  Map.fromList
+    [("EmptyPlayers", Player {playerName = "EmptyPlayers", giftHistory = Seq.fromList [GiftPair {givee = "EmptyPlayers", giver = "EmptyPlayers"}]})]
 
 playersUpdatePlayer :: PlayerKey -> Player -> Players -> Players
 -- playersUpdatePlayer playerKey player players = Map.insert playerKey player players
@@ -61,14 +66,24 @@ playersGetGiver selfKey players giftYear =
       Nothing -> "Error Finding GiftYear"
       (Just giftPair) -> giver giftPair
 
-playersSetGiftPair :: PlayerKey -> Players -> GiftYear -> GiftPair -> Maybe Players
+playersSetGiftPair :: PlayerKey -> Players -> GiftYear -> GiftPair -> Players
 playersSetGiftPair playerKey players giftYear giftPair =
   case Map.lookup playerKey players of
-    Nothing -> Nothing
+    Nothing -> emptyPlayers
     (Just plr) -> do
       let ngh = giftHistoryUpdateGiftHistory giftYear giftPair (giftHistory plr)
       let nplr = playerUpdateGiftHistory ngh plr
-      Just (playersUpdatePlayer playerKey nplr players)
+      playersUpdatePlayer playerKey nplr players
+
+-- TODO - complete this from scala template below
+playersUpdateGivee :: PlayerKey -> Players -> GiftYear -> GiftPair -> Players
+playersUpdateGivee playerKey players giftYear giftPair =
+  case Map.lookup playerKey players of
+    Nothing -> emptyPlayers
+    (Just plr) -> do
+      let ngh = giftHistoryUpdateGiftHistory giftYear giftPair (giftHistory plr)
+      let nplr = playerUpdateGiftHistory ngh plr
+      playersUpdatePlayer playerKey nplr players
 
 --def playersUpdateGivee(selfKey: String, giftYear: Int, givee: String, players: Map[JsonString, Player]): Map[String, Player] = {
 --    val ngp = GiftPair.giftPairUpdateGivee(givee, players(selfKey).giftHistory(giftYear))
