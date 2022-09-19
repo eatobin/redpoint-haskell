@@ -1,4 +1,4 @@
-module Players (playersUpdatePlayer, playersGetPlayerName, playersAddYear, playersGetGivee, playersGetGiver, playersSetGiftPair, playersUpdateGivee, playersJsonStringToPlayers) where
+module Players (playersUpdatePlayer, playersGetPlayerName, playersAddYear, playersGetGivee, playersGetGiver, playersSetGiftPair, playersUpdateGivee, playersUpdateGiver, playersJsonStringToPlayers) where
 
 import Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
@@ -83,6 +83,16 @@ playersUpdateGivee playerKey players gee giftYear =
       Nothing -> emptyPlayers
       (Just giftPair) -> do
         let ngp = giftPairUpdateGivee gee giftPair
+        playersSetGiftPair playerKey players giftYear ngp
+
+playersUpdateGiver :: PlayerKey -> Players -> Giver -> GiftYear -> Players
+playersUpdateGiver playerKey players ger giftYear =
+  case Map.lookup playerKey players of
+    Nothing -> emptyPlayers
+    (Just plr) -> case Seq.lookup giftYear (giftHistory plr) of
+      Nothing -> emptyPlayers
+      (Just giftPair) -> do
+        let ngp = giftPairUpdateGiver ger giftPair
         playersSetGiftPair playerKey players giftYear ngp
 
 playersJsonStringToPlayers :: JsonString -> Maybe Players

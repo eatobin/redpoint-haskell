@@ -58,6 +58,24 @@ newBeePlayers =
       ("RinSta", Player {playerName = "New Bee", giftHistory = Seq.fromList [GiftPair {giver = "NewBee", givee = "NewBee"}]})
     ]
 
+playersGivee :: Map String Player
+playersGivee =
+  Map.fromList
+    [ ("GeoHar", Player {playerName = "George Harrison", giftHistory = Seq.fromList [GiftPair {givee = "you", giver = "PauMcc"}]}),
+      ("JohLen", Player {playerName = "John Lennon", giftHistory = Seq.fromList [GiftPair {givee = "PauMcc", giver = "RinSta"}]}),
+      ("PauMcc", Player {playerName = "Paul McCartney", giftHistory = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}]}),
+      ("RinSta", Player {playerName = "New Bee", giftHistory = Seq.fromList [GiftPair {giver = "NewBee", givee = "NewBee"}]})
+    ]
+
+playersGiver :: Map String Player
+playersGiver =
+  Map.fromList
+    [ ("GeoHar", Player {playerName = "George Harrison", giftHistory = Seq.fromList [GiftPair {givee = "RinSta", giver = "you"}]}),
+      ("JohLen", Player {playerName = "John Lennon", giftHistory = Seq.fromList [GiftPair {givee = "PauMcc", giver = "RinSta"}]}),
+      ("PauMcc", Player {playerName = "Paul McCartney", giftHistory = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}]}),
+      ("RinSta", Player {playerName = "New Bee", giftHistory = Seq.fromList [GiftPair {giver = "NewBee", givee = "NewBee"}]})
+    ]
+
 extendedPlayers :: Map String Player
 extendedPlayers =
   Map.fromList
@@ -130,3 +148,5 @@ main = hspec $ do
     it "testPlayersGetGiverPass" $ playersGetGiver "JohLen" players1 0 `shouldBe` "RinSta"
     it "testPlayersGetGiverFailPlayer" $ playersGetGiver "Nope" players1 0 `shouldBe` "Error Finding Player"
     it "testPlayersGetGiverFailGiftYear" $ playersGetGiver "JohLen" players1 99 `shouldBe` "Error Finding GiftYear"
+    it "testPlayersUpdateGivee" $ playersUpdateGivee "GeoHar" newBeePlayers "you" 0 `shouldBe` playersGivee
+    it "testPlayersUpdateGiver" $ playersUpdateGiver "GeoHar" newBeePlayers "you" 0 `shouldBe` playersGiver
