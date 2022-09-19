@@ -25,5 +25,7 @@ data Roster = Roster
   }
   deriving (Show, Eq, Generic)
 
-rosterJsonStringToRoster :: JsonString -> Maybe Players
-rosterJsonStringToRoster js = A.decodeStrict (BS.pack js) :: Maybe Players
+instance FromJSON Roster
+
+rosterJsonStringToRoster :: JsonString -> Maybe Roster
+rosterJsonStringToRoster js = A.decodeStrict (BS.pack js) :: Maybe Roster

@@ -30,6 +30,7 @@ library
       Lib
       Player
       Players
+      Roster
   other-modules:
       Paths_redpoint_haskell
   hs-source-dirs:

@@ -9,6 +9,7 @@ import Gift_History
 import Gift_Pair
 import Player
 import Players
+import Roster
 import Test.Hspec
 
 type JsonString = String
@@ -85,11 +86,11 @@ extendedPlayers =
       ("RinSta", Player {playerName = "Ringo Starr", giftHistory = Seq.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}, GiftPair {givee = "RinSta", giver = "RinSta"}]})
     ]
 
--- bk4 :: Book
--- bk4 = Book "Title4" "Author4" (Just br3)
+jsonStringRoster1 :: JsonString
+jsonStringRoster1 = "{\"rosterName\":\"The Beatles\",\"rosterYear\":2014,\"players\":{\"PauMcc\":{\"playerName\":\"Paul McCartney\",\"giftHistory\":[{\"givee\":\"GeoHar\",\"giver\":\"JohLen\"}]},\"GeoHar\":{\"playerName\":\"George Harrison\",\"giftHistory\":[{\"givee\":\"RinSta\",\"giver\":\"PauMcc\"}]},\"JohLen\":{\"playerName\":\"John Lennon\",\"giftHistory\":[{\"givee\":\"PauMcc\",\"giver\":\"RinSta\"}]},\"RinSta\":{\"playerName\":\"Ringo Starr\",\"giftHistory\":[{\"givee\":\"JohLen\",\"giver\":\"GeoHar\"}]}}}"
 
--- bks1 :: [Book]
--- bks1 = [bk1, bk2]
+roster1 :: Roster
+roster1 = Roster {rosterName = "The Beatles", rosterYear = 2014, players = players1}
 
 -- bks2 :: [Book]
 -- bks2 = [bk3, bk1, bk2]
@@ -150,3 +151,6 @@ main = hspec $ do
     it "testPlayersGetGiverFailGiftYear" $ playersGetGiver "JohLen" players1 99 `shouldBe` "Error Finding GiftYear"
     it "testPlayersUpdateGivee" $ playersUpdateGivee "GeoHar" newBeePlayers "you" 0 `shouldBe` playersGivee
     it "testPlayersUpdateGiver" $ playersUpdateGiver "GeoHar" newBeePlayers "you" 0 `shouldBe` playersGiver
+
+  describe "Roster tests" $ do
+    it "testRosterJsonStringToRoster" $ rosterJsonStringToRoster jsonStringRoster1 `shouldBe` Just roster1
