@@ -75,20 +75,15 @@ playersSetGiftPair playerKey players giftYear giftPair =
       let nplr = playerUpdateGiftHistory ngh plr
       playersUpdatePlayer playerKey nplr players
 
--- TODO - complete this from scala template below
-playersUpdateGivee :: PlayerKey -> Players -> GiftYear -> GiftPair -> Players
-playersUpdateGivee playerKey players giftYear giftPair =
+playersUpdateGivee :: PlayerKey -> Players -> Givee -> GiftYear -> Players
+playersUpdateGivee playerKey players gee giftYear =
   case Map.lookup playerKey players of
     Nothing -> emptyPlayers
-    (Just plr) -> do
-      let ngh = giftHistoryUpdateGiftHistory giftYear giftPair (giftHistory plr)
-      let nplr = playerUpdateGiftHistory ngh plr
-      playersUpdatePlayer playerKey nplr players
-
---def playersUpdateGivee(selfKey: String, giftYear: Int, givee: String, players: Map[JsonString, Player]): Map[String, Player] = {
---    val ngp = GiftPair.giftPairUpdateGivee(givee, players(selfKey).giftHistory(giftYear))
---    playersSetGiftPair(selfKey, giftYear, ngp, players)
---  }
+    (Just plr) -> case Seq.lookup giftYear (giftHistory plr) of
+      Nothing -> emptyPlayers
+      (Just giftPair) -> do
+        let ngp = giftPairUpdateGivee gee giftPair
+        playersSetGiftPair playerKey players giftYear ngp
 
 playersJsonStringToPlayers :: JsonString -> Maybe Players
 playersJsonStringToPlayers js = A.decodeStrict (BS.pack js) :: Maybe Players
