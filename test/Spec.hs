@@ -41,6 +41,9 @@ player1 = Player {playerName = "Paul McCartney", giftHistory = Seq.fromList [Gif
 jsonStringPlayers :: JsonString
 jsonStringPlayers = "{\"PauMcc\":{\"playerName\":\"Paul McCartney\",\"giftHistory\":[{\"givee\":\"GeoHar\",\"giver\":\"JohLen\"}]},\"GeoHar\":{\"playerName\":\"George Harrison\",\"giftHistory\":[{\"givee\":\"RinSta\",\"giver\":\"PauMcc\"}]},\"JohLen\":{\"playerName\":\"John Lennon\",\"giftHistory\":[{\"givee\":\"PauMcc\",\"giver\":\"RinSta\"}]},\"RinSta\":{\"playerName\":\"Ringo Starr\",\"giftHistory\":[{\"givee\":\"JohLen\",\"giver\":\"GeoHar\"}]}}"
 
+jsonStringPlayersBad :: JsonString
+jsonStringPlayersBad = "{\"PauMcc\":{\"playerNameX\":\"Paul McCartney\",\"giftHistory\":[{\"givee\":\"GeoHar\",\"giver\":\"JohLen\"}]},\"GeoHar\":{\"playerName\":\"George Harrison\",\"giftHistory\":[{\"givee\":\"RinSta\",\"giver\":\"PauMcc\"}]},\"JohLen\":{\"playerName\":\"John Lennon\",\"giftHistory\":[{\"givee\":\"PauMcc\",\"giver\":\"RinSta\"}]},\"RinSta\":{\"playerName\":\"Ringo Starr\",\"giftHistory\":[{\"givee\":\"JohLen\",\"giver\":\"GeoHar\"}]}}"
+
 players1 :: Map String Player
 players1 =
   Map.fromList
@@ -146,7 +149,8 @@ main = hspec $ do
           }
 
   describe "Players tests" $ do
-    it "testPlayersJsonStringToPlayers" $ playersJsonStringToPlayers jsonStringPlayers `shouldBe` Just players1
+    it "testPlayersJsonStringToPlayersPass" $ playersJsonStringToPlayers jsonStringPlayers `shouldBe` Just players1
+    it "testPlayersJsonStringToPlayersFail" $ playersJsonStringToPlayers jsonStringPlayersBad `shouldBe` Nothing
     it "testPlayersUpdatePlayer" $ playersUpdatePlayer "RinSta" Player {playerName = "New Bee", giftHistory = Seq.fromList [GiftPair {giver = "NewBee", givee = "NewBee"}]} players1 `shouldBe` newBeePlayers
     it "testPlayersGetPlayerNameFound" $ playersGetPlayerName "RinSta" newBeePlayers `shouldBe` "New Bee"
     it "testPlayersGetPlayerNameNotFound" $ playersGetPlayerName "NotThere" newBeePlayers `shouldBe` "Error Finding Player"
@@ -163,5 +167,5 @@ main = hspec $ do
     it "testPlayersUpdateGiverFail" $ playersUpdateGiver "GeoHar" newBeePlayers "you" 99 `shouldBe` emptyPlayers
 
   describe "Roster tests" $ do
-    it "testRosterJsonStringToRoster" $ rosterJsonStringToRoster jsonStringRoster1 `shouldBe` Just roster1
+    it "testRosterJsonStringToRosterPass" $ rosterJsonStringToRoster jsonStringRoster1 `shouldBe` Just roster1
     it "testRosterJsonStringToRosterFail" $ rosterJsonStringToRoster jsonStringRosterBad `shouldBe` Nothing
