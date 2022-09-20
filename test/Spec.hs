@@ -23,6 +23,9 @@ giftPair1 = GiftPair {givee = "Givee1", giver = "Giver1"}
 jsonStringGiftHistory :: JsonString
 jsonStringGiftHistory = "[{\"giver\":\"JohLen\",\"givee\":\"GeoHar\"}]"
 
+jsonStringGiftHistoryBad :: JsonString
+jsonStringGiftHistoryBad = "[{\"giverX\":\"JohLen\",\"givee\":\"GeoHar\"}]"
+
 giftHistory1 :: Seq.Seq GiftPair
 giftHistory1 = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}]
 
@@ -136,7 +139,8 @@ main = hspec $ do
     it "testGiftPairUpdateGiver" $ giftPairUpdateGiver "Giver1" GiftPair {givee = "Givee1", giver = "BadGiver"} `shouldBe` giftPair1
 
   describe "GiftHistory tests" $ do
-    it "testGiftHistoryJsonStringToGiftHistory" $ giftHistoryJsonStringToGiftHistory jsonStringGiftHistory `shouldBe` Just giftHistory1
+    it "testGiftHistoryJsonStringToGiftHistoryPass" $ giftHistoryJsonStringToGiftHistory jsonStringGiftHistory `shouldBe` Just giftHistory1
+    it "testGiftHistoryJsonStringToGiftHistoryFail" $ giftHistoryJsonStringToGiftHistory jsonStringGiftHistoryBad `shouldBe` Nothing
     it "testGiftHistoryGiftHistoryToJsonString" $ giftHistoryGiftHistoryToJsonString giftHistory1 `shouldBe` jsonStringGiftHistory
     it "testGiftHistoryAddYear" $ giftHistoryAddYear giftHistory1 "Yippee" `shouldBe` giftHistory2
     it "testGiftHistoryUpdateGiftHistory" $ giftHistoryUpdateGiftHistory 1 giftPair1 giftHistory2 `shouldBe` giftHistory3
