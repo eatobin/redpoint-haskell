@@ -17,6 +17,9 @@ type JsonString = String
 jsonStringGiftPair :: JsonString
 jsonStringGiftPair = "{\"giver\":\"Giver1\",\"givee\":\"Givee1\"}"
 
+jsonStringGiftPairBad :: JsonString
+jsonStringGiftPairBad = "{\"giverX\":\"Giver1\",\"givee\":\"Givee1\"}"
+
 giftPair1 :: GiftPair
 giftPair1 = GiftPair {givee = "Givee1", giver = "Giver1"}
 
@@ -133,7 +136,8 @@ roster1 = Roster {rosterName = "The Beatles", rosterYear = 2014, players = playe
 main :: IO ()
 main = hspec $ do
   describe "GiftPair tests" $ do
-    it "testGiftPairJsonStringToGiftPair" $ giftPairJsonStringToGiftPair jsonStringGiftPair `shouldBe` Just giftPair1
+    it "testGiftPairJsonStringToGiftPairPass" $ giftPairJsonStringToGiftPair jsonStringGiftPair `shouldBe` Just giftPair1
+    it "testGiftPairJsonStringToGiftPairFail" $ giftPairJsonStringToGiftPair jsonStringGiftPairBad `shouldBe` Nothing
     it "testGiftPairGiftPairToJsonString" $ giftPairGiftPairToJsonString giftPair1 `shouldBe` jsonStringGiftPair
     it "testGiftPairUpdateGivee" $ giftPairUpdateGivee "Givee1" GiftPair {givee = "BadGivee", giver = "Giver1"} `shouldBe` giftPair1
     it "testGiftPairUpdateGiver" $ giftPairUpdateGiver "Giver1" GiftPair {givee = "Givee1", giver = "BadGiver"} `shouldBe` giftPair1
