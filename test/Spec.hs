@@ -86,6 +86,11 @@ extendedPlayers =
       ("RinSta", Player {playerName = "Ringo Starr", giftHistory = Seq.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}, GiftPair {givee = "RinSta", giver = "RinSta"}]})
     ]
 
+emptyPlayers :: Map String Player
+emptyPlayers =
+  Map.fromList
+    [("EmptyPlayers", Player {playerName = "EmptyPlayers", giftHistory = Seq.fromList [GiftPair {givee = "EmptyPlayers", giver = "EmptyPlayers"}]})]
+
 jsonStringRoster1 :: JsonString
 jsonStringRoster1 = "{\"rosterName\":\"The Beatles\",\"rosterYear\":2014,\"players\":{\"PauMcc\":{\"playerName\":\"Paul McCartney\",\"giftHistory\":[{\"givee\":\"GeoHar\",\"giver\":\"JohLen\"}]},\"GeoHar\":{\"playerName\":\"George Harrison\",\"giftHistory\":[{\"givee\":\"RinSta\",\"giver\":\"PauMcc\"}]},\"JohLen\":{\"playerName\":\"John Lennon\",\"giftHistory\":[{\"givee\":\"PauMcc\",\"giver\":\"RinSta\"}]},\"RinSta\":{\"playerName\":\"Ringo Starr\",\"giftHistory\":[{\"givee\":\"JohLen\",\"giver\":\"GeoHar\"}]}}}"
 
@@ -149,8 +154,10 @@ main = hspec $ do
     it "testPlayersGetGiverPass" $ playersGetGiver "JohLen" players1 0 `shouldBe` "RinSta"
     it "testPlayersGetGiverFailPlayer" $ playersGetGiver "Nope" players1 0 `shouldBe` "Error Finding Player"
     it "testPlayersGetGiverFailGiftYear" $ playersGetGiver "JohLen" players1 99 `shouldBe` "Error Finding GiftYear"
-    it "testPlayersUpdateGivee" $ playersUpdateGivee "GeoHar" newBeePlayers "you" 0 `shouldBe` playersGivee
+    it "testPlayersUpdateGiveePass" $ playersUpdateGivee "GeoHar" newBeePlayers "you" 0 `shouldBe` playersGivee
+    it "testPlayersUpdateGiveeFail" $ playersUpdateGivee "GeoHar" newBeePlayers "you" 99 `shouldBe` emptyPlayers
     it "testPlayersUpdateGiver" $ playersUpdateGiver "GeoHar" newBeePlayers "you" 0 `shouldBe` playersGiver
+    it "testPlayersUpdateGiverFail" $ playersUpdateGiver "GeoHar" newBeePlayers "you" 99 `shouldBe` emptyPlayers
 
   describe "Roster tests" $ do
     it "testRosterJsonStringToRoster" $ rosterJsonStringToRoster jsonStringRoster1 `shouldBe` Just roster1
