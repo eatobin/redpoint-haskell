@@ -94,6 +94,9 @@ emptyPlayers =
 jsonStringRoster1 :: JsonString
 jsonStringRoster1 = "{\"rosterName\":\"The Beatles\",\"rosterYear\":2014,\"players\":{\"PauMcc\":{\"playerName\":\"Paul McCartney\",\"giftHistory\":[{\"givee\":\"GeoHar\",\"giver\":\"JohLen\"}]},\"GeoHar\":{\"playerName\":\"George Harrison\",\"giftHistory\":[{\"givee\":\"RinSta\",\"giver\":\"PauMcc\"}]},\"JohLen\":{\"playerName\":\"John Lennon\",\"giftHistory\":[{\"givee\":\"PauMcc\",\"giver\":\"RinSta\"}]},\"RinSta\":{\"playerName\":\"Ringo Starr\",\"giftHistory\":[{\"givee\":\"JohLen\",\"giver\":\"GeoHar\"}]}}}"
 
+jsonStringRosterBad :: JsonString
+jsonStringRosterBad = "{\"rosterNameX\":\"The Beatles\",\"rosterYear\":2014,\"players\":{\"PauMcc\":{\"playerName\":\"Paul McCartney\",\"giftHistory\":[{\"givee\":\"GeoHar\",\"giver\":\"JohLen\"}]},\"GeoHar\":{\"playerName\":\"George Harrison\",\"giftHistory\":[{\"givee\":\"RinSta\",\"giver\":\"PauMcc\"}]},\"JohLen\":{\"playerName\":\"John Lennon\",\"giftHistory\":[{\"givee\":\"PauMcc\",\"giver\":\"RinSta\"}]},\"RinSta\":{\"playerName\":\"Ringo Starr\",\"giftHistory\":[{\"givee\":\"JohLen\",\"giver\":\"GeoHar\"}]}}}"
+
 roster1 :: Roster
 roster1 = Roster {rosterName = "The Beatles", rosterYear = 2014, players = players1}
 
@@ -161,3 +164,4 @@ main = hspec $ do
 
   describe "Roster tests" $ do
     it "testRosterJsonStringToRoster" $ rosterJsonStringToRoster jsonStringRoster1 `shouldBe` Just roster1
+    it "testRosterJsonStringToRosterFail" $ rosterJsonStringToRoster jsonStringRosterBad `shouldBe` Nothing
