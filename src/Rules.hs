@@ -7,8 +7,8 @@ import Players
 import Roster
 
 rulesGiveeNotSelf :: SelfKey -> Givee -> Bool
-rulesGiveeNotSelf ps ge =
-  ps /= ge
+rulesGiveeNotSelf selfKey gee =
+  selfKey /= gee
 
 rulesGiveeNotReciprocal :: Givee -> Players -> GiftYear -> SelfKey -> Bool
 rulesGiveeNotReciprocal gee plrs giftYear selfKey =
