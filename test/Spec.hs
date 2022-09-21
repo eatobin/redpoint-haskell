@@ -193,4 +193,5 @@ main = hspec $ do
     it "testRulesGiveeNotSelf" $ rulesGiveeNotSelf "JohLen" "GeoHar" `shouldBe` True
     it "testRulesGiveeNotReciprocalPass" $ rulesGiveeNotReciprocal "JohLen" players1 0 "GeoHar" `shouldBe` True
     it "testRulesGiveeNotReciprocalFail" $ rulesGiveeNotReciprocal "JohLen" reciprocalPlayers 0 "GeoHar" `shouldBe` False
-    it "testRulesGiveeNotRepeat" $ rulesGiveeNotRepeat "RinSta" "JohLen" 2 playersP4 `shouldBe` False
+    it "testRulesGiveeNotRepeatFail1" $ rulesGiveeNotRepeat "RinSta" "JohLen" 2 playersP4 `shouldBe` False
+    it "testRulesGiveeNotRepeatFail2" $ rulesGiveeNotRepeat "RinSta" "GeoHar" 2 playersP4 `shouldBe` False
