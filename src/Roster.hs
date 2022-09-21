@@ -1,22 +1,16 @@
 {-# LANGUAGE DeriveGeneric #-}
 
-module Roster (Roster (..), rosterJsonStringToRoster) where
+module Roster (RosterName, RosterYear, Roster (..), rosterJsonStringToRoster) where
 
 import Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
-import Data.Map.Strict (Map)
 import GHC.Generics
-import Player
+import Gift_Pair
+import Players
 
 type RosterName = String
 
-type PlayerKey = String
-
 type RosterYear = Int
-
-type Players = Map PlayerKey Player
-
-type JsonString = String
 
 data Roster = Roster
   { rosterName :: RosterName,

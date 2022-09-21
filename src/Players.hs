@@ -1,4 +1,4 @@
-module Players (playersUpdatePlayer, playersGetPlayerName, playersAddYear, playersGetGivee, playersGetGiver, playersSetGiftPair, playersUpdateGivee, playersUpdateGiver, playersJsonStringToPlayers) where
+module Players (SelfKey, Players, emptyPlayers, playersUpdatePlayer, playersGetPlayerName, playersAddYear, playersGetGivee, playersGetGiver, playersSetGiftPair, playersUpdateGivee, playersUpdateGiver, playersJsonStringToPlayers) where
 
 import Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
@@ -11,28 +11,20 @@ import Gift_Pair
 import Player
 import Prelude hiding (lookup)
 
-type PlayerKey = String
+type SelfKey = PlayerSymbol
 
-type SelfKey = String
-
-type PlayerName = String
-
-type GiftYear = Int
-
-type Players = Map PlayerKey Player
-
-type JsonString = String
+type Players = Map PlayerSymbol Player
 
 emptyPlayers :: Map String Player
 emptyPlayers =
   Map.fromList
     [("EmptyPlayers", Player {playerName = "EmptyPlayers", giftHistory = Seq.fromList [GiftPair {givee = "EmptyPlayers", giver = "EmptyPlayers"}]})]
 
-playersUpdatePlayer :: PlayerKey -> Player -> Players -> Players
+playersUpdatePlayer :: PlayerSymbol -> Player -> Players -> Players
 -- playersUpdatePlayer playerKey player players = Map.insert playerKey player players
 playersUpdatePlayer = Map.insert
 
-playersGetPlayerName :: PlayerKey -> Players -> PlayerName
+playersGetPlayerName :: PlayerSymbol -> Players -> PlayerName
 playersGetPlayerName playerKey players
   | isNothing maybePlayer = "Error Finding Player"
   | otherwise = playerName (fromJust maybePlayer)
@@ -50,7 +42,7 @@ playersAddYear players =
       | (playerKey, player) <- Map.toAscList players
     ]
 
-playersGetGivee :: SelfKey -> Players -> GiftYear -> PlayerName
+playersGetGivee :: SelfKey -> Players -> GiftYear -> Givee
 playersGetGivee selfKey players giftYear =
   case Map.lookup selfKey players of
     Nothing -> "Error Finding Player"
@@ -58,7 +50,7 @@ playersGetGivee selfKey players giftYear =
       Nothing -> "Error Finding GiftYear"
       (Just giftPair) -> givee giftPair
 
-playersGetGiver :: SelfKey -> Players -> GiftYear -> PlayerName
+playersGetGiver :: SelfKey -> Players -> GiftYear -> Giver
 playersGetGiver selfKey players giftYear =
   case Map.lookup selfKey players of
     Nothing -> "Error Finding Player"
@@ -66,7 +58,7 @@ playersGetGiver selfKey players giftYear =
       Nothing -> "Error Finding GiftYear"
       (Just giftPair) -> giver giftPair
 
-playersSetGiftPair :: PlayerKey -> Players -> GiftYear -> GiftPair -> Players
+playersSetGiftPair :: PlayerSymbol -> Players -> GiftYear -> GiftPair -> Players
 playersSetGiftPair playerKey players giftYear giftPair =
   case Map.lookup playerKey players of
     Nothing -> emptyPlayers
@@ -75,7 +67,7 @@ playersSetGiftPair playerKey players giftYear giftPair =
       let nplr = playerUpdateGiftHistory ngh plr
       playersUpdatePlayer playerKey nplr players
 
-playersUpdateGivee :: PlayerKey -> Players -> Givee -> GiftYear -> Players
+playersUpdateGivee :: PlayerSymbol -> Players -> Givee -> GiftYear -> Players
 playersUpdateGivee playerKey players gee giftYear =
   case Map.lookup playerKey players of
     Nothing -> emptyPlayers
@@ -85,7 +77,7 @@ playersUpdateGivee playerKey players gee giftYear =
         let ngp = giftPairUpdateGivee gee giftPair
         playersSetGiftPair playerKey players giftYear ngp
 
-playersUpdateGiver :: PlayerKey -> Players -> Giver -> GiftYear -> Players
+playersUpdateGiver :: PlayerSymbol -> Players -> Giver -> GiftYear -> Players
 playersUpdateGiver playerKey players ger giftYear =
   case Map.lookup playerKey players of
     Nothing -> emptyPlayers

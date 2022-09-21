@@ -31,6 +31,7 @@ library
       Player
       Players
       Roster
+      Rules
   other-modules:
       Paths_redpoint_haskell
   hs-source-dirs:

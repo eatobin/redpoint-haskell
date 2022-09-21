@@ -1,19 +1,15 @@
 {-# LANGUAGE DeriveGeneric #-}
 
-module Player (Player (..), playerUpdateGiftHistory, playerJsonStringToPlayer, playerPlayerToJsonString) where
+module Player (PlayerName, Player (..), playerUpdateGiftHistory, playerJsonStringToPlayer, playerPlayerToJsonString) where
 
 import Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.ByteString.Lazy as BL
-import Data.Sequence (Seq (..))
 import GHC.Generics
+import Gift_History
 import Gift_Pair
 
-type GiftHistory = Seq GiftPair
-
 type PlayerName = String
-
-type JsonString = String
 
 data Player = Player
   { playerName :: PlayerName,
