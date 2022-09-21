@@ -1,10 +1,10 @@
-module Rules (rulesGiveeNotSelf, rulesGiveeNotReciprocal) where
+{-# LANGUAGE ScopedTypeVariables #-}
+
+module Rules (rulesGiveeNotSelf, rulesGiveeNotReciprocal, rulesGiveeNotRepeat) where
 
 import Gift_History
 import Gift_Pair
-import Player
 import Players
-import Roster
 
 rulesGiveeNotSelf :: SelfKey -> Givee -> Bool
 rulesGiveeNotSelf selfKey gee =
@@ -16,11 +16,9 @@ rulesGiveeNotReciprocal gee plrs giftYear selfKey =
   where
     myReciprocal = playersGetGivee gee plrs giftYear
 
---giveeNotRepeat :: PlrSym -> Givee -> GYear -> PlayersMap -> Bool
---giveeNotRepeat ps ge gy pm =
---  let
---    past = filter (>= 0) . takeWhile (>= (gy - 3)) $ iterate (subtract 1) (gy - 1)
---    geY = getGiveeInRoster ps pm
---    geYrs = map geY past
---  in
---    notElem ge geYrs
+rulesGiveeNotRepeat :: SelfKey -> Givee -> GiftYear -> Players -> Bool
+rulesGiveeNotRepeat selfKey gee giftYear plrs =
+  let past :: [GiftYear] = filter (>= 0) . takeWhile (>= (giftYear - 3)) $ iterate (subtract 1) (giftYear - 1)
+      giveeInYear :: (GiftYear -> Givee) = playersGetGivee selfKey plrs
+      giveesInYears :: [Givee] = map giveeInYear past
+   in notElem gee giveesInYears
