@@ -67,8 +67,8 @@ playersSetGiftPair playerKey players giftYear giftPair =
       let nplr = playerUpdateGiftHistory ngh plr
       playersUpdatePlayer playerKey nplr players
 
-playersUpdateGivee :: PlayerSymbol -> Players -> Givee -> GiftYear -> Players
-playersUpdateGivee playerKey players gee giftYear =
+playersUpdateGivee :: PlayerSymbol -> Givee -> GiftYear -> Players -> Players
+playersUpdateGivee playerKey gee giftYear players =
   case Map.lookup playerKey players of
     Nothing -> emptyPlayers
     (Just plr) -> case Seq.lookup giftYear (giftHistory plr) of
@@ -77,8 +77,8 @@ playersUpdateGivee playerKey players gee giftYear =
         let ngp = giftPairUpdateGivee gee giftPair
         playersSetGiftPair playerKey players giftYear ngp
 
-playersUpdateGiver :: PlayerSymbol -> Players -> Giver -> GiftYear -> Players
-playersUpdateGiver playerKey players ger giftYear =
+playersUpdateGiver :: PlayerSymbol -> Giver -> GiftYear -> Players -> Players
+playersUpdateGiver playerKey ger giftYear players =
   case Map.lookup playerKey players of
     Nothing -> emptyPlayers
     (Just plr) -> case Seq.lookup giftYear (giftHistory plr) of

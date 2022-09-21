@@ -2,7 +2,6 @@
 -- λ> jsonStringGiftPair
 -- λ> gp1
 
-import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
 import qualified Data.Sequence as Seq
 import Gift_History
@@ -27,13 +26,13 @@ jsonStringGiftHistory = "[{\"giver\":\"JohLen\",\"givee\":\"GeoHar\"}]"
 jsonStringGiftHistoryBad :: JsonString
 jsonStringGiftHistoryBad = "[{\"giverX\":\"JohLen\",\"givee\":\"GeoHar\"}]"
 
-giftHistory1 :: Seq.Seq GiftPair
+giftHistory1 :: GiftHistory
 giftHistory1 = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}]
 
-giftHistory2 :: Seq.Seq GiftPair
+giftHistory2 :: GiftHistory
 giftHistory2 = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}, GiftPair {givee = "Yippee", giver = "Yippee"}]
 
-giftHistory3 :: Seq.Seq GiftPair
+giftHistory3 :: GiftHistory
 giftHistory3 = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}, GiftPair {givee = "Givee1", giver = "Giver1"}]
 
 jsonStringPlayer :: JsonString
@@ -51,7 +50,7 @@ jsonStringPlayers = "{\"PauMcc\":{\"playerName\":\"Paul McCartney\",\"giftHistor
 jsonStringPlayersBad :: JsonString
 jsonStringPlayersBad = "{\"PauMcc\":{\"playerNameX\":\"Paul McCartney\",\"giftHistory\":[{\"givee\":\"GeoHar\",\"giver\":\"JohLen\"}]},\"GeoHar\":{\"playerName\":\"George Harrison\",\"giftHistory\":[{\"givee\":\"RinSta\",\"giver\":\"PauMcc\"}]},\"JohLen\":{\"playerName\":\"John Lennon\",\"giftHistory\":[{\"givee\":\"PauMcc\",\"giver\":\"RinSta\"}]},\"RinSta\":{\"playerName\":\"Ringo Starr\",\"giftHistory\":[{\"givee\":\"JohLen\",\"giver\":\"GeoHar\"}]}}"
 
-players1 :: Map String Player
+players1 :: Players
 players1 =
   Map.fromList
     [ ("GeoHar", Player {playerName = "George Harrison", giftHistory = Seq.fromList [GiftPair {givee = "RinSta", giver = "PauMcc"}]}),
@@ -60,7 +59,7 @@ players1 =
       ("RinSta", Player {playerName = "Ringo Starr", giftHistory = Seq.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}]})
     ]
 
-newBeePlayers :: Map String Player
+newBeePlayers :: Players
 newBeePlayers =
   Map.fromList
     [ ("GeoHar", Player {playerName = "George Harrison", giftHistory = Seq.fromList [GiftPair {givee = "RinSta", giver = "PauMcc"}]}),
@@ -69,7 +68,7 @@ newBeePlayers =
       ("RinSta", Player {playerName = "New Bee", giftHistory = Seq.fromList [GiftPair {giver = "NewBee", givee = "NewBee"}]})
     ]
 
-playersGivee :: Map String Player
+playersGivee :: Players
 playersGivee =
   Map.fromList
     [ ("GeoHar", Player {playerName = "George Harrison", giftHistory = Seq.fromList [GiftPair {givee = "you", giver = "PauMcc"}]}),
@@ -78,7 +77,7 @@ playersGivee =
       ("RinSta", Player {playerName = "New Bee", giftHistory = Seq.fromList [GiftPair {giver = "NewBee", givee = "NewBee"}]})
     ]
 
-playersGiver :: Map String Player
+playersGiver :: Players
 playersGiver =
   Map.fromList
     [ ("GeoHar", Player {playerName = "George Harrison", giftHistory = Seq.fromList [GiftPair {givee = "RinSta", giver = "you"}]}),
@@ -87,7 +86,7 @@ playersGiver =
       ("RinSta", Player {playerName = "New Bee", giftHistory = Seq.fromList [GiftPair {giver = "NewBee", givee = "NewBee"}]})
     ]
 
-extendedPlayers :: Map String Player
+extendedPlayers :: Players
 extendedPlayers =
   Map.fromList
     [ ("GeoHar", Player {playerName = "George Harrison", giftHistory = Seq.fromList [GiftPair {givee = "RinSta", giver = "PauMcc"}, GiftPair {givee = "GeoHar", giver = "GeoHar"}]}),
@@ -105,14 +104,28 @@ jsonStringRosterBad = "{\"rosterNameX\":\"The Beatles\",\"rosterYear\":2014,\"pl
 roster1 :: Roster
 roster1 = Roster {rosterName = "The Beatles", rosterYear = 2014, players = players1}
 
--- bks2 :: [Book]
--- bks2 = [bk3, bk1, bk2]
+reciprocalPlayers :: Players
+reciprocalPlayers =
+  Map.fromList
+    [ ("GeoHar", Player {playerName = "George Harrison", giftHistory = Seq.fromList [GiftPair {givee = "JohLen", giver = "JohLen"}]}),
+      ("JohLen", Player {playerName = "John Lennon", giftHistory = Seq.fromList [GiftPair {givee = "GeoHar", giver = "GeoHar"}]})
+    ]
 
--- bks3 :: [Book]
--- bks3 = [bk1, bk2, bk3, bk4]
+playersP0 :: Players
+playersP0 =
+  Map.fromList
+    [ ("EriTob", Player {playerName = "Eric Tobin", giftHistory = Seq.fromList [GiftPair {givee = "KarLav", giver = "PauMcc"}]}),
+      ("GeoHar", Player {playerName = "George Harrison", giftHistory = Seq.fromList [GiftPair {givee = "PauMcc", giver = "JohLen"}]}),
+      ("JohLen", Player {playerName = "John Lennon", giftHistory = Seq.fromList [GiftPair {givee = "GeoHar", giver = "RinSta"}]}),
+      ("KarLav", Player {playerName = "Karen Lavengood", giftHistory = Seq.fromList [GiftPair {givee = "RinSta", giver = "EriTob"}]}),
+      ("PauMcc", Player {playerName = "Paul McCartney", giftHistory = Seq.fromList [GiftPair {givee = "EriTob", giver = "GeoHar"}]}),
+      ("RinSta", Player {playerName = "Ringo Starr", giftHistory = Seq.fromList [GiftPair {givee = "JohLen", giver = "KarLav"}]})
+    ]
 
--- bks5 :: [Book]
--- bks5 = [bk3, bk1, bk2]
+playersP4 :: Players
+playersP4 =
+  let extended = playersAddYear . playersAddYear . playersAddYear $ playersAddYear playersP0
+   in playersUpdateGivee "RinSta" "KarLav" 4 . playersUpdateGivee "RinSta" "EriTob" 3 . playersUpdateGivee "RinSta" "PauMcc" 2 $ playersUpdateGivee "RinSta" "GeoHar" 1 extended
 
 -- jsonStringBorrowersBad :: String
 -- jsonStringBorrowersBad =
@@ -166,10 +179,10 @@ main = hspec $ do
     it "testPlayersGetGiverPass" $ playersGetGiver "JohLen" players1 0 `shouldBe` "RinSta"
     it "testPlayersGetGiverFailPlayer" $ playersGetGiver "Nope" players1 0 `shouldBe` "Error Finding Player"
     it "testPlayersGetGiverFailGiftYear" $ playersGetGiver "JohLen" players1 99 `shouldBe` "Error Finding GiftYear"
-    it "testPlayersUpdateGiveePass" $ playersUpdateGivee "GeoHar" newBeePlayers "you" 0 `shouldBe` playersGivee
-    it "testPlayersUpdateGiveeFail" $ playersUpdateGivee "GeoHar" newBeePlayers "you" 99 `shouldBe` emptyPlayers
-    it "testPlayersUpdateGiver" $ playersUpdateGiver "GeoHar" newBeePlayers "you" 0 `shouldBe` playersGiver
-    it "testPlayersUpdateGiverFail" $ playersUpdateGiver "GeoHar" newBeePlayers "you" 99 `shouldBe` emptyPlayers
+    it "testPlayersUpdateGiveePass" $ playersUpdateGivee "GeoHar" "you" 0 newBeePlayers `shouldBe` playersGivee
+    it "testPlayersUpdateGiveeFail" $ playersUpdateGivee "GeoHar" "you" 99 newBeePlayers `shouldBe` emptyPlayers
+    it "testPlayersUpdateGiver" $ playersUpdateGiver "GeoHar" "you" 0 newBeePlayers `shouldBe` playersGiver
+    it "testPlayersUpdateGiverFail" $ playersUpdateGiver "GeoHar" "you" 99 newBeePlayers `shouldBe` emptyPlayers
 
   describe "Roster tests" $ do
     it "testRosterJsonStringToRosterPass" $ rosterJsonStringToRoster jsonStringRoster1 `shouldBe` Just roster1
