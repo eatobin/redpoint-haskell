@@ -201,3 +201,9 @@ main = hspec $ do
     it "testRulesGiveeNotRepeatFail6" $ rulesGiveeNotRepeat "RinSta" "PauMcc" 5 playersP4 `shouldBe` False
     it "testRulesGiveeNotRepeatFail7" $ rulesGiveeNotRepeat "RinSta" "EriTob" 5 playersP4 `shouldBe` False
     it "testRulesGiveeNotRepeatFail8" $ rulesGiveeNotRepeat "RinSta" "KarLav" 5 playersP4 `shouldBe` False
+    it "testRulesPassAll" $
+      ( rulesGiveeNotSelf "RinSta" "JohLen"
+          && rulesGiveeNotReciprocal "JohLen" players1 0 "GeoHar"
+          && rulesGiveeNotRepeat "RinSta" "GeoHar" 5 playersP4
+      )
+        `shouldBe` True
