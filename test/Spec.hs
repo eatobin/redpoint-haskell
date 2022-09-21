@@ -192,5 +192,4 @@ main = hspec $ do
   describe "Rules tests" $ do
     it "testRulesGiveeNotSelf" $ rulesGiveeNotSelf "JohLen" "GeoHar" `shouldBe` True
     it "testRulesGiveeNotReciprocalPass" $ rulesGiveeNotReciprocal "JohLen" players1 0 "GeoHar" `shouldBe` True
-
-
+    it "testRulesGiveeNotReciprocalFail" $ rulesGiveeNotReciprocal "JohLen" reciprocalPlayers 0 "GeoHar" `shouldBe` False
