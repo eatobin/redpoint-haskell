@@ -9,6 +9,7 @@ import Gift_Pair
 import Player
 import Players
 import Roster
+import Rules
 import Test.Hspec
 
 jsonStringGiftPair :: JsonString
@@ -187,3 +188,9 @@ main = hspec $ do
   describe "Roster tests" $ do
     it "testRosterJsonStringToRosterPass" $ rosterJsonStringToRoster jsonStringRoster1 `shouldBe` Just roster1
     it "testRosterJsonStringToRosterFail" $ rosterJsonStringToRoster jsonStringRosterBad `shouldBe` Nothing
+
+  describe "Rules tests" $ do
+    it "testRulesGiveeNotSelf" $ rulesGiveeNotSelf "JohLen" "GeoHar" `shouldBe` True
+    it "testRulesGiveeNotReciprocalPass" $ rulesGiveeNotReciprocal "JohLen" players1 0 "GeoHar" `shouldBe` True
+
+
