@@ -15,7 +15,7 @@ type SelfKey = PlayerSymbol
 
 type Players = Map PlayerSymbol Player
 
-emptyPlayers :: Map String Player
+emptyPlayers :: Players
 emptyPlayers =
   Map.fromList
     [("EmptyPlayers", Player {playerName = "EmptyPlayers", giftHistory = Seq.fromList [GiftPair {givee = "EmptyPlayers", giver = "EmptyPlayers"}]})]
