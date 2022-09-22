@@ -4,8 +4,10 @@
 
 import qualified Data.Map.Strict as Map
 import qualified Data.Sequence as Seq
+import qualified Data.Set as Set
 import Gift_History
 import Gift_Pair
+import Hat
 import Player
 import Players
 import Roster
@@ -128,9 +130,11 @@ playersP4 =
   let extended = playersAddYear . playersAddYear . playersAddYear $ playersAddYear playersP0
    in playersUpdateGivee "RinSta" "KarLav" 4 . playersUpdateGivee "RinSta" "EriTob" 3 . playersUpdateGivee "RinSta" "PauMcc" 2 $ playersUpdateGivee "RinSta" "GeoHar" 1 extended
 
--- jsonStringBorrowersBad :: String
--- jsonStringBorrowersBad =
---   "[{\"name\"\"Borrower1\",\"maxBooks\":1},{\"name\":\"Borrower2\",\"maxBooks\":2}]"
+hat1 :: Hat
+hat1 = Set.fromList ["RinSta", "GeoHar", "JohLen", "PauMcc", "JohLen"]
+
+--Map.keysSet (fromList [(5, "a"), (3, "b")]) == Data.Set.fromList [3, 5]
+--keysSet empty == Data.Set.empty
 
 -- jsonStringBorrowers :: String
 -- jsonStringBorrowers =
@@ -207,3 +211,6 @@ main = hspec $ do
           && rulesGiveeNotRepeat "RinSta" "GeoHar" 5 playersP4
       )
         `shouldBe` True
+
+  describe "Hat tests" $ do
+    it "testHatMakeHat" $ hatMakeHat players1 `shouldBe` hat1
