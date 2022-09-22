@@ -27,7 +27,7 @@ library
   exposed-modules:
       Gift_History
       Gift_Pair
-      Lib
+      Hat
       Player
       Players
       Roster
