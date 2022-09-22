@@ -218,3 +218,4 @@ main = hspec $ do
   describe "Hat tests" $ do
     it "testHatMakeHat" $ hatMakeHat players1 `shouldBe` hat1
     it "testHatRemovePuck" $ hatRemovePuck "JohLen" hat1 `shouldBe` hat2
+    it "testHatDiscardGivee" $ hatDiscardGivee "JohLen" hat2 `shouldBe` hat1

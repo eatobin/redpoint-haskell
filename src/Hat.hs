@@ -1,4 +1,4 @@
-module Hat (Hat, Discards, hatMakeHat, hatRemovePuck) where
+module Hat (Hat, Discards, hatMakeHat, hatRemovePuck, hatDiscardGivee) where
 
 import qualified Data.Map.Strict as Map
 import Data.Set (Set)
@@ -15,3 +15,6 @@ hatMakeHat = Map.keysSet
 
 hatRemovePuck :: PlayerSymbol -> Hat -> Hat
 hatRemovePuck = Set.delete
+
+hatDiscardGivee :: Givee -> Discards -> Discards
+hatDiscardGivee = Set.insert
