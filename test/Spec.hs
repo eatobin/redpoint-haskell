@@ -133,6 +133,9 @@ playersP4 =
 hat1 :: Hat
 hat1 = Set.fromList ["RinSta", "GeoHar", "JohLen", "PauMcc", "JohLen"]
 
+hat2 :: Hat
+hat2 = Set.fromList ["RinSta", "GeoHar", "PauMcc"]
+
 --Map.keysSet (fromList [(5, "a"), (3, "b")]) == Data.Set.fromList [3, 5]
 --keysSet empty == Data.Set.empty
 
@@ -214,3 +217,4 @@ main = hspec $ do
 
   describe "Hat tests" $ do
     it "testHatMakeHat" $ hatMakeHat players1 `shouldBe` hat1
+    it "testHatRemovePuck" $ hatRemovePuck "JohLen" hat1 `shouldBe` hat2
