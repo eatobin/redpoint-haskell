@@ -2,7 +2,6 @@ module Players (SelfKey, Players, emptyPlayers, playersUpdatePlayer, playersGetP
 
 import Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
-import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
 import Data.Maybe (fromJust, isNothing)
 import Data.Sequence as Seq
@@ -13,7 +12,7 @@ import Prelude hiding (lookup)
 
 type SelfKey = PlayerSymbol
 
-type Players = Map PlayerSymbol Player
+type Players = Map.Map PlayerSymbol Player
 
 emptyPlayers :: Players
 emptyPlayers =

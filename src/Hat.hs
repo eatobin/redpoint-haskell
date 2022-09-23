@@ -1,14 +1,13 @@
 module Hat (Hat, Discards, hatMakeHat, hatRemovePuck, hatDiscardGivee, hatReturnDiscards) where
 
 import qualified Data.Map.Strict as Map
-import Data.Set (Set)
 import qualified Data.Set as Set
 import Gift_Pair
 import Players
 
-type Hat = Set PlayerSymbol
+type Hat = Set.Set PlayerSymbol
 
-type Discards = Set PlayerSymbol
+type Discards = Set.Set PlayerSymbol
 
 hatMakeHat :: Players -> Hat
 hatMakeHat = Map.keysSet

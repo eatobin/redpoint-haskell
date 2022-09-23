@@ -3,16 +3,15 @@ module Gift_History (GiftHistory, GiftYear, giftHistoryAddYear, giftHistoryUpdat
 import Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.ByteString.Lazy as BL
-import Data.Sequence (Seq (..), (|>))
 import qualified Data.Sequence as Seq
 import Gift_Pair
 
-type GiftHistory = Seq GiftPair
+type GiftHistory = Seq.Seq GiftPair
 
 type GiftYear = Int
 
 giftHistoryAddYear :: GiftHistory -> PlayerSymbol -> GiftHistory
-giftHistoryAddYear giftHistory playerKey = giftHistory |> (GiftPair {givee = playerKey, giver = playerKey})
+giftHistoryAddYear giftHistory playerKey = giftHistory Seq.|> (GiftPair {givee = playerKey, giver = playerKey})
 
 giftHistoryUpdateGiftHistory :: GiftYear -> GiftPair -> GiftHistory -> GiftHistory
 -- giftHistoryUpdateGiftHistory giftYear giftPair giftHistory = Seq.update giftYear giftPair giftHistory
