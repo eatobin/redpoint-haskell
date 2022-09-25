@@ -24,3 +24,6 @@ mainReadFileIntoJsonString f = do
       let s = BS.unpack r
       return (Right s)
     Left _ -> return (Left "File read error.")
+
+redpointRosterOrQuit :: FilePath -> IO()
+redpointRosterOrQuit filePath
