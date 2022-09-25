@@ -6,10 +6,8 @@ import Gift_Pair
 
 type ErrorString = String
 
---main :: IO ()
---main = do
---  input <- BS.readFile jsonFile
---  putStrLn (BS.unpack input)
+jsonFile :: FilePath
+jsonFile = "resources/blackhawks.json"
 
 main :: IO ()
 main = do
@@ -26,6 +24,3 @@ mainReadFileIntoJsonString f = do
       let s = BS.unpack r
       return (Right s)
     Left _ -> return (Left "File read error.")
-
-jsonFile :: FilePath
-jsonFile = "resources/blackhawks.json"
