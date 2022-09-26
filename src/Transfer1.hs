@@ -8,7 +8,7 @@ type Account = TVar Int
 withdraw :: Account -> Int -> STM ()
 withdraw acc amount = do
   bal <- readTVar acc
-  check (amount <= 0 || amount <= bal)
+  check (amount >= 0 && amount <= bal)
   writeTVar acc (bal - amount)
 
 deposit :: Account -> Int -> STM ()
