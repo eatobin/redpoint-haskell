@@ -1,7 +1,6 @@
 module Transfer1 (main1) where
 
 import Control.Concurrent.STM
-import Control.Monad (when)
 
 type Account = TVar Int
 
@@ -14,7 +13,8 @@ withdraw acc amount = do
 deposit :: Account -> Int -> STM ()
 deposit acc amount = do
   bal <- readTVar acc
-  when (amount > 0) $ writeTVar acc (bal + amount)
+  check (amount >= 0)
+  writeTVar acc (bal + amount)
 
 transfer :: Account -> Account -> Int -> IO ()
 transfer from to amount =
