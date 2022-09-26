@@ -1,7 +1,4 @@
-module Transfer1
-  ( main1,
-  )
-where
+module Transfer1 (main1) where
 
 import Control.Concurrent.STM
 import Control.Monad (when)
