@@ -6,9 +6,7 @@ import Control.Concurrent.STM
 import Control.Exception
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.Map.Strict as Map
-import qualified Data.Sequence as Seq
 import Gift_Pair
-import Player
 import Players
 import Roster
 
@@ -25,9 +23,9 @@ jsonFile = "resources/blackhawks.json"
 
 main :: IO ()
 main = do
-  tvRosterName <- atomically (newTVar "nope")
+  tvRosterName <- atomically (newTVar "")
   tvRosterYear <- atomically (newTVar 0)
-  tvPlayers <- atomically (newTVar (Map.fromList [("GeoHar", Player {playerName = "George Harrison", giftHistory = Seq.fromList [GiftPair {givee = "RinSta", giver = "PauMcc"}]})]))
+  tvPlayers <- atomically (newTVar Map.empty)
   redpointRosterOrQuit jsonFile tvRosterName tvRosterYear tvPlayers
   rn <- readTVarIO tvRosterName
   ry <- readTVarIO tvRosterYear
