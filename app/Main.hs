@@ -1,6 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Main (main, mainRosterOrQuit, mainDrawPuck) where
+module Main (main, mainReadFileIntoJsonString, mainRosterOrQuit, mainDrawPuck) where
 
 import Control.Concurrent.STM
 import Control.Exception
