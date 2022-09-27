@@ -1,6 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Main (main, mainReadFileIntoJsonString, mainRosterOrQuit, mainDrawPuck, mainStartNewYear, mainSelectNewGiver, mainGiveeIsSuccess) where
+module Main (main, mainReadFileIntoJsonString, mainRosterOrQuit, mainDrawPuck, mainStartNewYear, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure) where
 
 import Control.Concurrent.STM
 import Control.Exception
@@ -139,3 +139,12 @@ mainGiveeIsSuccess tvMaybeGiver tvGiftYear tvMaybeGivee tvPlayers tvGiveeHat = d
   atomically $ modifyTVar tvPlayers (playersUpdateGiver (fromJust mge) (fromJust mgr) gy)
   atomically $ modifyTVar tvGiveeHat (hatRemovePuck (fromJust mge))
   atomically $ writeTVar tvMaybeGivee Nothing
+
+mainGiveeIsFailure :: TVMaybeGivee -> TVGiveeHat -> TVDiscards -> IO ()
+mainGiveeIsFailure tvMaybeGivee tvGiveeHat tvDiscards = do
+  mge <- readTVarIO tvMaybeGivee
+  atomically $ modifyTVar tvGiveeHat (hatRemovePuck (fromJust mge))
+  atomically $ modifyTVar tvDiscards (hatDiscardGivee (fromJust mge))
+  geh <- readTVarIO tvGiveeHat
+  mge1 <- mainDrawPuck geh
+  atomically $ writeTVar tvMaybeGivee mge1
