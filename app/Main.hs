@@ -1,12 +1,13 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Main (main, mainReadFileIntoJsonString, mainRosterOrQuit, mainDrawPuck) where
+module Main (main, mainReadFileIntoJsonString, mainRosterOrQuit, mainDrawPuck, mainStartNewYear) where
 
 import Control.Concurrent.STM
 import Control.Exception
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.Map.Strict as Map
 import qualified Data.Set as Set
+import Gift_History
 import Gift_Pair
 import Hat
 import Players
@@ -20,6 +21,18 @@ type TVRosterName = TVar RosterName
 type TVRosterYear = TVar RosterYear
 
 type TVPlayers = TVar Players
+
+type TVGiftYear = TVar GiftYear
+
+type TVGiveeHat = TVar Hat
+
+type TVGiverHat = TVar Hat
+
+type TVMaybeGivee = TVar (Maybe Givee)
+
+type TVMaybeGiver = TVar (Maybe Giver)
+
+type TVDiscards = TVar Discards
 
 jsonFile :: FilePath
 jsonFile = "resources/blackhawks.json"
@@ -67,3 +80,18 @@ mainDrawPuck hat =
     else do
       n <- randomRIO (0, length hat - 1)
       return (Just (Set.elemAt n hat))
+
+mainStartNewYear :: TVGiftYear -> TVPlayers -> TVGiverHat -> TVGiveeHat -> TVMaybeGiver -> TVMaybeGivee -> TVDiscards -> IO ()
+mainStartNewYear tvGiftYear tvPlayers tvGiverHat tvGiveeHat tvMaybeGiver tvMaybeGivee tvDiscards = do
+  plrs <- readTVarIO tvPlayers
+  let nhgr = hatMakeHat plrs
+  let nhge = hatMakeHat plrs
+  gr <- mainDrawPuck nhgr
+  ge <- mainDrawPuck nhge
+  atomically $ modifyTVar tvGiftYear (+ 1)
+  atomically $ modifyTVar tvPlayers playersAddYear
+  atomically $ writeTVar tvGiverHat nhgr
+  atomically $ writeTVar tvGiveeHat nhge
+  atomically $ writeTVar tvMaybeGiver gr
+  atomically $ writeTVar tvMaybeGivee ge
+  atomically $ writeTVar tvDiscards Set.empty
