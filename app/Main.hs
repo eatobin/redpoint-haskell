@@ -5,7 +5,10 @@ module Main (main, redpointRosterOrQuit) where
 import Control.Concurrent.STM
 import Control.Exception
 import qualified Data.ByteString.Char8 as BS
+import qualified Data.Map.Strict as Map
+import qualified Data.Sequence as Seq
 import Gift_Pair
+import Player
 import Players
 import Roster
 
@@ -22,10 +25,16 @@ jsonFile = "resources/blackhawks.json"
 
 main :: IO ()
 main = do
-  input <- mainReadFileIntoJsonString jsonFile
-  case input of
-    Right r -> putStrLn r
-    Left e -> putStrLn e
+  tvRosterName <- atomically (newTVar "nope")
+  tvRosterYear <- atomically (newTVar 0)
+  tvPlayers <- atomically (newTVar (Map.fromList [("GeoHar", Player {playerName = "George Harrison", giftHistory = Seq.fromList [GiftPair {givee = "RinSta", giver = "PauMcc"}]})]))
+  redpointRosterOrQuit jsonFile tvRosterName tvRosterYear tvPlayers
+  rn <- readTVarIO tvRosterName
+  ry <- readTVarIO tvRosterYear
+  plrs <- readTVarIO tvPlayers
+  putStrLn rn
+  print ry
+  print plrs
 
 mainReadFileIntoJsonString :: FilePath -> IO (Either ErrorString JsonString)
 mainReadFileIntoJsonString f = do
