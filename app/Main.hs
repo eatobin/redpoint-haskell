@@ -1,11 +1,12 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Main (main, mainReadFileIntoJsonString, mainRosterOrQuit, mainDrawPuck, mainStartNewYear) where
+module Main (main, mainReadFileIntoJsonString, mainRosterOrQuit, mainDrawPuck, mainStartNewYear, mainSelectNewGiver) where
 
 import Control.Concurrent.STM
 import Control.Exception
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.Map.Strict as Map
+import Data.Maybe
 import qualified Data.Set as Set
 import Gift_History
 import Gift_Pair
@@ -105,12 +106,26 @@ mainStartNewYear tvGiftYear tvPlayers tvGiverHat tvGiveeHat tvMaybeGiver tvMaybe
   plrs <- readTVarIO tvPlayers
   let nhgr = hatMakeHat plrs
   let nhge = hatMakeHat plrs
-  gr <- mainDrawPuck nhgr
-  ge <- mainDrawPuck nhge
+  mgr <- mainDrawPuck nhgr
+  mge <- mainDrawPuck nhge
   atomically $ modifyTVar tvGiftYear (+ 1)
   atomically $ modifyTVar tvPlayers playersAddYear
   atomically $ writeTVar tvGiverHat nhgr
   atomically $ writeTVar tvGiveeHat nhge
-  atomically $ writeTVar tvMaybeGiver gr
-  atomically $ writeTVar tvMaybeGivee ge
+  atomically $ writeTVar tvMaybeGiver mgr
+  atomically $ writeTVar tvMaybeGivee mge
   atomically $ writeTVar tvDiscards Set.empty
+
+mainSelectNewGiver :: TVMaybeGiver -> TVGiverHat -> TVGiveeHat -> TVDiscards -> TVMaybeGivee -> IO ()
+mainSelectNewGiver tvMaybeGiver tvGiverHat tvGiveeHat tvDiscards tvMaybeGivee = do
+  mgr <- readTVarIO tvMaybeGiver
+  atomically $ modifyTVar tvGiverHat (hatRemovePuck (fromJust mgr))
+  dc <- readTVarIO tvDiscards
+  atomically $ modifyTVar tvGiveeHat (hatReturnDiscards dc)
+  atomically $ writeTVar tvDiscards Set.empty
+  grh <- readTVarIO tvGiverHat
+  mgr1 <- mainDrawPuck grh
+  atomically $ writeTVar tvMaybeGiver mgr1
+  geh <- readTVarIO tvGiveeHat
+  mge <- mainDrawPuck geh
+  atomically $ writeTVar tvMaybeGivee mge
