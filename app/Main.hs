@@ -34,21 +34,40 @@ type TVMaybeGiver = TVar (Maybe Giver)
 
 type TVDiscards = TVar Discards
 
-jsonFile :: FilePath
-jsonFile = "resources/blackhawks.json"
+filePath :: FilePath
+filePath = "resources/blackhawks.json"
 
 main :: IO ()
 main = do
+  tvGiftYear <- atomically (newTVar 0)
+  tvMaybeGiver <- atomically (newTVar Nothing)
+  tvMaybeGivee <- atomically (newTVar Nothing)
+  tvPlayers <- atomically (newTVar Map.empty)
+  tvGiverHat <- atomically (newTVar Set.empty)
+  tvGiveeHat <- atomically (newTVar Set.empty)
+  tvDiscards <- atomically (newTVar Set.empty)
   tvRosterName <- atomically (newTVar "")
   tvRosterYear <- atomically (newTVar 0)
-  tvPlayers <- atomically (newTVar Map.empty)
-  mainRosterOrQuit jsonFile tvRosterName tvRosterYear tvPlayers
+  mainRosterOrQuit filePath tvRosterName tvRosterYear tvPlayers
+  mainStartNewYear tvGiftYear tvPlayers tvGiverHat tvGiveeHat tvMaybeGiver tvMaybeGivee tvDiscards
+  gy <- readTVarIO tvGiftYear
+  mgr <- readTVarIO tvMaybeGiver
+  mge <- readTVarIO tvMaybeGivee
+  plrs <- readTVarIO tvPlayers
+  grh <- readTVarIO tvGiverHat
+  geh <- readTVarIO tvGiveeHat
+  dis <- readTVarIO tvDiscards
   rn <- readTVarIO tvRosterName
   ry <- readTVarIO tvRosterYear
-  plrs <- readTVarIO tvPlayers
-  putStrLn rn
-  print ry
+  print gy
+  print mgr
+  print mge
   print plrs
+  print grh
+  print geh
+  print dis
+  print rn
+  print ry
 
 mainReadFileIntoJsonString :: FilePath -> IO (Either ErrorString JsonString)
 mainReadFileIntoJsonString f = do
@@ -60,8 +79,8 @@ mainReadFileIntoJsonString f = do
     Left _ -> return (Left "File read error.")
 
 mainRosterOrQuit :: FilePath -> TVRosterName -> TVRosterYear -> TVPlayers -> IO ()
-mainRosterOrQuit filePath tvRosterName tvRosterYear tvPlayers = do
-  rosterStringEither :: Either ErrorString JsonString <- mainReadFileIntoJsonString filePath
+mainRosterOrQuit fp tvRosterName tvRosterYear tvPlayers = do
+  rosterStringEither :: Either ErrorString JsonString <- mainReadFileIntoJsonString fp
   case rosterStringEither of
     Right rs -> do
       let maybeRoster :: Maybe Roster = rosterJsonStringToRoster rs
