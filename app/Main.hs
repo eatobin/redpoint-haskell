@@ -1,12 +1,13 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Main (main, mainReadFileIntoJsonString, mainRosterOrQuit, mainDrawPuck, mainStartNewYear, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure) where
+module Main (main, mainReadFileIntoJsonString, mainRosterOrQuit, mainDrawPuck, mainStartNewYear, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainErrors) where
 
 import Control.Concurrent.STM
 import Control.Exception
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.Map.Strict as Map
 import Data.Maybe
+import Data.Sequence as Seq
 import qualified Data.Set as Set
 import Gift_History
 import Gift_Pair
@@ -34,6 +35,8 @@ type TVMaybeGivee = TVar (Maybe Givee)
 type TVMaybeGiver = TVar (Maybe Giver)
 
 type TVDiscards = TVar Discards
+
+type PlayerErrors = Seq.Seq PlayerSymbol
 
 filePath :: FilePath
 filePath = "resources/blackhawks.json"
@@ -98,7 +101,7 @@ mainDrawPuck hat =
   if Set.null hat
     then return Nothing
     else do
-      n <- randomRIO (0, length hat - 1)
+      n <- randomRIO (0, Prelude.length hat - 1)
       return (Just (Set.elemAt n hat))
 
 mainStartNewYear :: TVGiftYear -> TVPlayers -> TVGiverHat -> TVGiveeHat -> TVMaybeGiver -> TVMaybeGivee -> TVDiscards -> IO ()
@@ -148,3 +151,17 @@ mainGiveeIsFailure tvMaybeGivee tvGiveeHat tvDiscards = do
   geh <- readTVarIO tvGiveeHat
   mge1 <- mainDrawPuck geh
   atomically $ writeTVar tvMaybeGivee mge1
+
+mainErrors :: TVPlayers -> GiftYear -> IO PlayerErrors
+mainErrors tvPlayers tvGiftYear = do
+  plrs <- readTVarIO tvPlayers
+  return
+    ( Seq.fromList
+        [ plrSymbol
+          | let plrKeys = Map.keys plrs,
+            plrSymbol <- plrKeys,
+            let giverCode = playersGetGiver plrSymbol plrs tvGiftYear,
+            let giveeCode = playersGetGivee plrSymbol plrs tvGiftYear,
+            (plrSymbol == giverCode) || (plrSymbol == giveeCode)
+        ]
+    )
