@@ -160,9 +160,9 @@ mainErrors tvPlayers tvGiftYear = do
     ( Seq.fromList
         [ plrSymbol
           | plrSymbol <- plrKeys,
-            let giverCode = playersGetGiver plrSymbol plrs tvGiftYear,
-            let giveeCode = playersGetGivee plrSymbol plrs tvGiftYear,
-            (plrSymbol == giverCode) || (plrSymbol == giveeCode)
+            let geeCode = playersGetGivee plrSymbol plrs tvGiftYear,
+            let gerCode = playersGetGiver plrSymbol plrs tvGiftYear,
+            (plrSymbol == gerCode) || (plrSymbol == geeCode)
         ]
     )
 
@@ -177,20 +177,46 @@ mainPrintResults tvPlayers tvGiftYear = do
         let pn = playersGetPlayerName plrSymbol plrs,
         let geeCode = playersGetGivee plrSymbol plrs tvGiftYear,
         let geeName = playersGetPlayerName geeCode plrs
-        --        let giverCode = playersGetGiver plrSymbol plrs tvGiftYear
+        --        let gerCode = playersGetGiver plrSymbol plrs tvGiftYear
     ]
+
+--testingPrintResults :: Players -> GiftYear -> IO ()
+--testingPrintResults plrs gy = do
+--  let plrKeys = Map.keys plrs
+--  mapM_
+--    putStrLn
+--    [ pn ++ " is buying for " ++ geeName
+--      | plrSymbol <- plrKeys,
+--        let pn = playersGetPlayerName plrSymbol plrs,
+--        let geeCode = playersGetGivee plrSymbol plrs gy,
+--        let geeName = playersGetPlayerName geeCode plrs,
+--        let gerCode = playersGetGiver plrSymbol plrs gy,
+--        if (plrSymbol == gerCode) || (plrSymbol == geeCode)
+--          then pn ++ " is buying for " ++ geeName
+--        else pn ++ " is buying for " ++ geeName
+--    ]
+
+--testingPrintResults :: Players -> IO ()
+
+--testingPrintResults :: Map.Map String a -> IO ()
+--testingPrintResults plrs = do
+--  let plrKeys = Map.keys plrs
+--  mapM_ putStrLn [plrSymbol | plrSymbol <- plrKeys]
 
 testingPrintResults :: Players -> GiftYear -> IO ()
 testingPrintResults plrs gy = do
   let plrKeys = Map.keys plrs
   mapM_
     putStrLn
-    [ pn ++ " is buying for " ++ geeName
-      | plrSymbol <- plrKeys,
-        let pn = playersGetPlayerName plrSymbol plrs,
-        let geeCode = playersGetGivee plrSymbol plrs gy,
+    [ do
+        let pn = playersGetPlayerName plrSymbol plrs
+        let geeCode = playersGetGivee plrSymbol plrs gy
         let geeName = playersGetPlayerName geeCode plrs
-        --        let giverCode = playersGetGiver plrSymbol plrs tvGiftYear
+        let gerCode = playersGetGiver plrSymbol plrs gy
+        if (plrSymbol == gerCode) || True
+          then pn ++ " " ++ geeCode ++ " " ++ geeName ++ " " ++ gerCode
+          else "Nope!!"
+      | plrSymbol <- plrKeys
     ]
 
 --  def redpointPrintResults(): Unit = {
