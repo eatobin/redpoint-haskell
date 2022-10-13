@@ -1,4 +1,5 @@
--- λ> :load test/Spec.hs src/Gift_Pair.hs src/Gift_History.hs src/Player.hs src/Players src/Roster.hs src/Rules.hs
+-- λ> :load src/Gift_Pair.hs src/Gift_History.hs src/Player.hs src/Players src/Roster.hs src/Hat.hs src/Rules.hs test/Spec.hs
+-- λ> :load src/Gift_Pair.hs src/Gift_History.hs src/Player.hs src/Players src/Roster.hs src/Rules.hs app/Main.hs
 -- λ> jsonStringGiftPair
 -- λ> gp1
 

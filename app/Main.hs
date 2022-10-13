@@ -1,6 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Main (main, mainReadFileIntoJsonString, mainRosterOrQuit, mainDrawPuck, mainStartNewYear, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainErrors, mainPrintResults) where
+module Main (main, mainReadFileIntoJsonString, mainRosterOrQuit, mainDrawPuck, mainStartNewYear, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainErrors, mainPrintResults, testingPrintResults) where
 
 import Control.Concurrent.STM
 import Control.Exception
@@ -172,11 +172,24 @@ mainPrintResults tvPlayers tvGiftYear = do
   let plrKeys = Map.keys plrs
   mapM_
     putStrLn
-    [ playerName ++ " is buying for " ++ giveeName
+    [ pn ++ " is buying for " ++ geeName
       | plrSymbol <- plrKeys,
-        let playerName = playersGetPlayerName plrSymbol plrs,
-        let giveeCode = playersGetGivee plrSymbol plrs tvGiftYear,
-        let giveeName = playersGetPlayerName giveeCode plrs
+        let pn = playersGetPlayerName plrSymbol plrs,
+        let geeCode = playersGetGivee plrSymbol plrs tvGiftYear,
+        let geeName = playersGetPlayerName geeCode plrs
+        --        let giverCode = playersGetGiver plrSymbol plrs tvGiftYear
+    ]
+
+testingPrintResults :: Players -> GiftYear -> IO ()
+testingPrintResults plrs gy = do
+  let plrKeys = Map.keys plrs
+  mapM_
+    putStrLn
+    [ pn ++ " is buying for " ++ geeName
+      | plrSymbol <- plrKeys,
+        let pn = playersGetPlayerName plrSymbol plrs,
+        let geeCode = playersGetGivee plrSymbol plrs gy,
+        let geeName = playersGetPlayerName geeCode plrs
         --        let giverCode = playersGetGiver plrSymbol plrs tvGiftYear
     ]
 
