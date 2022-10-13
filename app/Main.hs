@@ -1,6 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Main (main, mainReadFileIntoJsonString, mainRosterOrQuit, mainDrawPuck, mainStartNewYear, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainErrors) where
+module Main (main, mainReadFileIntoJsonString, mainRosterOrQuit, mainDrawPuck, mainStartNewYear, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainErrors, mainPrintResults) where
 
 import Control.Concurrent.STM
 import Control.Exception
@@ -155,31 +155,30 @@ mainGiveeIsFailure tvMaybeGivee tvGiveeHat tvDiscards = do
 mainErrors :: TVPlayers -> GiftYear -> IO PlayerErrors
 mainErrors tvPlayers tvGiftYear = do
   plrs <- readTVarIO tvPlayers
+  let plrKeys = Map.keys plrs
   return
     ( Seq.fromList
         [ plrSymbol
-          | let plrKeys = Map.keys plrs,
-            plrSymbol <- plrKeys,
+          | plrSymbol <- plrKeys,
             let giverCode = playersGetGiver plrSymbol plrs tvGiftYear,
             let giveeCode = playersGetGivee plrSymbol plrs tvGiftYear,
             (plrSymbol == giverCode) || (plrSymbol == giveeCode)
         ]
     )
 
---mainPrintResults tvPlayers tvGiftYear = do
---  plrs <- readTVarIO tvPlayers
---  let plrKeys = Map.keys plrs
---    [ plrSymbol
---      | plrSymbol <- plrKeys,
---        let playerName = playersGetPlayerName plrSymbol plrs,
---        let giveeCode = playersGetGivee plrSymbol plrs tvGiftYear,
---        let giveeName = playersGetPlayerName giveeCode plrs,
---        let giverCode = playersGetGiver plrSymbol plrs tvGiftYear,
---        if True then 1 else 0
---        (plrSymbol == giverCode) || (plrSymbol == giveeCode)
---        
---    ]
-    
+mainPrintResults :: TVPlayers -> GiftYear -> IO ()
+mainPrintResults tvPlayers tvGiftYear = do
+  plrs <- readTVarIO tvPlayers
+  let plrKeys = Map.keys plrs
+  mapM_
+    putStrLn
+    [ playerName ++ " is buying for " ++ giveeName
+      | plrSymbol <- plrKeys,
+        let playerName = playersGetPlayerName plrSymbol plrs,
+        let giveeCode = playersGetGivee plrSymbol plrs tvGiftYear,
+        let giveeName = playersGetPlayerName giveeCode plrs
+        --        let giverCode = playersGetGiver plrSymbol plrs tvGiftYear
+    ]
 
 --  def redpointPrintResults(): Unit = {
 --    val plrKeys: Seq[String] = aPlayers.keys.toSeq.sorted
