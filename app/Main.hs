@@ -165,3 +165,44 @@ mainErrors tvPlayers tvGiftYear = do
             (plrSymbol == giverCode) || (plrSymbol == giveeCode)
         ]
     )
+
+--mainPrintResults tvPlayers tvGiftYear = do
+--  plrs <- readTVarIO tvPlayers
+--  let plrKeys = Map.keys plrs
+--    [ plrSymbol
+--      | plrSymbol <- plrKeys,
+--        let playerName = playersGetPlayerName plrSymbol plrs,
+--        let giveeCode = playersGetGivee plrSymbol plrs tvGiftYear,
+--        let giveeName = playersGetPlayerName giveeCode plrs,
+--        let giverCode = playersGetGiver plrSymbol plrs tvGiftYear,
+--        if True then 1 else 0
+--        (plrSymbol == giverCode) || (plrSymbol == giveeCode)
+--        
+--    ]
+    
+
+--  def redpointPrintResults(): Unit = {
+--    val plrKeys: Seq[String] = aPlayers.keys.toSeq.sorted
+--    for (plrSym <- plrKeys) yield {
+--      val playerName = playersGetPlayerName(plrSym, aPlayers)
+--      val giveeCode = playersGetGivee(plrSym, agYear, aPlayers)
+--      val giveeName = playersGetPlayerName(giveeCode, aPlayers)
+--      val giverCode = playersGetGiver(plrSym, agYear, aPlayers)
+--
+--      if (plrSymbol == giveeCode && plrSym == giverCode) {
+--        println("%s is **buying** for nor **receiving** from anyone - **ERROR**".format(playerName))
+--      } else if (plrSym == giverCode) {
+--        println("%s is **receiving** from no one - **ERROR**".format(playerName))
+--      } else if (plrSym == giveeCode) {
+--        println("%s is **buying** for no one - **ERROR**".format(playerName))
+--      } else {
+--        println("%s is buying for %s".format(playerName, giveeName))
+--      }
+--    }
+--    if (redpointErrors().nonEmpty) {
+--      println()
+--      println("There is a logic error in this year's pairings.")
+--      println("Do you see how it occurs?")
+--      println("If not... call me and I'll explain!")
+--    }
+--  }
