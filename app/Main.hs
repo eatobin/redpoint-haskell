@@ -194,7 +194,7 @@ testingPrintResults plrs gy = do
         let geeName = playersGetPlayerName geeCode plrs
         let gerCode = playersGetGiver plrSymbol plrs gy
         if (plrSymbol == geeCode) && (plrSymbol == gerCode)
-          then pn ++ " is **buying** for nor **receiving** from anyone - **ERROR**"
+          then pn ++ " is neither **buying** for nor **receiving** from anyone - **ERROR**"
           else
             if plrSymbol == gerCode
               then pn ++ " is **receiving** from no one - **ERROR**"
