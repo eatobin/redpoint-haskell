@@ -4,6 +4,7 @@ module Main (main, mainReadFileIntoJsonString, mainRosterOrQuit, mainDrawPuck, m
 
 import Control.Concurrent.STM
 import Control.Exception
+import Control.Monad
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.Map.Strict as Map
 import Data.Maybe
@@ -201,6 +202,26 @@ testingPrintResults plrs gy = do
                   else pn ++ " is buying for " ++ geeName
       | plrSymbol <- plrKeys
     ]
+  Control.Monad.when True $ do
+    putStrLn ""
+    putStrLn "There is a logic error in this year's pairings."
+    putStrLn "Do you see how it occurs?"
+    putStrLn "If not... call me and I'll explain!"
+
+--TODO if error list is null (above)
+
+--λ> testingPrintResults players1 0
+--George Harrison is buying for Ringo Starr
+--John Lennon is buying for Paul McCartney
+--Paul McCartney is buying for George Harrison
+--Ringo Starr is buying for John Lennon
+--true
+--λ> testingPrintResults players2 0
+--George Harrison is buying for Ringo Starr
+--John Lennon is **buying** for no one - **ERROR**
+--Paul McCartney is **receiving** from no one - **ERROR**
+--Ringo Starr is **buying** for nor **receiving** from anyone - **ERROR**
+--true
 
 --  def redpointPrintResults(): Unit = {
 --    val plrKeys: Seq[String] = aPlayers.keys.toSeq.sorted
