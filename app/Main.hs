@@ -180,29 +180,6 @@ mainPrintResults tvPlayers tvGiftYear = do
         --        let gerCode = playersGetGiver plrSymbol plrs tvGiftYear
     ]
 
---testingPrintResults :: Players -> GiftYear -> IO ()
---testingPrintResults plrs gy = do
---  let plrKeys = Map.keys plrs
---  mapM_
---    putStrLn
---    [ pn ++ " is buying for " ++ geeName
---      | plrSymbol <- plrKeys,
---        let pn = playersGetPlayerName plrSymbol plrs,
---        let geeCode = playersGetGivee plrSymbol plrs gy,
---        let geeName = playersGetPlayerName geeCode plrs,
---        let gerCode = playersGetGiver plrSymbol plrs gy,
---        if (plrSymbol == gerCode) || (plrSymbol == geeCode)
---          then pn ++ " is buying for " ++ geeName
---        else pn ++ " is buying for " ++ geeName
---    ]
-
---testingPrintResults :: Players -> IO ()
-
---testingPrintResults :: Map.Map String a -> IO ()
---testingPrintResults plrs = do
---  let plrKeys = Map.keys plrs
---  mapM_ putStrLn [plrSymbol | plrSymbol <- plrKeys]
-
 testingPrintResults :: Players -> GiftYear -> IO ()
 testingPrintResults plrs gy = do
   let plrKeys = Map.keys plrs
@@ -213,9 +190,15 @@ testingPrintResults plrs gy = do
         let geeCode = playersGetGivee plrSymbol plrs gy
         let geeName = playersGetPlayerName geeCode plrs
         let gerCode = playersGetGiver plrSymbol plrs gy
-        if (plrSymbol == gerCode) || True
-          then pn ++ " " ++ geeCode ++ " " ++ geeName ++ " " ++ gerCode
-          else "Nope!!"
+        if (plrSymbol == geeCode) && (plrSymbol == gerCode)
+          then pn ++ " is **buying** for nor **receiving** from anyone - **ERROR**"
+          else
+            if plrSymbol == gerCode
+              then pn ++ " is **receiving** from no one - **ERROR**"
+              else
+                if plrSymbol == geeCode
+                  then pn ++ " is **buying** for no one - **ERROR**"
+                  else pn ++ " is buying for " ++ geeName
       | plrSymbol <- plrKeys
     ]
 
@@ -227,11 +210,11 @@ testingPrintResults plrs gy = do
 --      val giveeName = playersGetPlayerName(giveeCode, aPlayers)
 --      val giverCode = playersGetGiver(plrSym, agYear, aPlayers)
 --
---      if (plrSymbol == giveeCode && plrSym == giverCode) {
+--      if (plrSymbol == geeCode) && (plrSymbol == gerCode) {
 --        println("%s is **buying** for nor **receiving** from anyone - **ERROR**".format(playerName))
---      } else if (plrSym == giverCode) {
+--      } else if (plrSymbol == gerCode) {
 --        println("%s is **receiving** from no one - **ERROR**".format(playerName))
---      } else if (plrSym == giveeCode) {
+--      } else if (plrSymbol == geeCode) {
 --        println("%s is **buying** for no one - **ERROR**".format(playerName))
 --      } else {
 --        println("%s is buying for %s".format(playerName, giveeName))
