@@ -153,30 +153,32 @@ mainGiveeIsFailure tvMaybeGivee tvGiveeHat tvDiscards = do
   mge1 <- mainDrawPuck geh
   atomically $ writeTVar tvMaybeGivee mge1
 
-mainErrors :: TVPlayers -> GiftYear -> IO PlayerErrors
+mainErrors :: TVPlayers -> TVGiftYear -> IO PlayerErrors
 mainErrors tvPlayers tvGiftYear = do
   plrs <- readTVarIO tvPlayers
+  gy <- readTVarIO tvGiftYear
   let plrKeys = Map.keys plrs
   return
     ( Seq.fromList
         [ plrSymbol
           | plrSymbol <- plrKeys,
-            let geeCode = playersGetGivee plrSymbol plrs tvGiftYear,
-            let gerCode = playersGetGiver plrSymbol plrs tvGiftYear,
+            let geeCode = playersGetGivee plrSymbol plrs gy,
+            let gerCode = playersGetGiver plrSymbol plrs gy,
             (plrSymbol == gerCode) || (plrSymbol == geeCode)
         ]
     )
 
-mainPrintResults :: TVPlayers -> GiftYear -> IO ()
+mainPrintResults :: TVPlayers -> TVGiftYear -> IO ()
 mainPrintResults tvPlayers tvGiftYear = do
   plrs <- readTVarIO tvPlayers
+  gy <- readTVarIO tvGiftYear
   let plrKeys = Map.keys plrs
   mapM_
     putStrLn
     [ pn ++ " is buying for " ++ geeName
       | plrSymbol <- plrKeys,
         let pn = playersGetPlayerName plrSymbol plrs,
-        let geeCode = playersGetGivee plrSymbol plrs tvGiftYear,
+        let geeCode = playersGetGivee plrSymbol plrs gy,
         let geeName = playersGetPlayerName geeCode plrs
         --        let gerCode = playersGetGiver plrSymbol plrs tvGiftYear
     ]
