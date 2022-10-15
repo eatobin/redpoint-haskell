@@ -36,8 +36,6 @@ type TVMaybeGiver = TVar (Maybe Giver)
 
 type TVDiscards = TVar Discards
 
---type PlayerErrors = [PlayerSymbol]
-
 filePath :: FilePath
 filePath = "resources/blackhawks.json"
 
@@ -189,3 +187,18 @@ mainPrintResults tvPlayers tvGiftYear = do
     putStrLn "There is a logic error in this year's pairings."
     putStrLn "Do you see how it occurs?"
     putStrLn "If not... call me and I'll explain!"
+
+
+--  def redpointPrintStringGivingRoster(rName: String, rYear: Int): Unit = {
+--    println()
+--    println("%s - Year %d Gifts:".format(rName, rYear + agYear))
+--    println()
+--    redpointPrintResults()
+--  }
+--
+--  def redpointPrintAndAsk(rName: String, rYear: Int): String = {
+--    redpointPrintStringGivingRoster(rName, rYear)
+--    println()
+--    readLine("Continue? ('q' to quit): ")
+--  }
+--}
