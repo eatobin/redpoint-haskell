@@ -1,6 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Main (main, mainReadFileIntoJsonString, mainRosterOrQuit, mainDrawPuck, mainStartNewYear, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainErrorListIsEmpty, mainPrintResults) where
+module Main (main, mainReadFileIntoJsonString, mainRosterOrQuit, mainDrawPuck, mainStartNewYear, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainErrorListIsEmpty, mainPrintResults, mainPrintStringGivingRoster) where
 
 import Control.Concurrent.STM
 import Control.Exception
@@ -183,19 +183,18 @@ mainPrintResults tvPlayers tvGiftYear = do
       | plrSymbol <- plrKeys
     ]
   unless errorListIsEmpty $ do
-    putStrLn ""
-    putStrLn "There is a logic error in this year's pairings."
+    putStrLn "\nThere is a logic error in this year's pairings."
     putStrLn "Do you see how it occurs?"
     putStrLn "If not... call me and I'll explain!"
 
+mainPrintStringGivingRoster :: TVRosterName -> TVRosterYear -> TVGiftYear -> TVPlayers -> IO ()
+mainPrintStringGivingRoster tvRosterName tvRosterYear tvGiftYear tvPlayers = do
+  rn <- readTVarIO tvRosterName
+  ry <- readTVarIO tvRosterYear
+  gy <- readTVarIO tvGiftYear
+  putStrLn ("\n" ++ rn ++ " - Year " ++ show (ry + gy) ++ " Gifts:\n")
+  mainPrintResults tvPlayers tvGiftYear
 
---  def redpointPrintStringGivingRoster(rName: String, rYear: Int): Unit = {
---    println()
---    println("%s - Year %d Gifts:".format(rName, rYear + agYear))
---    println()
---    redpointPrintResults()
---  }
---
 --  def redpointPrintAndAsk(rName: String, rYear: Int): String = {
 --    redpointPrintStringGivingRoster(rName, rYear)
 --    println()
