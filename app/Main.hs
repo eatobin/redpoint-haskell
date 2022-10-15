@@ -1,14 +1,13 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Main (main, mainReadFileIntoJsonString, mainRosterOrQuit, mainDrawPuck, mainStartNewYear, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainErrors, mainPrintResults, testingPrintResults) where
+module Main (main, mainReadFileIntoJsonString, mainRosterOrQuit, mainDrawPuck, mainStartNewYear, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainErrors) where
 
 import Control.Concurrent.STM
 import Control.Exception
-import Control.Monad
+--import Control.Monad
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.Map.Strict as Map
 import Data.Maybe
-import Data.Sequence as Seq
 import qualified Data.Set as Set
 import Gift_History
 import Gift_Pair
@@ -37,7 +36,7 @@ type TVMaybeGiver = TVar (Maybe Giver)
 
 type TVDiscards = TVar Discards
 
-type PlayerErrors = Seq.Seq PlayerSymbol
+--type PlayerErrors = [PlayerSymbol]
 
 filePath :: FilePath
 filePath = "resources/blackhawks.json"
@@ -153,62 +152,70 @@ mainGiveeIsFailure tvMaybeGivee tvGiveeHat tvDiscards = do
   mge1 <- mainDrawPuck geh
   atomically $ writeTVar tvMaybeGivee mge1
 
-mainErrors :: TVPlayers -> TVGiftYear -> IO PlayerErrors
+mainErrors :: TVPlayers -> TVGiftYear -> IO Bool
 mainErrors tvPlayers tvGiftYear = do
   plrs <- readTVarIO tvPlayers
   gy <- readTVarIO tvGiftYear
   let plrKeys = Map.keys plrs
-  return
-    ( Seq.fromList
-        [ plrSymbol
-          | plrSymbol <- plrKeys,
-            let geeCode = playersGetGivee plrSymbol plrs gy,
-            let gerCode = playersGetGiver plrSymbol plrs gy,
-            (plrSymbol == gerCode) || (plrSymbol == geeCode)
-        ]
-    )
+  let errorList = [plrSymbol | plrSymbol <- plrKeys, let geeCode = playersGetGivee plrSymbol plrs gy, let gerCode = playersGetGiver plrSymbol plrs gy, (plrSymbol == gerCode) || (plrSymbol == geeCode)]
+  return (null errorList)
 
-mainPrintResults :: TVPlayers -> TVGiftYear -> IO ()
-mainPrintResults tvPlayers tvGiftYear = do
-  plrs <- readTVarIO tvPlayers
-  gy <- readTVarIO tvGiftYear
-  let plrKeys = Map.keys plrs
-  mapM_
-    putStrLn
-    [ pn ++ " is buying for " ++ geeName
-      | plrSymbol <- plrKeys,
-        let pn = playersGetPlayerName plrSymbol plrs,
-        let geeCode = playersGetGivee plrSymbol plrs gy,
-        let geeName = playersGetPlayerName geeCode plrs
-        --        let gerCode = playersGetGiver plrSymbol plrs tvGiftYear
-    ]
+--mainPrintResults :: TVPlayers -> TVGiftYear -> IO ()
+--mainPrintResults tvPlayers tvGiftYear = do
+--  plrs <- readTVarIO tvPlayers
+--  gy <- readTVarIO tvGiftYear
+--  let plrKeys = Map.keys plrs
+--  mapM_
+--    putStrLn
+--    [ do
+--        let pn = playersGetPlayerName plrSymbol plrs
+--        let geeCode = playersGetGivee plrSymbol plrs gy
+--        let geeName = playersGetPlayerName geeCode plrs
+--        let gerCode = playersGetGiver plrSymbol plrs gy
+--        if (plrSymbol == geeCode) && (plrSymbol == gerCode)
+--          then pn ++ " is neither **buying** for nor **receiving** from anyone - **ERROR**"
+--          else
+--            if plrSymbol == gerCode
+--              then pn ++ " is **receiving** from no one - **ERROR**"
+--              else
+--                if plrSymbol == geeCode
+--                  then pn ++ " is **buying** for no one - **ERROR**"
+--                  else pn ++ " is buying for " ++ geeName
+--      | plrSymbol <- plrKeys
+--    ]
+--  Control.Monad.when (null [5 :: Int]) $ do
+--    putStrLn ""
+--    putStrLn "There is a logic error in this year's pairings."
+--    putStrLn "Do you see how it occurs?"
+--    putStrLn "If not... call me and I'll explain!"
 
-testingPrintResults :: Players -> GiftYear -> IO ()
-testingPrintResults plrs gy = do
-  let plrKeys = Map.keys plrs
-  mapM_
-    putStrLn
-    [ do
-        let pn = playersGetPlayerName plrSymbol plrs
-        let geeCode = playersGetGivee plrSymbol plrs gy
-        let geeName = playersGetPlayerName geeCode plrs
-        let gerCode = playersGetGiver plrSymbol plrs gy
-        if (plrSymbol == geeCode) && (plrSymbol == gerCode)
-          then pn ++ " is neither **buying** for nor **receiving** from anyone - **ERROR**"
-          else
-            if plrSymbol == gerCode
-              then pn ++ " is **receiving** from no one - **ERROR**"
-              else
-                if plrSymbol == geeCode
-                  then pn ++ " is **buying** for no one - **ERROR**"
-                  else pn ++ " is buying for " ++ geeName
-      | plrSymbol <- plrKeys
-    ]
-  Control.Monad.when True $ do
-    putStrLn ""
-    putStrLn "There is a logic error in this year's pairings."
-    putStrLn "Do you see how it occurs?"
-    putStrLn "If not... call me and I'll explain!"
+--(null (mainErrors tvPlayers tvGiftYear))
+--testingPrintResults :: Players -> GiftYear -> IO ()
+--testingPrintResults plrs gy = do
+--  let plrKeys = Map.keys plrs
+--  mapM_
+--    putStrLn
+--    [ do
+--        let pn = playersGetPlayerName plrSymbol plrs
+--        let geeCode = playersGetGivee plrSymbol plrs gy
+--        let geeName = playersGetPlayerName geeCode plrs
+--        let gerCode = playersGetGiver plrSymbol plrs gy
+--        if (plrSymbol == geeCode) && (plrSymbol == gerCode)
+--          then pn ++ " is neither **buying** for nor **receiving** from anyone - **ERROR**"
+--          else
+--            if plrSymbol == gerCode
+--              then pn ++ " is **receiving** from no one - **ERROR**"
+--              else
+--                if plrSymbol == geeCode
+--                  then pn ++ " is **buying** for no one - **ERROR**"
+--                  else pn ++ " is buying for " ++ geeName
+--      | plrSymbol <- plrKeys
+--    ]
+--  Control.Monad.when True $ do
+--    putStrLn ""
+--    putStrLn "There is a logic error in this year's pairings."
+--    putStrLn "Do you see how it occurs?"
+--    putStrLn "If not... call me and I'll explain!"
 
 --TODO if error list is null (above)
 
