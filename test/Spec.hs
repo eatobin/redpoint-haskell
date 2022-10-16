@@ -63,15 +63,6 @@ players1 =
       ("RinSta", Player {playerName = "Ringo Starr", giftHistory = Seq.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}]})
     ]
 
-players2 :: Players
-players2 =
-  Map.fromList
-    [ ("GeoHar", Player {playerName = "George Harrison", giftHistory = Seq.fromList [GiftPair {givee = "RinSta", giver = "PauMcc"}]}),
-      ("JohLen", Player {playerName = "John Lennon", giftHistory = Seq.fromList [GiftPair {givee = "JohLen", giver = "RinSta"}]}),
-      ("PauMcc", Player {playerName = "Paul McCartney", giftHistory = Seq.fromList [GiftPair {givee = "GeoHar", giver = "PauMcc"}]}),
-      ("RinSta", Player {playerName = "Ringo Starr", giftHistory = Seq.fromList [GiftPair {givee = "RinSta", giver = "RinSta"}]})
-    ]
-
 newBeePlayers :: Players
 newBeePlayers =
   Map.fromList
