@@ -1,6 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Main (main, mainReadFileIntoJsonString, mainRosterOrQuit, mainDrawPuck, mainStartNewYear, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainErrorListIsEmpty, mainPrintResults, mainPrintStringGivingRoster) where
+module Main (main, mainReadFileIntoJsonString, mainRosterOrQuit, mainDrawPuck, mainStartNewYear, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainErrorListIsEmpty, mainPrintResults, mainPrintStringGivingRoster, mainPromptLine, mainPrintAndAsk) where
 
 import Control.Concurrent.STM
 import Control.Exception
@@ -195,9 +195,12 @@ mainPrintStringGivingRoster tvRosterName tvRosterYear tvGiftYear tvPlayers = do
   putStrLn ("\n" ++ rn ++ " - Year " ++ show (ry + gy) ++ " Gifts:\n")
   mainPrintResults tvPlayers tvGiftYear
 
---  def redpointPrintAndAsk(rName: String, rYear: Int): String = {
---    redpointPrintStringGivingRoster(rName, rYear)
---    println()
---    readLine("Continue? ('q' to quit): ")
---  }
---}
+mainPromptLine :: String -> IO String
+mainPromptLine prompt = do
+  putStr prompt
+  getLine
+
+mainPrintAndAsk :: TVRosterName -> TVRosterYear -> TVGiftYear -> TVPlayers -> IO String
+mainPrintAndAsk tvRosterName tvRosterYear tvGiftYear tvPlayers = do
+  mainPrintStringGivingRoster tvRosterName tvRosterYear tvGiftYear tvPlayers
+  mainPromptLine "\nContinue? ('q' to quit): "
