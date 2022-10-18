@@ -5,7 +5,9 @@ module Main (main, mainReadFileIntoJsonString, mainRosterOrQuit, mainDrawPuck, m
 import Control.Concurrent.STM
 import Control.Exception
 import Control.Monad
+import Control.Monad.Loops (whileM_)
 import qualified Data.ByteString.Char8 as BS
+import Data.Char (toLower)
 import qualified Data.Map.Strict as Map
 import Data.Maybe
 import qualified Data.Set as Set
@@ -14,10 +16,8 @@ import Gift_Pair
 import Hat
 import Players
 import Roster
-import System.Random
-import Data.Char (toLower)
-import           Control.Monad.Loops    (whileM_)
 import Rules
+import System.Random
 
 type ErrorString = String
 
@@ -53,27 +53,28 @@ main = do
   tvDiscards <- atomically (newTVar Set.empty)
   tvRosterName <- atomically (newTVar "")
   tvRosterYear <- atomically (newTVar 0)
-  mainRosterOrQuit filePath tvRosterName tvRosterYear tvPlayers
-  mainStartNewYear tvGiftYear tvPlayers tvGiverHat tvGiveeHat tvMaybeGiver tvMaybeGivee tvDiscards
-  gyX <- readTVarIO tvGiftYear
-  mgrX <- readTVarIO tvMaybeGiver
-  mgeX <- readTVarIO tvMaybeGivee
-  plrsX <- readTVarIO tvPlayers
-  grh <- readTVarIO tvGiverHat
-  geh <- readTVarIO tvGiveeHat
-  dis <- readTVarIO tvDiscards
-  rn <- readTVarIO tvRosterName
-  ry <- readTVarIO tvRosterYear
-  print gyX
-  print mgrX
-  print mgeX
-  print plrsX
-  print grh
-  print geh
-  print dis
-  print rn
-  print ry
+  --  mainRosterOrQuit filePath tvRosterName tvRosterYear tvPlayers
+  --  mainStartNewYear tvGiftYear tvPlayers tvGiverHat tvGiveeHat tvMaybeGiver tvMaybeGivee tvDiscards
+  --  gyX <- readTVarIO tvGiftYear
+  --  mgrX <- readTVarIO tvMaybeGiver
+  --  mgeX <- readTVarIO tvMaybeGivee
+  --  plrsX <- readTVarIO tvPlayers
+  --  grh <- readTVarIO tvGiverHat
+  --  geh <- readTVarIO tvGiveeHat
+  --  dis <- readTVarIO tvDiscards
+  --  rn <- readTVarIO tvRosterName
+  --  ry <- readTVarIO tvRosterYear
+  --  print gyX
+  --  print mgrX
+  --  print mgeX
+  --  print plrsX
+  --  print grh
+  --  print geh
+  --  print dis
+  --  print rn
+  --  print ry
 
+  mainRosterOrQuit filePath tvRosterName tvRosterYear tvPlayers
   whileM_ ((/= "q") . map toLower <$> mainPrintAndAsk tvRosterName tvRosterYear tvGiftYear tvPlayers) $ do
     mainStartNewYear tvGiftYear tvPlayers tvGiverHat tvGiveeHat tvMaybeGiver tvMaybeGivee tvDiscards
     whileM_ (fmap isJust (readTVarIO tvMaybeGiver)) $ do
@@ -82,15 +83,12 @@ main = do
         mge <- readTVarIO tvMaybeGivee
         gy <- readTVarIO tvGiftYear
         plrs <- readTVarIO tvPlayers
-        if
-          rulesGiveeNotSelf (fromJust mgr) (fromJust mge) &&
-          rulesGiveeNotReciprocal (fromJust mgr) plrs gy (fromJust mge)   &&
-          giveeNotRepeat (fromJust mgr) (fromJust mge) gy pm
-        then
-          giveeIsSuccess tvGiver tvGY tvGivee tvPM tvGiveeHat
-        else
-          giveeIsFailure tvGivee tvGiveeHat tvDiscards
-      selectNewGiver tvGiver tvGiverHat tvDiscards tvGiveeHat tvGivee
+        if rulesGiveeNotSelf (fromJust mgr) (fromJust mge)
+          && rulesGiveeNotReciprocal (fromJust mgr) plrs gy (fromJust mge)
+          && rulesGiveeNotRepeat (fromJust mgr) (fromJust mge) gy plrs
+          then mainGiveeIsSuccess tvMaybeGiver tvGiftYear tvMaybeGivee tvPlayers tvGiveeHat
+          else mainGiveeIsFailure tvMaybeGivee tvGiveeHat tvDiscards
+      mainSelectNewGiver tvMaybeGiver tvGiverHat tvDiscards tvGiveeHat tvMaybeGivee
     putStrLn ""
   putStrLn ""
   putStrLn "This was fun!"
@@ -98,9 +96,6 @@ main = do
   putStrLn "Please call: Eric Tobin 773-325-1516"
   putStrLn "Thanks! Bye..."
   putStrLn ""
-
-
-
 
 mainReadFileIntoJsonString :: FilePath -> IO (Either ErrorString JsonString)
 mainReadFileIntoJsonString f = do
