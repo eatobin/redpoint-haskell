@@ -52,8 +52,8 @@ main = do
   tvGiverHat <- atomically (newTVar Set.empty)
   tvGiveeHat <- atomically (newTVar Set.empty)
   tvDiscards <- atomically (newTVar Set.empty)
-  tvRosterName <- atomically (newTVar "")
-  tvRosterYear <- atomically (newTVar 0)
+  --tvRosterName <- atomically (newTVar "")
+  --tvRosterYear <- atomically (newTVar 0)
   --  mainRosterOrQuit filePath tvRosterName tvRosterYear tvPlayers
 
   --  mainStartNewYear tvGiftYear tvPlayers tvGiverHat tvGiveeHat tvMaybeGiver tvMaybeGivee tvDiscards
