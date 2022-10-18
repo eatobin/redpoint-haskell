@@ -22,9 +22,9 @@ import System.Random
 
 type ErrorString = String
 
-type TVRosterName = TVar RosterName
+--type TVRosterName = TVar RosterName
 
-type TVRosterYear = TVar RosterYear
+--type TVRosterYear = TVar RosterYear
 
 type TVPlayers = TVar Players
 
@@ -120,6 +120,7 @@ mainRosterOrQuit fp tvRosterName tvRosterYear tvPlayers = do
     Right rs -> do
       let maybeRoster :: Maybe Roster = rosterJsonStringToRoster rs
       case maybeRoster of
+--TODO jiggle in here with making a straight up roster for internal use
         Just r -> do
           atomically $ writeTVar tvRosterName (rosterName r)
           atomically $ writeTVar tvRosterYear (rosterYear r)
