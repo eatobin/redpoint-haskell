@@ -17,6 +17,7 @@ import Hat
 import Players
 import Roster
 import Rules
+import System.IO
 import System.Random
 
 type ErrorString = String
@@ -74,7 +75,9 @@ main = do
   --  print dis
   --  print rn
   --  print ry
-  mainPrintStringGivingRoster rn ry tvGiftYear tvPlayers
+  --  mainPrintStringGivingRoster rn ry tvGiftYear tvPlayers
+  a <- mainPrintAndAsk rn ry tvGiftYear tvPlayers
+  putStrLn a
 
 --  mainRosterOrQuit filePath tvRosterName tvRosterYear tvPlayers
 --  whileM_ ((/= "q") . map toLower <$> mainPrintAndAsk tvRosterName tvRosterYear tvGiftYear tvPlayers) $ do
@@ -225,6 +228,7 @@ mainPrintStringGivingRoster rn ry tvGiftYear tvPlayers = do
 mainPromptLine :: String -> IO String
 mainPromptLine prompt = do
   putStr prompt
+  hFlush stdout
   getLine
 
 mainPrintAndAsk :: RosterName -> RosterYear -> TVGiftYear -> TVPlayers -> IO String
