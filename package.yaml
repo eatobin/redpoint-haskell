@@ -27,6 +27,7 @@ dependencies:
   - hspec
   - random
   - stm
+  - monad-loops
 
 ghc-options:
   - -Wall

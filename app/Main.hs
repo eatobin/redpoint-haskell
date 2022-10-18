@@ -15,6 +15,9 @@ import Hat
 import Players
 import Roster
 import System.Random
+import Data.Char (toLower)
+import           Control.Monad.Loops    (whileM_)
+import Rules
 
 type ErrorString = String
 
@@ -52,24 +55,52 @@ main = do
   tvRosterYear <- atomically (newTVar 0)
   mainRosterOrQuit filePath tvRosterName tvRosterYear tvPlayers
   mainStartNewYear tvGiftYear tvPlayers tvGiverHat tvGiveeHat tvMaybeGiver tvMaybeGivee tvDiscards
-  gy <- readTVarIO tvGiftYear
-  mgr <- readTVarIO tvMaybeGiver
-  mge <- readTVarIO tvMaybeGivee
-  plrs <- readTVarIO tvPlayers
+  gyX <- readTVarIO tvGiftYear
+  mgrX <- readTVarIO tvMaybeGiver
+  mgeX <- readTVarIO tvMaybeGivee
+  plrsX <- readTVarIO tvPlayers
   grh <- readTVarIO tvGiverHat
   geh <- readTVarIO tvGiveeHat
   dis <- readTVarIO tvDiscards
   rn <- readTVarIO tvRosterName
   ry <- readTVarIO tvRosterYear
-  print gy
-  print mgr
-  print mge
-  print plrs
+  print gyX
+  print mgrX
+  print mgeX
+  print plrsX
   print grh
   print geh
   print dis
   print rn
   print ry
+
+  whileM_ ((/= "q") . map toLower <$> mainPrintAndAsk tvRosterName tvRosterYear tvGiftYear tvPlayers) $ do
+    mainStartNewYear tvGiftYear tvPlayers tvGiverHat tvGiveeHat tvMaybeGiver tvMaybeGivee tvDiscards
+    whileM_ (fmap isJust (readTVarIO tvMaybeGiver)) $ do
+      whileM_ (fmap isJust (readTVarIO tvMaybeGivee)) $ do
+        mgr <- readTVarIO tvMaybeGiver
+        mge <- readTVarIO tvMaybeGivee
+        gy <- readTVarIO tvGiftYear
+        plrs <- readTVarIO tvPlayers
+        if
+          rulesGiveeNotSelf (fromJust mgr) (fromJust mge) &&
+          rulesGiveeNotReciprocal (fromJust mgr) plrs gy (fromJust mge)   &&
+          giveeNotRepeat (fromJust mgr) (fromJust mge) gy pm
+        then
+          giveeIsSuccess tvGiver tvGY tvGivee tvPM tvGiveeHat
+        else
+          giveeIsFailure tvGivee tvGiveeHat tvDiscards
+      selectNewGiver tvGiver tvGiverHat tvDiscards tvGiveeHat tvGivee
+    putStrLn ""
+  putStrLn ""
+  putStrLn "This was fun!"
+  putStrLn "Talk about a position with Redpoint?"
+  putStrLn "Please call: Eric Tobin 773-325-1516"
+  putStrLn "Thanks! Bye..."
+  putStrLn ""
+
+
+
 
 mainReadFileIntoJsonString :: FilePath -> IO (Either ErrorString JsonString)
 mainReadFileIntoJsonString f = do
