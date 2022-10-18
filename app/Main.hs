@@ -59,7 +59,7 @@ main = do
   --  gyX <- readTVarIO tvGiftYear
   --  mgrX <- readTVarIO tvMaybeGiver
   --  mgeX <- readTVarIO tvMaybeGivee
-  plrsX <- readTVarIO tvPlayers
+  --  plrsX <- readTVarIO tvPlayers
   --  grh <- readTVarIO tvGiverHat
   --  geh <- readTVarIO tvGiveeHat
   --  dis <- readTVarIO tvDiscards
@@ -68,12 +68,13 @@ main = do
   --  print gyX
   --  print mgrX
   --  print mgeX
-  print plrsX
+  --  print plrsX
   --  print grh
   --  print geh
   --  print dis
-  print rn
-  print ry
+  --  print rn
+  --  print ry
+  mainPrintStringGivingRoster rn ry tvGiftYear tvPlayers
 
 --  mainRosterOrQuit filePath tvRosterName tvRosterYear tvPlayers
 --  whileM_ ((/= "q") . map toLower <$> mainPrintAndAsk tvRosterName tvRosterYear tvGiftYear tvPlayers) $ do
@@ -92,7 +93,8 @@ main = do
 --      mainSelectNewGiver tvMaybeGiver tvGiverHat tvDiscards tvGiveeHat tvMaybeGivee
 --    putStrLn ""
 --  putStrLn ""
---  putStrLn "This was fun!"
+--    putStrLn "This was fun!"
+
 --  putStrLn "Talk about a position with Redpoint?"
 --  putStrLn "Please call: Eric Tobin 773-325-1516"
 --  putStrLn "Thanks! Bye..."
@@ -214,10 +216,8 @@ mainPrintResults tvPlayers tvGiftYear = do
     putStrLn "Do you see how it occurs?"
     putStrLn "If not... call me and I'll explain!"
 
-mainPrintStringGivingRoster :: TVRosterName -> TVRosterYear -> TVGiftYear -> TVPlayers -> IO ()
-mainPrintStringGivingRoster tvRosterName tvRosterYear tvGiftYear tvPlayers = do
-  rn <- readTVarIO tvRosterName
-  ry <- readTVarIO tvRosterYear
+mainPrintStringGivingRoster :: RosterName -> RosterYear -> TVGiftYear -> TVPlayers -> IO ()
+mainPrintStringGivingRoster rn ry tvGiftYear tvPlayers = do
   gy <- readTVarIO tvGiftYear
   putStrLn ("\n" ++ rn ++ " - Year " ++ show (ry + gy) ++ " Gifts:\n")
   mainPrintResults tvPlayers tvGiftYear
@@ -227,7 +227,7 @@ mainPromptLine prompt = do
   putStr prompt
   getLine
 
-mainPrintAndAsk :: TVRosterName -> TVRosterYear -> TVGiftYear -> TVPlayers -> IO String
-mainPrintAndAsk tvRosterName tvRosterYear tvGiftYear tvPlayers = do
-  mainPrintStringGivingRoster tvRosterName tvRosterYear tvGiftYear tvPlayers
+mainPrintAndAsk :: RosterName -> RosterYear -> TVGiftYear -> TVPlayers -> IO String
+mainPrintAndAsk rn ry tvGiftYear tvPlayers = do
+  mainPrintStringGivingRoster rn ry tvGiftYear tvPlayers
   mainPromptLine "\nContinue? ('q' to quit): "
