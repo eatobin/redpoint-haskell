@@ -17,6 +17,7 @@ import Hat
 import Players
 import Roster
 import Rules
+import System.Exit
 import System.IO
 import System.Random
 
@@ -52,10 +53,9 @@ main = do
   tvGiverHat <- atomically (newTVar Set.empty)
   tvGiveeHat <- atomically (newTVar Set.empty)
   tvDiscards <- atomically (newTVar Set.empty)
-  --tvRosterName <- atomically (newTVar "")
-  --tvRosterYear <- atomically (newTVar 0)
-  --  mainRosterOrQuit filePath tvRosterName tvRosterYear tvPlayers
-
+  rosterPair <- mainRosterOrQuit filePath tvPlayers
+  let rn = fst rosterPair
+  let ry = snd rosterPair
   --  mainStartNewYear tvGiftYear tvPlayers tvGiverHat tvGiveeHat tvMaybeGiver tvMaybeGivee tvDiscards
   --  gyX <- readTVarIO tvGiftYear
   --  mgrX <- readTVarIO tvMaybeGiver
@@ -79,9 +79,9 @@ main = do
   --  a <- mainPrintAndAsk rn ry tvGiftYear tvPlayers
   --  putStrLn a
 
-  mainRosterOrQuit filePath tvRosterName tvRosterYear tvPlayers
-  rn <- readTVarIO tvRosterName
-  ry <- readTVarIO tvRosterYear
+  --  mainRosterOrQuit filePath tvRosterName tvRosterYear tvPlayers
+  --  rn <- readTVarIO tvRosterName
+  --  ry <- readTVarIO tvRosterYear
   whileM_ ((/= "q") . map toLower <$> mainPrintAndAsk rn ry tvGiftYear tvPlayers) $ do
     mainStartNewYear tvGiftYear tvPlayers tvGiverHat tvGiveeHat tvMaybeGiver tvMaybeGivee tvDiscards
     whileM_ (fmap isJust (readTVarIO tvMaybeGiver)) $ do
@@ -113,20 +113,18 @@ mainReadFileIntoJsonString f = do
       return (Right s)
     Left _ -> return (Left "File read error.")
 
-mainRosterOrQuit :: FilePath -> TVRosterName -> TVRosterYear -> TVPlayers -> IO ()
-mainRosterOrQuit fp tvRosterName tvRosterYear tvPlayers = do
+mainRosterOrQuit :: FilePath -> TVPlayers -> IO (RosterName, RosterYear)
+mainRosterOrQuit fp tvPlayers = do
   rosterStringEither :: Either ErrorString JsonString <- mainReadFileIntoJsonString fp
   case rosterStringEither of
     Right rs -> do
       let maybeRoster :: Maybe Roster = rosterJsonStringToRoster rs
       case maybeRoster of
---TODO jiggle in here with making a straight up roster for internal use
         Just r -> do
-          atomically $ writeTVar tvRosterName (rosterName r)
-          atomically $ writeTVar tvRosterYear (rosterYear r)
           atomically $ writeTVar tvPlayers (players r)
-        Nothing -> putStrLn "parse error"
-    Left fe -> putStrLn fe
+          return (rosterName r, rosterYear r)
+        Nothing -> exitWith (ExitFailure 42)
+    Left _ -> exitWith (ExitFailure 99)
 
 mainDrawPuck :: Hat -> IO (Maybe PlayerSymbol)
 mainDrawPuck hat =
