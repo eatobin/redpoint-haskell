@@ -25,6 +25,8 @@ source-repository head
 
 library
   exposed-modules:
+      Borrower
+      Fact
       Gift_History
       Gift_Pair
       Hat
@@ -32,6 +34,7 @@ library
       Players
       Roster
       Rules
+      Strip
       Transfer1
   other-modules:
       Paths_redpoint_haskell
@@ -66,10 +69,13 @@ executable redpoint-haskell-exe
     , stm
   default-language: Haskell2010
 
-test-suite redpoint-haskell-test
+test-suite spec
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      BorrowerSpec
+      FactSpec
+      StripSpec
       Paths_redpoint_haskell
   hs-source-dirs:
       test
@@ -79,9 +85,10 @@ test-suite redpoint-haskell-test
     , base >=4.7 && <5
     , bytestring
     , containers
-    , hspec
+    , hspec ==2.*
     , monad-loops
     , random
     , redpoint-haskell
     , stm
   default-language: Haskell2010
+  build-tool-depends: hspec-discover:hspec-discover == 2.*
