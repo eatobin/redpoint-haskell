@@ -58,9 +58,8 @@ executables:
         other-modules: Paths_redpoint_haskell  # your package name here
 
 tests:
-  redpoint-haskell-test:
-    main: Spec.hs
-    source-dirs: test
+  spec:
+    defaults: hspec/hspec@main
     ghc-options:
       - -threaded
       - -rtsopts
