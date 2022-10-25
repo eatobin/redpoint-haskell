@@ -41,7 +41,7 @@ helpersReadFileIntoJsonString f = do
     Right r -> do
       let s = BS.unpack r
       return (Right s)
-    Left _ -> return (Left "File read error.")
+    Left _ -> return (Left "file read error.")
 
 helpersRosterOrQuit :: FilePath -> TVPlayers -> IO (RosterName, RosterYear)
 helpersRosterOrQuit fp tvPlayers = do

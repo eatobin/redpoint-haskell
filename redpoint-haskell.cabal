@@ -76,6 +76,7 @@ test-suite spec
   other-modules:
       BorrowerSpec
       FactSpec
+      HelpersSpec
       StripSpec
       Paths_redpoint_haskell
   hs-source-dirs:
