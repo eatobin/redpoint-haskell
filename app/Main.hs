@@ -1,12 +1,12 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Main (main, mainHelpersReadFileIntoJsonString, mainRosterOrQuit, mainDrawPuck, mainStartNewYear, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainErrorListIsEmpty, mainPrintResults, mainPrintStringGivingRoster, mainPromptLine, mainPrintAndAsk) where
+module Main (main, mainReadFileIntoJsonString, mainRosterOrQuit, mainDrawPuck, mainStartNewYear, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainErrorListIsEmpty, mainPrintResults, mainPrintStringGivingRoster, mainPromptLine, mainPrintAndAsk) where
 
 import Control.Concurrent.STM
---import Control.Exception
+import Control.Exception
 import Control.Monad
 import Control.Monad.Loops (whileM_)
---import qualified Data.ByteString.Char8 as BS
+import qualified Data.ByteString.Char8 as BS
 import Data.Char (toLower)
 import qualified Data.Map.Strict as Map
 import Data.Maybe
@@ -20,7 +20,6 @@ import Rules
 import System.Exit
 import System.IO
 import System.Random
-import Main_Helpers
 
 type ErrorString = String
 
@@ -42,8 +41,8 @@ type TVMaybeGiver = TVar (Maybe Giver)
 
 type TVDiscards = TVar Discards
 
---filePath :: FilePath
---filePath = "resources/blackhawks.json"
+filePath :: FilePath
+filePath = "resources/blackhawks.json"
 
 main :: IO ()
 main = do
@@ -105,18 +104,18 @@ main = do
   putStrLn "Thanks! Bye..."
   putStrLn ""
 
---mainReadFileIntoJsonString :: FilePath -> IO (Either ErrorString JsonString)
---mainReadFileIntoJsonString f = do
---  result <- try (BS.readFile f) :: IO (Either SomeException BS.ByteString)
---  case result of
---    Right r -> do
---      let s = BS.unpack r
---      return (Right s)
---    Left _ -> return (Left "File read error.")
+mainReadFileIntoJsonString :: FilePath -> IO (Either ErrorString JsonString)
+mainReadFileIntoJsonString f = do
+  result <- try (BS.readFile f) :: IO (Either SomeException BS.ByteString)
+  case result of
+    Right r -> do
+      let s = BS.unpack r
+      return (Right s)
+    Left _ -> return (Left "File read error.")
 
 mainRosterOrQuit :: FilePath -> TVPlayers -> IO (RosterName, RosterYear)
 mainRosterOrQuit fp tvPlayers = do
-  rosterStringEither :: Either ErrorString JsonString <- mainHelpersReadFileIntoJsonString fp
+  rosterStringEither :: Either ErrorString JsonString <- mainReadFileIntoJsonString fp
   case rosterStringEither of
     Right rs -> do
       let maybeRoster :: Maybe Roster = rosterJsonStringToRoster rs
