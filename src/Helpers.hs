@@ -1,6 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Helpers (mainReadFileIntoJsonString, mainRosterOrQuit, mainDrawPuck, mainStartNewYear, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainErrorListIsEmpty, mainPrintResults, mainPrintStringGivingRoster, mainPromptLine, mainPrintAndAsk) where
+module Helpers (helpersReadFileIntoJsonString, helpersRosterOrQuit, helpersDrawPuck, helpersStartNewYear, helpersSelectNewGiver, helpersGiveeIsSuccess, helpersGiveeIsFailure, helpersErrorListIsEmpty, helpersPrintResults, helpersPrintStringGivingRoster, helpersPromptLine, helpersPrintAndAsk) where
 
 import Control.Concurrent.STM
 import Control.Exception
@@ -34,8 +34,8 @@ type TVMaybeGiver = TVar (Maybe Giver)
 
 type TVDiscards = TVar Discards
 
-mainReadFileIntoJsonString :: FilePath -> IO (Either ErrorString JsonString)
-mainReadFileIntoJsonString f = do
+helpersReadFileIntoJsonString :: FilePath -> IO (Either ErrorString JsonString)
+helpersReadFileIntoJsonString f = do
   result <- try (BS.readFile f) :: IO (Either SomeException BS.ByteString)
   case result of
     Right r -> do
@@ -43,9 +43,9 @@ mainReadFileIntoJsonString f = do
       return (Right s)
     Left _ -> return (Left "File read error.")
 
-mainRosterOrQuit :: FilePath -> TVPlayers -> IO (RosterName, RosterYear)
-mainRosterOrQuit fp tvPlayers = do
-  rosterStringEither :: Either ErrorString JsonString <- mainReadFileIntoJsonString fp
+helpersRosterOrQuit :: FilePath -> TVPlayers -> IO (RosterName, RosterYear)
+helpersRosterOrQuit fp tvPlayers = do
+  rosterStringEither :: Either ErrorString JsonString <- helpersReadFileIntoJsonString fp
   case rosterStringEither of
     Right rs -> do
       let maybeRoster :: Maybe Roster = rosterJsonStringToRoster rs
@@ -56,21 +56,21 @@ mainRosterOrQuit fp tvPlayers = do
         Nothing -> exitWith (ExitFailure 42)
     Left _ -> exitWith (ExitFailure 99)
 
-mainDrawPuck :: Hat -> IO (Maybe PlayerSymbol)
-mainDrawPuck hat =
+helpersDrawPuck :: Hat -> IO (Maybe PlayerSymbol)
+helpersDrawPuck hat =
   if Set.null hat
     then return Nothing
     else do
       n <- randomRIO (0, Prelude.length hat - 1)
       return (Just (Set.elemAt n hat))
 
-mainStartNewYear :: TVGiftYear -> TVPlayers -> TVGiverHat -> TVGiveeHat -> TVMaybeGiver -> TVMaybeGivee -> TVDiscards -> IO ()
-mainStartNewYear tvGiftYear tvPlayers tvGiverHat tvGiveeHat tvMaybeGiver tvMaybeGivee tvDiscards = do
+helpersStartNewYear :: TVGiftYear -> TVPlayers -> TVGiverHat -> TVGiveeHat -> TVMaybeGiver -> TVMaybeGivee -> TVDiscards -> IO ()
+helpersStartNewYear tvGiftYear tvPlayers tvGiverHat tvGiveeHat tvMaybeGiver tvMaybeGivee tvDiscards = do
   plrs <- readTVarIO tvPlayers
   let nhgr = hatMakeHat plrs
   let nhge = hatMakeHat plrs
-  mgr <- mainDrawPuck nhgr
-  mge <- mainDrawPuck nhge
+  mgr <- helpersDrawPuck nhgr
+  mge <- helpersDrawPuck nhge
   atomically $ modifyTVar tvGiftYear (+ 1)
   atomically $ modifyTVar tvPlayers playersAddYear
   atomically $ writeTVar tvGiverHat nhgr
@@ -79,22 +79,22 @@ mainStartNewYear tvGiftYear tvPlayers tvGiverHat tvGiveeHat tvMaybeGiver tvMaybe
   atomically $ writeTVar tvMaybeGivee mge
   atomically $ writeTVar tvDiscards Set.empty
 
-mainSelectNewGiver :: TVMaybeGiver -> TVGiverHat -> TVGiveeHat -> TVDiscards -> TVMaybeGivee -> IO ()
-mainSelectNewGiver tvMaybeGiver tvGiverHat tvGiveeHat tvDiscards tvMaybeGivee = do
+helpersSelectNewGiver :: TVMaybeGiver -> TVGiverHat -> TVGiveeHat -> TVDiscards -> TVMaybeGivee -> IO ()
+helpersSelectNewGiver tvMaybeGiver tvGiverHat tvGiveeHat tvDiscards tvMaybeGivee = do
   mgr <- readTVarIO tvMaybeGiver
   atomically $ modifyTVar tvGiverHat (hatRemovePuck (fromJust mgr))
   dc <- readTVarIO tvDiscards
   atomically $ modifyTVar tvGiveeHat (hatReturnDiscards dc)
   atomically $ writeTVar tvDiscards Set.empty
   grh <- readTVarIO tvGiverHat
-  mgr1 <- mainDrawPuck grh
+  mgr1 <- helpersDrawPuck grh
   atomically $ writeTVar tvMaybeGiver mgr1
   geh <- readTVarIO tvGiveeHat
-  mge <- mainDrawPuck geh
+  mge <- helpersDrawPuck geh
   atomically $ writeTVar tvMaybeGivee mge
 
-mainGiveeIsSuccess :: TVMaybeGiver -> TVGiftYear -> TVMaybeGivee -> TVPlayers -> TVGiveeHat -> IO ()
-mainGiveeIsSuccess tvMaybeGiver tvGiftYear tvMaybeGivee tvPlayers tvGiveeHat = do
+helpersGiveeIsSuccess :: TVMaybeGiver -> TVGiftYear -> TVMaybeGivee -> TVPlayers -> TVGiveeHat -> IO ()
+helpersGiveeIsSuccess tvMaybeGiver tvGiftYear tvMaybeGivee tvPlayers tvGiveeHat = do
   mgr <- readTVarIO tvMaybeGiver
   gy <- readTVarIO tvGiftYear
   mge <- readTVarIO tvMaybeGivee
@@ -103,28 +103,28 @@ mainGiveeIsSuccess tvMaybeGiver tvGiftYear tvMaybeGivee tvPlayers tvGiveeHat = d
   atomically $ modifyTVar tvGiveeHat (hatRemovePuck (fromJust mge))
   atomically $ writeTVar tvMaybeGivee Nothing
 
-mainGiveeIsFailure :: TVMaybeGivee -> TVGiveeHat -> TVDiscards -> IO ()
-mainGiveeIsFailure tvMaybeGivee tvGiveeHat tvDiscards = do
+helpersGiveeIsFailure :: TVMaybeGivee -> TVGiveeHat -> TVDiscards -> IO ()
+helpersGiveeIsFailure tvMaybeGivee tvGiveeHat tvDiscards = do
   mge <- readTVarIO tvMaybeGivee
   atomically $ modifyTVar tvGiveeHat (hatRemovePuck (fromJust mge))
   atomically $ modifyTVar tvDiscards (hatDiscardGivee (fromJust mge))
   geh <- readTVarIO tvGiveeHat
-  mge1 <- mainDrawPuck geh
+  mge1 <- helpersDrawPuck geh
   atomically $ writeTVar tvMaybeGivee mge1
 
-mainErrorListIsEmpty :: TVPlayers -> TVGiftYear -> IO Bool
-mainErrorListIsEmpty tvPlayers tvGiftYear = do
+helpersErrorListIsEmpty :: TVPlayers -> TVGiftYear -> IO Bool
+helpersErrorListIsEmpty tvPlayers tvGiftYear = do
   plrs <- readTVarIO tvPlayers
   gy <- readTVarIO tvGiftYear
   let plrKeys = Map.keys plrs
   let errorList = [plrSymbol | plrSymbol <- plrKeys, let geeCode = playersGetGivee plrSymbol plrs gy, let gerCode = playersGetGiver plrSymbol plrs gy, (plrSymbol == gerCode) || (plrSymbol == geeCode)]
   return (null errorList)
 
-mainPrintResults :: TVPlayers -> TVGiftYear -> IO ()
-mainPrintResults tvPlayers tvGiftYear = do
+helpersPrintResults :: TVPlayers -> TVGiftYear -> IO ()
+helpersPrintResults tvPlayers tvGiftYear = do
   plrs <- readTVarIO tvPlayers
   gy <- readTVarIO tvGiftYear
-  errorListIsEmpty <- mainErrorListIsEmpty tvPlayers tvGiftYear
+  errorListIsEmpty <- helpersErrorListIsEmpty tvPlayers tvGiftYear
   let plrKeys = Map.keys plrs
   mapM_
     putStrLn
@@ -149,19 +149,19 @@ mainPrintResults tvPlayers tvGiftYear = do
     putStrLn "Do you see how it occurs?"
     putStrLn "If not... call me and I'll explain!"
 
-mainPrintStringGivingRoster :: RosterName -> RosterYear -> TVGiftYear -> TVPlayers -> IO ()
-mainPrintStringGivingRoster rn ry tvGiftYear tvPlayers = do
+helpersPrintStringGivingRoster :: RosterName -> RosterYear -> TVGiftYear -> TVPlayers -> IO ()
+helpersPrintStringGivingRoster rn ry tvGiftYear tvPlayers = do
   gy <- readTVarIO tvGiftYear
   putStrLn ("\n" ++ rn ++ " - Year " ++ show (ry + gy) ++ " Gifts:\n")
-  mainPrintResults tvPlayers tvGiftYear
+  helpersPrintResults tvPlayers tvGiftYear
 
-mainPromptLine :: String -> IO String
-mainPromptLine prompt = do
+helpersPromptLine :: String -> IO String
+helpersPromptLine prompt = do
   putStr prompt
   hFlush stdout
   getLine
 
-mainPrintAndAsk :: RosterName -> RosterYear -> TVGiftYear -> TVPlayers -> IO String
-mainPrintAndAsk rn ry tvGiftYear tvPlayers = do
-  mainPrintStringGivingRoster rn ry tvGiftYear tvPlayers
-  mainPromptLine "\nContinue? ('q' to quit): "
+helpersPrintAndAsk :: RosterName -> RosterYear -> TVGiftYear -> TVPlayers -> IO String
+helpersPrintAndAsk rn ry tvGiftYear tvPlayers = do
+  helpersPrintStringGivingRoster rn ry tvGiftYear tvPlayers
+  helpersPromptLine "\nContinue? ('q' to quit): "
