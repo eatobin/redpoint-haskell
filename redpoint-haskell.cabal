@@ -30,6 +30,7 @@ library
       Gift_History
       Gift_Pair
       Hat
+      Helpers
       Player
       Players
       Roster
