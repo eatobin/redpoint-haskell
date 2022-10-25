@@ -1,9 +1,12 @@
 module Main (main) where
 
-main :: IO ()
--- main = do { putStrLn "What's your name?" 
---           ; name <- getLine  
---           ; putStrLn ("Hello " ++ name) 
---           }
+import System.IO
 
-main = putStrLn "What's your name, honey?" >> getLine >>= putStrLn . ("Hello " ++)
+main :: IO ()
+--main = do
+--  putStrLn "What's your name?"
+--  hFlush stdout
+--  name <- getLine
+--  putStrLn ("Hello " ++ name)
+
+main = putStrLn "What's your name, honey?" >> hFlush stdout >> getLine >>= putStrLn . ("Hello " ++)
