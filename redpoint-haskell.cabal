@@ -26,7 +26,6 @@ source-repository head
 library
   exposed-modules:
       Borrower
-      Fact
       Gift_History
       Gift_Pair
       Hat
@@ -35,8 +34,6 @@ library
       Players
       Roster
       Rules
-      Strip
-      Transfer1
   other-modules:
       Paths_redpoint_haskell
   hs-source-dirs:
@@ -75,9 +72,7 @@ test-suite spec
   main-is: Spec.hs
   other-modules:
       BorrowerSpec
-      FactSpec
       HelpersSpec
-      StripSpec
       Paths_redpoint_haskell
   hs-source-dirs:
       test
