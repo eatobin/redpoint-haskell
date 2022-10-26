@@ -1,4 +1,4 @@
-module Transfer1 (main1) where
+module Transfer1 (withdraw, deposit, transfer, showAccount, showBalance) where
 
 import qualified Control.Concurrent.STM as STM
 
@@ -33,13 +33,3 @@ showBalance from to = do
   y <- showAccount to
   putStrLn $ "FROM balance: $" <> show x
   putStrLn $ "TO balance: $" <> show y
-
-main1 :: IO ()
-main1 = do
-  from <- STM.atomically (STM.newTVar 200)
-  to <- STM.atomically (STM.newTVar 200)
-  showBalance from to
-  putStrLn "Transfering $50 from 'FROM' to 'TO'"
-  transfer from to 50
-  putStrLn "Done!"
-  showBalance from to
