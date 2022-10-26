@@ -2,34 +2,34 @@ module Transfer1 (withdraw, deposit, transfer, showAccount, showBalance) where
 
 import qualified Control.Concurrent.STM as STM
 
-type Account = STM.TVar Int
+type AccountTVarInt = STM.TVar Int
 
-withdraw :: Account -> Int -> STM.STM ()
-withdraw acc amount = do
-  bal <- STM.readTVar acc
+withdraw :: AccountTVarInt -> Int -> STM.STM ()
+withdraw fromAcctTVarInt amount = do
+  bal <- STM.readTVar fromAcctTVarInt
   STM.check (amount >= 0 && amount <= bal)
-  STM.writeTVar acc (bal - amount)
+  STM.writeTVar fromAcctTVarInt (bal - amount)
 
-deposit :: Account -> Int -> STM.STM ()
-deposit acc amount = do
-  bal <- STM.readTVar acc
+deposit :: AccountTVarInt -> Int -> STM.STM ()
+deposit toAcctTVarInt amount = do
+  bal <- STM.readTVar toAcctTVarInt
   STM.check (amount >= 0)
-  STM.writeTVar acc (bal + amount)
+  STM.writeTVar toAcctTVarInt (bal + amount)
 
-transfer :: Account -> Account -> Int -> IO ()
-transfer from to amount =
+transfer :: AccountTVarInt -> AccountTVarInt -> Int -> IO ()
+transfer fromAcctTVarInt toAcctTVarInt amount =
   STM.atomically
     ( do
-        deposit to amount
-        withdraw from amount
+        deposit toAcctTVarInt amount
+        withdraw fromAcctTVarInt amount
     )
 
-showAccount :: Account -> IO Int
+showAccount :: AccountTVarInt -> IO Int
 showAccount = STM.readTVarIO
 
-showBalance :: Account -> Account -> IO ()
-showBalance from to = do
-  x <- showAccount from
-  y <- showAccount to
+showBalance :: AccountTVarInt -> AccountTVarInt -> IO ()
+showBalance fromAcctTVarInt toAcctTVarInt = do
+  x <- showAccount fromAcctTVarInt
+  y <- showAccount toAcctTVarInt
   putStrLn $ "FROM balance: $" <> show x
   putStrLn $ "TO balance: $" <> show y
