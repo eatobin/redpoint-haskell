@@ -1,31 +1,31 @@
 module Transfer1 (main1) where
 
-import qualified Control.Concurrent.STM as E
+import qualified Control.Concurrent.STM as STM
 
-type Account = E.TVar Int
+type Account = STM.TVar Int
 
-withdraw :: Account -> Int -> E.STM ()
+withdraw :: Account -> Int -> STM.STM ()
 withdraw acc amount = do
-  bal <- E.readTVar acc
-  E.check (amount >= 0 && amount <= bal)
-  E.writeTVar acc (bal - amount)
+  bal <- STM.readTVar acc
+  STM.check (amount >= 0 && amount <= bal)
+  STM.writeTVar acc (bal - amount)
 
-deposit :: Account -> Int -> E.STM ()
+deposit :: Account -> Int -> STM.STM ()
 deposit acc amount = do
-  bal <- E.readTVar acc
-  E.check (amount >= 0)
-  E.writeTVar acc (bal + amount)
+  bal <- STM.readTVar acc
+  STM.check (amount >= 0)
+  STM.writeTVar acc (bal + amount)
 
 transfer :: Account -> Account -> Int -> IO ()
 transfer from to amount =
-  E.atomically
+  STM.atomically
     ( do
         deposit to amount
         withdraw from amount
     )
 
 showAccount :: Account -> IO Int
-showAccount = E.readTVarIO
+showAccount = STM.readTVarIO
 
 showBalance :: Account -> Account -> IO ()
 showBalance from to = do
@@ -36,8 +36,8 @@ showBalance from to = do
 
 main1 :: IO ()
 main1 = do
-  from <- E.atomically (E.newTVar 200)
-  to <- E.atomically (E.newTVar 200)
+  from <- STM.atomically (STM.newTVar 200)
+  to <- STM.atomically (STM.newTVar 200)
   showBalance from to
   putStrLn "Transfering $50 from 'FROM' to 'TO'"
   transfer from to 50
