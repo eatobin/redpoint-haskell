@@ -5,10 +5,10 @@ import Transfer1
 
 main :: IO ()
 main = do
-  from <- STM.atomically (STM.newTVar 200)
-  to <- STM.atomically (STM.newTVar 200)
-  showBalance from to
+  fromAcct <- STM.atomically (STM.newTVar 200)
+  toAcct <- STM.atomically (STM.newTVar 200)
+  showBalance fromAcct toAcct
   putStrLn "Transfering $50 from 'FROM' to 'TO'"
-  transfer from to 50
+  transfer fromAcct toAcct 50
   putStrLn "Done!"
-  showBalance from to
+  showBalance fromAcct toAcct
