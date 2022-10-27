@@ -5,23 +5,23 @@ import qualified Control.Concurrent.STM as STM
 type AccountTVarInt = STM.TVar Int
 
 withdraw :: AccountTVarInt -> Int -> STM.STM ()
-withdraw fromAcctTVarInt amount = do
-  bal <- STM.readTVar fromAcctTVarInt
-  STM.check (amount >= 0 && amount <= bal)
-  STM.writeTVar fromAcctTVarInt (bal - amount)
+withdraw fromAcctTVarInt amountInt = do
+  balInt <- STM.readTVar fromAcctTVarInt
+  STM.check (amountInt >= 0 && amountInt <= balInt)
+  STM.writeTVar fromAcctTVarInt (balInt - amountInt)
 
 deposit :: AccountTVarInt -> Int -> STM.STM ()
-deposit toAcctTVarInt amount = do
-  bal <- STM.readTVar toAcctTVarInt
-  STM.check (amount >= 0)
-  STM.writeTVar toAcctTVarInt (bal + amount)
+deposit toAcctTVarInt amountInt = do
+  balInt <- STM.readTVar toAcctTVarInt
+  STM.check (amountInt >= 0)
+  STM.writeTVar toAcctTVarInt (balInt + amountInt)
 
 transfer :: AccountTVarInt -> AccountTVarInt -> Int -> IO ()
-transfer fromAcctTVarInt toAcctTVarInt amount =
+transfer fromAcctTVarInt toAcctTVarInt amountInt =
   STM.atomically
     ( do
-        deposit toAcctTVarInt amount
-        withdraw fromAcctTVarInt amount
+        deposit toAcctTVarInt amountInt
+        withdraw fromAcctTVarInt amountInt
     )
 
 showAccount :: AccountTVarInt -> IO Int
