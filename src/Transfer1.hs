@@ -29,7 +29,7 @@ showAccount = STM.readTVarIO
 
 showBalance :: AccountTVarInt -> AccountTVarInt -> IO ()
 showBalance fromAcctTVarInt toAcctTVarInt = do
-  x <- showAccount fromAcctTVarInt
-  y <- showAccount toAcctTVarInt
-  putStrLn $ "FROM balance: $" <> show x
-  putStrLn $ "TO balance: $" <> show y
+  xInt <- showAccount fromAcctTVarInt
+  yInt <- showAccount toAcctTVarInt
+  putStrLn $ "FROM balance: $" <> show xInt
+  putStrLn $ "TO balance: $" <> show yInt
