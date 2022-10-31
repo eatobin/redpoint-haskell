@@ -65,19 +65,20 @@ helpersDrawPuck hat =
       return (Just (Set.elemAt n hat))
 
 helpersStartNewYear :: TVarGiftYear -> TVarPlayers -> TVarGiverHat -> TVarGiveeHat -> TVarMaybeGiver -> TVarMaybeGivee -> TVarDiscards -> IO ()
-helpersStartNewYear tvGiftYear tvPlayers tvGiverHat tvGiveeHat tvMaybeGiver tvMaybeGivee tvDiscards = do
-  plrs <- STM.readTVarIO tvPlayers
+helpersStartNewYear tVarGiftYear tVarPlayers tVarGiverHat tVarGiveeHat tVarMaybeGiver tVarMaybeGivee tVarDiscards = do
+  plrs <- STM.readTVarIO tVarPlayers
   let nhgr = hatMakeHat plrs
   let nhge = hatMakeHat plrs
   mgr <- helpersDrawPuck nhgr
   mge <- helpersDrawPuck nhge
-  STM.atomically $ STM.modifyTVar tvGiftYear (+ 1)
-  STM.atomically $ STM.modifyTVar tvPlayers playersAddYear
-  STM.atomically $ STM.writeTVar tvGiverHat nhgr
-  STM.atomically $ STM.writeTVar tvGiveeHat nhge
-  STM.atomically $ STM.writeTVar tvMaybeGiver mgr
-  STM.atomically $ STM.writeTVar tvMaybeGivee mge
-  STM.atomically $ STM.writeTVar tvDiscards Set.empty
+  STM.atomically $ do
+    STM.modifyTVar tVarGiftYear (+ 1)
+    STM.modifyTVar tVarPlayers playersAddYear
+    STM.writeTVar tVarGiverHat nhgr
+    STM.writeTVar tVarGiveeHat nhge
+    STM.writeTVar tVarMaybeGiver mgr
+    STM.writeTVar tVarMaybeGivee mge
+    STM.writeTVar tVarDiscards Set.empty
 
 helpersSelectNewGiver :: TVarMaybeGiver -> TVarGiverHat -> TVarGiveeHat -> TVarDiscards -> TVarMaybeGivee -> IO ()
 helpersSelectNewGiver tvMaybeGiver tvGiverHat tvGiveeHat tvDiscards tvMaybeGivee = do
