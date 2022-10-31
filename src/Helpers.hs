@@ -20,19 +20,19 @@ import System.Random
 
 type ErrorString = String
 
-type TVPlayers = STM.TVar Players
+type TVarPlayers = STM.TVar Players
 
-type TVGiftYear = STM.TVar GiftYear
+type TVarGiftYear = STM.TVar GiftYear
 
-type TVGiveeHat = STM.TVar Hat
+type TVarGiveeHat = STM.TVar Hat
 
-type TVGiverHat = STM.TVar Hat
+type TVarGiverHat = STM.TVar Hat
 
-type TVMaybeGivee = STM.TVar (Maybe Givee)
+type TVarMaybeGivee = STM.TVar (Maybe Givee)
 
-type TVMaybeGiver = STM.TVar (Maybe Giver)
+type TVarMaybeGiver = STM.TVar (Maybe Giver)
 
-type TVDiscards = STM.TVar Discards
+type TVarDiscards = STM.TVar Discards
 
 helpersReadFileIntoJsonString :: FilePath -> IO (Either ErrorString JsonString)
 helpersReadFileIntoJsonString f = do
@@ -43,7 +43,7 @@ helpersReadFileIntoJsonString f = do
       return (Right s)
     Left _ -> return (Left "file read error.")
 
-helpersRosterOrQuit :: FilePath -> TVPlayers -> IO (RosterName, RosterYear)
+helpersRosterOrQuit :: FilePath -> TVarPlayers -> IO (RosterName, RosterYear)
 helpersRosterOrQuit fp tvPlayers = do
   rosterStringEither :: Either ErrorString JsonString <- helpersReadFileIntoJsonString fp
   case rosterStringEither of
@@ -64,7 +64,7 @@ helpersDrawPuck hat =
       n <- randomRIO (0, Prelude.length hat - 1)
       return (Just (Set.elemAt n hat))
 
-helpersStartNewYear :: TVGiftYear -> TVPlayers -> TVGiverHat -> TVGiveeHat -> TVMaybeGiver -> TVMaybeGivee -> TVDiscards -> IO ()
+helpersStartNewYear :: TVarGiftYear -> TVarPlayers -> TVarGiverHat -> TVarGiveeHat -> TVarMaybeGiver -> TVarMaybeGivee -> TVarDiscards -> IO ()
 helpersStartNewYear tvGiftYear tvPlayers tvGiverHat tvGiveeHat tvMaybeGiver tvMaybeGivee tvDiscards = do
   plrs <- STM.readTVarIO tvPlayers
   let nhgr = hatMakeHat plrs
@@ -79,7 +79,7 @@ helpersStartNewYear tvGiftYear tvPlayers tvGiverHat tvGiveeHat tvMaybeGiver tvMa
   STM.atomically $ STM.writeTVar tvMaybeGivee mge
   STM.atomically $ STM.writeTVar tvDiscards Set.empty
 
-helpersSelectNewGiver :: TVMaybeGiver -> TVGiverHat -> TVGiveeHat -> TVDiscards -> TVMaybeGivee -> IO ()
+helpersSelectNewGiver :: TVarMaybeGiver -> TVarGiverHat -> TVarGiveeHat -> TVarDiscards -> TVarMaybeGivee -> IO ()
 helpersSelectNewGiver tvMaybeGiver tvGiverHat tvGiveeHat tvDiscards tvMaybeGivee = do
   mgr <- STM.readTVarIO tvMaybeGiver
   STM.atomically $ STM.modifyTVar tvGiverHat (hatRemovePuck (fromJust mgr))
@@ -93,7 +93,7 @@ helpersSelectNewGiver tvMaybeGiver tvGiverHat tvGiveeHat tvDiscards tvMaybeGivee
   mge <- helpersDrawPuck geh
   STM.atomically $ STM.writeTVar tvMaybeGivee mge
 
-helpersGiveeIsSuccess :: TVMaybeGiver -> TVGiftYear -> TVMaybeGivee -> TVPlayers -> TVGiveeHat -> IO ()
+helpersGiveeIsSuccess :: TVarMaybeGiver -> TVarGiftYear -> TVarMaybeGivee -> TVarPlayers -> TVarGiveeHat -> IO ()
 helpersGiveeIsSuccess tvMaybeGiver tvGiftYear tvMaybeGivee tvPlayers tvGiveeHat = do
   mgr <- STM.readTVarIO tvMaybeGiver
   gy <- STM.readTVarIO tvGiftYear
@@ -103,7 +103,7 @@ helpersGiveeIsSuccess tvMaybeGiver tvGiftYear tvMaybeGivee tvPlayers tvGiveeHat 
   STM.atomically $ STM.modifyTVar tvGiveeHat (hatRemovePuck (fromJust mge))
   STM.atomically $ STM.writeTVar tvMaybeGivee Nothing
 
-helpersGiveeIsFailure :: TVMaybeGivee -> TVGiveeHat -> TVDiscards -> IO ()
+helpersGiveeIsFailure :: TVarMaybeGivee -> TVarGiveeHat -> TVarDiscards -> IO ()
 helpersGiveeIsFailure tvMaybeGivee tvGiveeHat tvDiscards = do
   mge <- STM.readTVarIO tvMaybeGivee
   STM.atomically $ STM.modifyTVar tvGiveeHat (hatRemovePuck (fromJust mge))
@@ -112,7 +112,7 @@ helpersGiveeIsFailure tvMaybeGivee tvGiveeHat tvDiscards = do
   mge1 <- helpersDrawPuck geh
   STM.atomically $ STM.writeTVar tvMaybeGivee mge1
 
-helpersErrorListIsEmpty :: TVPlayers -> TVGiftYear -> IO Bool
+helpersErrorListIsEmpty :: TVarPlayers -> TVarGiftYear -> IO Bool
 helpersErrorListIsEmpty tvPlayers tvGiftYear = do
   plrs <- STM.readTVarIO tvPlayers
   gy <- STM.readTVarIO tvGiftYear
@@ -120,7 +120,7 @@ helpersErrorListIsEmpty tvPlayers tvGiftYear = do
   let errorList = [plrSymbol | plrSymbol <- plrKeys, let geeCode = playersGetGivee plrSymbol plrs gy, let gerCode = playersGetGiver plrSymbol plrs gy, (plrSymbol == gerCode) || (plrSymbol == geeCode)]
   return (null errorList)
 
-helpersPrintResults :: TVPlayers -> TVGiftYear -> IO ()
+helpersPrintResults :: TVarPlayers -> TVarGiftYear -> IO ()
 helpersPrintResults tvPlayers tvGiftYear = do
   plrs <- STM.readTVarIO tvPlayers
   gy <- STM.readTVarIO tvGiftYear
@@ -149,7 +149,7 @@ helpersPrintResults tvPlayers tvGiftYear = do
     putStrLn "Do you see how it occurs?"
     putStrLn "If not... call me and I'll explain!"
 
-helpersPrintStringGivingRoster :: RosterName -> RosterYear -> TVGiftYear -> TVPlayers -> IO ()
+helpersPrintStringGivingRoster :: RosterName -> RosterYear -> TVarGiftYear -> TVarPlayers -> IO ()
 helpersPrintStringGivingRoster rn ry tvGiftYear tvPlayers = do
   gy <- STM.readTVarIO tvGiftYear
   putStrLn ("\n" ++ rn ++ " - Year " ++ show (ry + gy) ++ " Gifts:\n")
@@ -161,7 +161,7 @@ helpersPromptLine prompt = do
   hFlush stdout
   getLine
 
-helpersPrintAndAsk :: RosterName -> RosterYear -> TVGiftYear -> TVPlayers -> IO String
+helpersPrintAndAsk :: RosterName -> RosterYear -> TVarGiftYear -> TVarPlayers -> IO String
 helpersPrintAndAsk rn ry tvGiftYear tvPlayers = do
   helpersPrintStringGivingRoster rn ry tvGiftYear tvPlayers
   helpersPromptLine "\nContinue? ('q' to quit): "
