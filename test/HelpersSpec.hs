@@ -31,7 +31,7 @@ spec = do
         `shouldReturn` Left "file read error."
 
   describe "helpersRosterOrQuit" $ do
-    it "given a valid filepath and TVarPlayers, returns an IO (RosterName, RosterYear) and sets the TVarPlayers" $ do
+    it "given a valid filepath and TVarPlayers, returns an IO (RosterName, RosterYear)\n    and sets the TVarPlayers" $ do
       playersTVarPlayers <- STM.atomically (STM.newTVar (Map.empty :: Players))
       ioPair <- helpersRosterOrQuit "resources-test/beatles.json" playersTVarPlayers
       plrs <- STM.readTVarIO playersTVarPlayers
