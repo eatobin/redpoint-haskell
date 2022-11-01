@@ -30,15 +30,10 @@ spec = do
       helpersReadFileIntoJsonString "resources-test/no-file.json"
         `shouldReturn` Left "file read error."
 
-  describe "helpersRosterOrQuit - (RosterName, RosterYear)" $ do
-    it "given a valid filepath and TVarPlayers, returns an IO (RosterName, RosterYear)" $ do
+  describe "helpersRosterOrQuit" $ do
+    it "given a valid filepath and TVarPlayers, returns an IO (RosterName, RosterYear) and sets the TVarPlayers" $ do
       playersTVarPlayers <- STM.atomically (STM.newTVar (Map.empty :: Players))
-      helpersRosterOrQuit "resources-test/beatles.json" playersTVarPlayers
-        `shouldReturn` ("The Beatles", 2014)
-
-  describe "helpersRosterOrQuit - TVarPlayers" $ do
-    it "given a valid filepath and TVarPlayers, writes a TVarPlayers" $ do
-      playersTVarPlayers <- STM.atomically (STM.newTVar (Map.empty :: Players))
-      _ <- helpersRosterOrQuit "resources-test/beatles.json" playersTVarPlayers
+      ioPair <- helpersRosterOrQuit "resources-test/beatles.json" playersTVarPlayers
       plrs <- STM.readTVarIO playersTVarPlayers
+      ioPair `shouldBe` ("The Beatles", 2014)
       plrs `shouldBe` players1
