@@ -20,20 +20,12 @@ players1 =
 
 spec :: Spec
 spec = do
-  describe "helpersReadFileIntoJsonString - PASS" $ do
-    it "given a valid filepath, returns a Right JsonString" $
-      helpersReadFileIntoJsonString "resources-test/bad-json.json"
-        `shouldReturn` Right "[ \"test\" :: 123 ]\n"
-
-  describe "helpersReadFileIntoJsonString - FAIL" $ do
-    it "given an invalid filepath, returns a Left ErrorString" $
-      helpersReadFileIntoJsonString "resources-test/no-file.json"
-        `shouldReturn` Left "file read error."
-
   describe "helpersRosterOrQuit" $ do
-    it "given a valid filepath and TVarPlayers, returns an IO (RosterName, RosterYear)\n    and sets the TVarPlayers" $ do
+    it "given a valid filepath and TVarPlayers,\n    returns an IO (RosterName, RosterYear)\n    and sets the TVarPlayers\n    or Quits with an ErrorString" $ do
       playersTVarPlayers <- STM.atomically (STM.newTVar (Map.empty :: Players))
       ioPair <- helpersRosterOrQuit "resources-test/beatles.json" playersTVarPlayers
       plrs <- STM.readTVarIO playersTVarPlayers
       ioPair `shouldBe` ("The Beatles", 2014)
       plrs `shouldBe` players1
+      helpersReadFileIntoJsonString "resources-test/no-file.json"
+        `shouldReturn` Left "file read error."
