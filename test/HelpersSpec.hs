@@ -9,17 +9,14 @@ import Player
 import Players
 import Test.Hspec
 
-emptyPlayersSTMTVarPlayers :: STM.STM (STM.TVar Players)
-emptyPlayersSTMTVarPlayers = STM.newTVar (Map.empty :: Players)
-
---players1 :: Players
---players1 =
---  Map.fromList
---    [ ("GeoHar", Player {playerName = "George Harrison", giftHistory = Seq.fromList [GiftPair {givee = "RinSta", giver = "PauMcc"}]}),
---      ("JohLen", Player {playerName = "John Lennon", giftHistory = Seq.fromList [GiftPair {givee = "PauMcc", giver = "RinSta"}]}),
---      ("PauMcc", Player {playerName = "Paul McCartney", giftHistory = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}]}),
---      ("RinSta", Player {playerName = "Ringo Starr", giftHistory = Seq.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}]})
---    ]
+players1 :: Players
+players1 =
+  Map.fromList
+    [ ("GeoHar", Player {playerName = "George Harrison", giftHistory = Seq.fromList [GiftPair {givee = "RinSta", giver = "PauMcc"}]}),
+      ("JohLen", Player {playerName = "John Lennon", giftHistory = Seq.fromList [GiftPair {givee = "PauMcc", giver = "RinSta"}]}),
+      ("PauMcc", Player {playerName = "Paul McCartney", giftHistory = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}]}),
+      ("RinSta", Player {playerName = "Ringo Starr", giftHistory = Seq.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}]})
+    ]
 
 spec :: Spec
 spec = do
@@ -35,6 +32,13 @@ spec = do
 
   describe "helpersRosterOrQuit - (RosterName, RosterYear)" $ do
     it "given a valid filepath and TVarPlayers, returns an IO (RosterName, RosterYear)" $ do
-      emptyPlayersTVarInt <- STM.atomically emptyPlayersSTMTVarPlayers
-      helpersRosterOrQuit "resources-test/beatles.json" emptyPlayersTVarInt
+      playersTVarPlayers <- STM.atomically (STM.newTVar (Map.empty :: Players))
+      helpersRosterOrQuit "resources-test/beatles.json" playersTVarPlayers
         `shouldReturn` ("The Beatles", 2014)
+
+  describe "helpersRosterOrQuit - TVarPlayers" $ do
+    it "given a valid filepath and TVarPlayers, writes a TVarPlayers" $ do
+      playersTVarPlayers <- STM.atomically (STM.newTVar (Map.empty :: Players))
+      _ <- helpersRosterOrQuit "resources-test/beatles.json" playersTVarPlayers
+      plrs <- STM.readTVarIO playersTVarPlayers
+      plrs `shouldBe` players1
