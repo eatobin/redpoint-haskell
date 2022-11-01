@@ -10,7 +10,7 @@ import Players
 import Test.Hspec
 
 emptyPlayersSTMTVarPlayers :: STM.STM (STM.TVar Players)
-emptyPlayersSTMTVarPlayers = STM.newTVar (emptyPlayers :: Players)
+emptyPlayersSTMTVarPlayers = STM.newTVar (Map.empty :: Players)
 
 --players1 :: Players
 --players1 =
