@@ -3,6 +3,7 @@ module HelpersSpec (spec) where
 import qualified Control.Concurrent.STM as STM
 import qualified Data.Map.Strict as Map
 import qualified Data.Sequence as Seq
+import qualified Data.Set as Set
 import Gift_Pair
 import Helpers
 import Player
@@ -32,16 +33,21 @@ spec = do
 
   describe "helpersRosterOrQuit" $ do
     it "given a valid filepath and TVarPlayers, returns an IO (RosterName, RosterYear)\n    and sets the TVarPlayers" $ do
-      playersTVarPlayers <- STM.atomically (STM.newTVar (Map.empty :: Players))
-      ioPair <- helpersRosterOrQuit "resources-test/beatles.json" playersTVarPlayers
-      plrs <- STM.readTVarIO playersTVarPlayers
+      tVarPlayers <- STM.atomically (STM.newTVar (Map.empty :: Players))
+      ioPair <- helpersRosterOrQuit "resources-test/beatles.json" tVarPlayers
+      plrs <- STM.readTVarIO tVarPlayers
       ioPair `shouldBe` ("The Beatles", 2014)
       plrs `shouldBe` players1
 
   describe "helpersStartNewYear" $ do
-      it "resets TVarGiftYear, TVarPlayers, TVarGiverHat, TVarGiveeHat,\n    TVarMaybeGiver, TVarMaybeGivee and TVarDiscards" $ do
-        playersTVarPlayers <- STM.atomically (STM.newTVar (Map.empty :: Players))
-        ioPair <- helpersRosterOrQuit "resources-test/beatles.json" playersTVarPlayers
-        plrs <- STM.readTVarIO playersTVarPlayers
-        ioPair `shouldBe` ("The Beatles", 2014)
-        plrs `shouldBe` players1
+    it "resets TVarGiftYear, TVarPlayers, TVarGiverHat, TVarGiveeHat,\n    TVarMaybeGiver, TVarMaybeGivee and TVarDiscards" $ do
+      tVarPlayers <- STM.atomically (STM.newTVar (Map.empty :: Players))
+      _ <- helpersRosterOrQuit "resources-test/beatles.json" tVarPlayers
+      tVarGiftYear <- STM.atomically (STM.newTVar 0)
+      tVarGiverHat <- STM.atomically (STM.newTVar Set.empty)
+      tVarGiveeHat <- STM.atomically (STM.newTVar Set.empty)
+      tVarMaybeGiver <- STM.atomically (STM.newTVar Nothing)
+      tVarMaybeGivee <- STM.atomically (STM.newTVar Nothing)
+      tVarDiscards <- STM.atomically (STM.newTVar Set.empty)
+      helpersStartNewYear tVarGiftYear tVarPlayers tVarGiverHat tVarGiveeHat tVarMaybeGiver tVarMaybeGivee tVarDiscards
+      "xxx" `shouldBe` "xxx"
