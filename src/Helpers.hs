@@ -46,13 +46,13 @@ helpersRosterOrQuit fp tvPlayers = do
   rosterStringMaybe :: Maybe JsonString <- helpersReadFileIntoJsonString fp
   case rosterStringMaybe of
     Just rs -> do
-      let maybeRoster :: Maybe Roster = rosterJsonStringToRoster rs
-      case maybeRoster of
+      let rosterMaybe :: Maybe Roster = rosterJsonStringToRoster rs
+      case rosterMaybe of
         Just r -> do
           STM.atomically $ STM.writeTVar tvPlayers (players r)
           return (rosterName r, rosterYear r)
-        Nothing -> exitWith (ExitFailure 2)
-    Nothing -> exitWith (ExitFailure 1)
+        Nothing -> die "roster parse error"
+    Nothing -> die "file read error"
 
 helpersDrawPuck :: Hat -> IO (Maybe PlayerSymbol)
 helpersDrawPuck hat =
