@@ -18,8 +18,6 @@ import System.Exit
 import System.IO
 import System.Random
 
-type ErrorString = String
-
 type TVarPlayers = STM.TVar Players
 
 type TVarGiftYear = STM.TVar GiftYear
@@ -34,27 +32,27 @@ type TVarMaybeGiver = STM.TVar (Maybe Giver)
 
 type TVarDiscards = STM.TVar Discards
 
-helpersReadFileIntoJsonString :: FilePath -> IO (Either ErrorString JsonString)
+helpersReadFileIntoJsonString :: FilePath -> IO (Maybe JsonString)
 helpersReadFileIntoJsonString f = do
   result <- try (BS.readFile f) :: IO (Either SomeException BS.ByteString)
   case result of
     Right r -> do
       let s = BS.unpack r
-      return (Right s)
-    Left _ -> return (Left "file read error.")
+      return (Just s)
+    Left _ -> return Nothing
 
 helpersRosterOrQuit :: FilePath -> TVarPlayers -> IO (RosterName, RosterYear)
 helpersRosterOrQuit fp tvPlayers = do
-  rosterStringEither :: Either ErrorString JsonString <- helpersReadFileIntoJsonString fp
-  case rosterStringEither of
-    Right rs -> do
+  rosterStringMaybe :: Maybe JsonString <- helpersReadFileIntoJsonString fp
+  case rosterStringMaybe of
+    Just rs -> do
       let maybeRoster :: Maybe Roster = rosterJsonStringToRoster rs
       case maybeRoster of
         Just r -> do
           STM.atomically $ STM.writeTVar tvPlayers (players r)
           return (rosterName r, rosterYear r)
-        Nothing -> exitWith (ExitFailure 42)
-    Left _ -> exitWith (ExitFailure 99)
+        Nothing -> exitWith (ExitFailure 2)
+    Nothing -> exitWith (ExitFailure 1)
 
 helpersDrawPuck :: Hat -> IO (Maybe PlayerSymbol)
 helpersDrawPuck hat =
