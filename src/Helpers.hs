@@ -14,7 +14,7 @@ import Gift_Pair
 import Hat
 import Players
 import Roster
-import System.Exit
+import qualified System.Exit as SE
 import System.IO
 import System.Random
 
@@ -51,8 +51,8 @@ helpersRosterOrQuit fp tvPlayers = do
         Just r -> do
           STM.atomically $ STM.writeTVar tvPlayers (players r)
           return (rosterName r, rosterYear r)
-        Nothing -> die "roster parse error"
-    Nothing -> die "file read error"
+        Nothing -> SE.exitWith (SE.ExitFailure 22)
+    Nothing -> SE.exitWith (SE.ExitFailure 11)
 
 helpersDrawPuck :: Hat -> IO (Maybe PlayerSymbol)
 helpersDrawPuck hat =
