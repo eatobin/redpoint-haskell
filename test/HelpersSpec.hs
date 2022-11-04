@@ -37,3 +37,11 @@ spec = do
       plrs <- STM.readTVarIO playersTVarPlayers
       ioPair `shouldBe` ("The Beatles", 2014)
       plrs `shouldBe` players1
+
+  describe "helpersStartNewYear" $ do
+      it "resets TVarGiftYear, TVarPlayers, TVarGiverHat, TVarGiveeHat,\n    TVarMaybeGiver, TVarMaybeGivee and TVarDiscards" $ do
+        playersTVarPlayers <- STM.atomically (STM.newTVar (Map.empty :: Players))
+        ioPair <- helpersRosterOrQuit "resources-test/beatles.json" playersTVarPlayers
+        plrs <- STM.readTVarIO playersTVarPlayers
+        ioPair `shouldBe` ("The Beatles", 2014)
+        plrs `shouldBe` players1
