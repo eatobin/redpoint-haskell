@@ -19,6 +19,15 @@ players1 =
       ("RinSta", Player {playerName = "Ringo Starr", giftHistory = Seq.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}]})
     ]
 
+players2 :: Players
+players2 =
+  Map.fromList
+    [ ("GeoHar", Player {playerName = "George Harrison", giftHistory = Seq.fromList [GiftPair {givee = "RinSta", giver = "PauMcc"}, GiftPair {givee = "GeoHar", giver = "GeoHar"}]}),
+      ("JohLen", Player {playerName = "John Lennon", giftHistory = Seq.fromList [GiftPair {givee = "PauMcc", giver = "RinSta"}, GiftPair {givee = "JohLen", giver = "JohLen"}]}),
+      ("PauMcc", Player {playerName = "Paul McCartney", giftHistory = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}, GiftPair {givee = "PauMcc", giver = "PauMcc"}]}),
+      ("RinSta", Player {playerName = "Ringo Starr", giftHistory = Seq.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}, GiftPair {givee = "RinSta", giver = "RinSta"}]})
+    ]
+
 spec :: Spec
 spec = do
   describe "helpersReadFileIntoJsonString - PASS" $ do
@@ -31,13 +40,13 @@ spec = do
       helpersReadFileIntoJsonString "resources-test/no-file.json"
         `shouldReturn` Nothing
 
-  describe "helpersRosterOrQuit" $ do
-    it "given a valid filepath and TVarPlayers, returns an IO (RosterName, RosterYear)\n    and sets the TVarPlayers" $ do
-      tVarPlayers <- STM.atomically (STM.newTVar (Map.empty :: Players))
-      ioPair <- helpersRosterOrQuit "resources-test/beatles.json" tVarPlayers
-      plrs <- STM.readTVarIO tVarPlayers
-      ioPair `shouldBe` ("The Beatles", 2014)
-      plrs `shouldBe` players1
+    describe "helpersRosterOrQuit" $ do
+      it "given a valid filepath and TVarPlayers, returns an IO (RosterName, RosterYear)\n    and sets the TVarPlayers" $ do
+        tVarPlayers <- STM.atomically (STM.newTVar (Map.empty :: Players))
+        ioPair <- helpersRosterOrQuit "resources-test/beatles.json" tVarPlayers
+        plrs <- STM.readTVarIO tVarPlayers
+        ioPair `shouldBe` ("The Beatles", 2014)
+        plrs `shouldBe` players1
 
   describe "helpersStartNewYear" $ do
     it "resets TVarGiftYear, TVarPlayers, TVarGiverHat, TVarGiveeHat,\n    TVarMaybeGiver, TVarMaybeGivee and TVarDiscards" $ do
@@ -50,4 +59,7 @@ spec = do
       tVarMaybeGivee <- STM.atomically (STM.newTVar Nothing)
       tVarDiscards <- STM.atomically (STM.newTVar Set.empty)
       helpersStartNewYear tVarGiftYear tVarPlayers tVarGiverHat tVarGiveeHat tVarMaybeGiver tVarMaybeGivee tVarDiscards
-      "xxx" `shouldBe` "xxx"
+      gyX <- STM.readTVarIO tVarGiftYear
+      gyX `shouldBe` 1
+      plrs <- STM.readTVarIO tVarPlayers
+      plrs `shouldBe` players2
