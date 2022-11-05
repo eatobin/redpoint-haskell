@@ -71,3 +71,5 @@ spec = do
       mgrX `shouldNotBe` Nothing
       mgeX <- STM.readTVarIO tVarMaybeGivee
       mgeX `shouldNotBe` Nothing
+      dis <- STM.readTVarIO tVarDiscards
+      dis `shouldBe` Set.empty
