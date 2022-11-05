@@ -67,3 +67,7 @@ spec = do
       grh `shouldBe` Set.fromList ["GeoHar", "JohLen", "PauMcc", "RinSta"]
       geh <- STM.readTVarIO tVarGiveeHat
       geh `shouldBe` Set.fromList ["GeoHar", "JohLen", "PauMcc", "RinSta"]
+      mgrX <- STM.readTVarIO tVarMaybeGiver
+      mgrX `shouldNotBe` Nothing
+      mgeX <- STM.readTVarIO tVarMaybeGivee
+      mgeX `shouldNotBe` Nothing
