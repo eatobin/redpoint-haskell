@@ -7,7 +7,7 @@ import Control.Exception
 import Control.Monad
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.Map.Strict as Map
-import Data.Maybe
+import qualified Data.Maybe as DM
 import qualified Data.Set as Set
 import Gift_History
 import Gift_Pair
@@ -87,7 +87,7 @@ helpersSelectNewGiver tVarMaybeGiver tVarGiverHat tVarGiveeHat tVarDiscards tVar
   geh <- STM.readTVarIO tVarGiveeHat
   mge <- helpersDrawPuck geh
   STM.atomically $ do
-    STM.modifyTVar tVarGiverHat (hatRemovePuck (fromJust mgr))
+    STM.modifyTVar tVarGiverHat (hatRemovePuck (DM.fromJust mgr))
     STM.modifyTVar tVarGiveeHat (hatReturnDiscards dc)
     STM.writeTVar tVarDiscards Set.empty
     STM.writeTVar tVarMaybeGiver mgr1
@@ -99,9 +99,9 @@ helpersGiveeIsSuccess tVarMaybeGiver tVarGiftYear tVarMaybeGivee tVarPlayers tVa
   gy <- STM.readTVarIO tVarGiftYear
   mge <- STM.readTVarIO tVarMaybeGivee
   STM.atomically $ do
-    STM.modifyTVar tVarPlayers (playersUpdateGivee (fromJust mgr) (fromJust mge) gy)
-    STM.modifyTVar tVarPlayers (playersUpdateGiver (fromJust mge) (fromJust mgr) gy)
-    STM.modifyTVar tVarGiveeHat (hatRemovePuck (fromJust mge))
+    STM.modifyTVar tVarPlayers (playersUpdateGivee (DM.fromJust mgr) (DM.fromJust mge) gy)
+    STM.modifyTVar tVarPlayers (playersUpdateGiver (DM.fromJust mge) (DM.fromJust mgr) gy)
+    STM.modifyTVar tVarGiveeHat (hatRemovePuck (DM.fromJust mge))
     STM.writeTVar tVarMaybeGivee Nothing
 
 helpersGiveeIsFailure :: TVarMaybeGivee -> TVarGiveeHat -> TVarDiscards -> IO ()
@@ -110,8 +110,8 @@ helpersGiveeIsFailure tVarMaybeGivee tVarGiveeHat tVarDiscards = do
   geh <- STM.readTVarIO tVarGiveeHat
   mge1 <- helpersDrawPuck geh
   STM.atomically $ do
-    STM.modifyTVar tVarGiveeHat (hatRemovePuck (fromJust mge))
-    STM.modifyTVar tVarDiscards (hatDiscardGivee (fromJust mge))
+    STM.modifyTVar tVarGiveeHat (hatRemovePuck (DM.fromJust mge))
+    STM.modifyTVar tVarDiscards (hatDiscardGivee (DM.fromJust mge))
     STM.writeTVar tVarMaybeGivee mge1
 
 helpersErrorListIsEmpty :: TVarPlayers -> TVarGiftYear -> IO Bool
