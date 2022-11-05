@@ -65,3 +65,5 @@ spec = do
       plrs `shouldBe` players2
       grh <- STM.readTVarIO tVarGiverHat
       grh `shouldBe` Set.fromList ["GeoHar", "JohLen", "PauMcc", "RinSta"]
+      geh <- STM.readTVarIO tVarGiveeHat
+      geh `shouldBe` Set.fromList ["GeoHar", "JohLen", "PauMcc", "RinSta"]
