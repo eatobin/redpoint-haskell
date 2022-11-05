@@ -42,14 +42,14 @@ helpersReadFileIntoJsonString f = do
     Left _ -> return Nothing
 
 helpersRosterOrQuit :: FilePath -> TVarPlayers -> IO (RosterName, RosterYear)
-helpersRosterOrQuit fp tvPlayers = do
+helpersRosterOrQuit fp tVarPlayers = do
   rosterStringMaybe :: Maybe JsonString <- helpersReadFileIntoJsonString fp
   case rosterStringMaybe of
     Just rs -> do
       let rosterMaybe :: Maybe Roster = rosterJsonStringToRoster rs
       case rosterMaybe of
         Just r -> do
-          STM.atomically $ STM.writeTVar tvPlayers (players r)
+          STM.atomically $ STM.writeTVar tVarPlayers (players r)
           return (rosterName r, rosterYear r)
         Nothing -> SE.exitWith (SE.ExitFailure 22)
     Nothing -> SE.exitWith (SE.ExitFailure 11)
@@ -79,51 +79,51 @@ helpersStartNewYear tVarGiftYear tVarPlayers tVarGiverHat tVarGiveeHat tVarMaybe
     STM.writeTVar tVarDiscards Set.empty
 
 helpersSelectNewGiver :: TVarMaybeGiver -> TVarGiverHat -> TVarGiveeHat -> TVarDiscards -> TVarMaybeGivee -> IO ()
-helpersSelectNewGiver tvMaybeGiver tvGiverHat tvGiveeHat tvDiscards tvMaybeGivee = do
-  mgr <- STM.readTVarIO tvMaybeGiver
-  STM.atomically $ STM.modifyTVar tvGiverHat (hatRemovePuck (fromJust mgr))
-  dc <- STM.readTVarIO tvDiscards
-  STM.atomically $ STM.modifyTVar tvGiveeHat (hatReturnDiscards dc)
-  STM.atomically $ STM.writeTVar tvDiscards Set.empty
-  grh <- STM.readTVarIO tvGiverHat
+helpersSelectNewGiver tVarMaybeGiver tVarGiverHat tVarGiveeHat tVarDiscards tVarMaybeGivee = do
+  mgr <- STM.readTVarIO tVarMaybeGiver
+  STM.atomically $ STM.modifyTVar tVarGiverHat (hatRemovePuck (fromJust mgr))
+  dc <- STM.readTVarIO tVarDiscards
+  STM.atomically $ STM.modifyTVar tVarGiveeHat (hatReturnDiscards dc)
+  STM.atomically $ STM.writeTVar tVarDiscards Set.empty
+  grh <- STM.readTVarIO tVarGiverHat
   mgr1 <- helpersDrawPuck grh
-  STM.atomically $ STM.writeTVar tvMaybeGiver mgr1
-  geh <- STM.readTVarIO tvGiveeHat
+  STM.atomically $ STM.writeTVar tVarMaybeGiver mgr1
+  geh <- STM.readTVarIO tVarGiveeHat
   mge <- helpersDrawPuck geh
-  STM.atomically $ STM.writeTVar tvMaybeGivee mge
+  STM.atomically $ STM.writeTVar tVarMaybeGivee mge
 
 helpersGiveeIsSuccess :: TVarMaybeGiver -> TVarGiftYear -> TVarMaybeGivee -> TVarPlayers -> TVarGiveeHat -> IO ()
-helpersGiveeIsSuccess tvMaybeGiver tvGiftYear tvMaybeGivee tvPlayers tvGiveeHat = do
-  mgr <- STM.readTVarIO tvMaybeGiver
-  gy <- STM.readTVarIO tvGiftYear
-  mge <- STM.readTVarIO tvMaybeGivee
-  STM.atomically $ STM.modifyTVar tvPlayers (playersUpdateGivee (fromJust mgr) (fromJust mge) gy)
-  STM.atomically $ STM.modifyTVar tvPlayers (playersUpdateGiver (fromJust mge) (fromJust mgr) gy)
-  STM.atomically $ STM.modifyTVar tvGiveeHat (hatRemovePuck (fromJust mge))
-  STM.atomically $ STM.writeTVar tvMaybeGivee Nothing
+helpersGiveeIsSuccess tVarMaybeGiver tVarGiftYear tVarMaybeGivee tVarPlayers tVarGiveeHat = do
+  mgr <- STM.readTVarIO tVarMaybeGiver
+  gy <- STM.readTVarIO tVarGiftYear
+  mge <- STM.readTVarIO tVarMaybeGivee
+  STM.atomically $ STM.modifyTVar tVarPlayers (playersUpdateGivee (fromJust mgr) (fromJust mge) gy)
+  STM.atomically $ STM.modifyTVar tVarPlayers (playersUpdateGiver (fromJust mge) (fromJust mgr) gy)
+  STM.atomically $ STM.modifyTVar tVarGiveeHat (hatRemovePuck (fromJust mge))
+  STM.atomically $ STM.writeTVar tVarMaybeGivee Nothing
 
 helpersGiveeIsFailure :: TVarMaybeGivee -> TVarGiveeHat -> TVarDiscards -> IO ()
-helpersGiveeIsFailure tvMaybeGivee tvGiveeHat tvDiscards = do
-  mge <- STM.readTVarIO tvMaybeGivee
-  STM.atomically $ STM.modifyTVar tvGiveeHat (hatRemovePuck (fromJust mge))
-  STM.atomically $ STM.modifyTVar tvDiscards (hatDiscardGivee (fromJust mge))
-  geh <- STM.readTVarIO tvGiveeHat
+helpersGiveeIsFailure tVarMaybeGivee tVarGiveeHat tVarDiscards = do
+  mge <- STM.readTVarIO tVarMaybeGivee
+  STM.atomically $ STM.modifyTVar tVarGiveeHat (hatRemovePuck (fromJust mge))
+  STM.atomically $ STM.modifyTVar tVarDiscards (hatDiscardGivee (fromJust mge))
+  geh <- STM.readTVarIO tVarGiveeHat
   mge1 <- helpersDrawPuck geh
-  STM.atomically $ STM.writeTVar tvMaybeGivee mge1
+  STM.atomically $ STM.writeTVar tVarMaybeGivee mge1
 
 helpersErrorListIsEmpty :: TVarPlayers -> TVarGiftYear -> IO Bool
-helpersErrorListIsEmpty tvPlayers tvGiftYear = do
-  plrs <- STM.readTVarIO tvPlayers
-  gy <- STM.readTVarIO tvGiftYear
+helpersErrorListIsEmpty tVarPlayers tVarGiftYear = do
+  plrs <- STM.readTVarIO tVarPlayers
+  gy <- STM.readTVarIO tVarGiftYear
   let plrKeys = Map.keys plrs
   let errorList = [plrSymbol | plrSymbol <- plrKeys, let geeCode = playersGetGivee plrSymbol plrs gy, let gerCode = playersGetGiver plrSymbol plrs gy, (plrSymbol == gerCode) || (plrSymbol == geeCode)]
   return (null errorList)
 
 helpersPrintResults :: TVarPlayers -> TVarGiftYear -> IO ()
-helpersPrintResults tvPlayers tvGiftYear = do
-  plrs <- STM.readTVarIO tvPlayers
-  gy <- STM.readTVarIO tvGiftYear
-  errorListIsEmpty <- helpersErrorListIsEmpty tvPlayers tvGiftYear
+helpersPrintResults tVarPlayers tVarGiftYear = do
+  plrs <- STM.readTVarIO tVarPlayers
+  gy <- STM.readTVarIO tVarGiftYear
+  errorListIsEmpty <- helpersErrorListIsEmpty tVarPlayers tVarGiftYear
   let plrKeys = Map.keys plrs
   mapM_
     putStrLn
@@ -149,10 +149,10 @@ helpersPrintResults tvPlayers tvGiftYear = do
     putStrLn "If not... call me and I'll explain!"
 
 helpersPrintStringGivingRoster :: RosterName -> RosterYear -> TVarGiftYear -> TVarPlayers -> IO ()
-helpersPrintStringGivingRoster rn ry tvGiftYear tvPlayers = do
-  gy <- STM.readTVarIO tvGiftYear
+helpersPrintStringGivingRoster rn ry tVarGiftYear tVarPlayers = do
+  gy <- STM.readTVarIO tVarGiftYear
   putStrLn ("\n" ++ rn ++ " - Year " ++ show (ry + gy) ++ " Gifts:\n")
-  helpersPrintResults tvPlayers tvGiftYear
+  helpersPrintResults tVarPlayers tVarGiftYear
 
 helpersPromptLine :: String -> IO String
 helpersPromptLine prompt = do
@@ -161,6 +161,6 @@ helpersPromptLine prompt = do
   getLine
 
 helpersPrintAndAsk :: RosterName -> RosterYear -> TVarGiftYear -> TVarPlayers -> IO String
-helpersPrintAndAsk rn ry tvGiftYear tvPlayers = do
-  helpersPrintStringGivingRoster rn ry tvGiftYear tvPlayers
+helpersPrintAndAsk rn ry tVarGiftYear tVarPlayers = do
+  helpersPrintStringGivingRoster rn ry tVarGiftYear tVarPlayers
   helpersPromptLine "\nContinue? ('q' to quit): "

@@ -69,7 +69,8 @@ main = do
   print geh
   print dis
 
---  mainPrintStringGivingRoster rn ry TVarGiftYear TVarPlayers
+  helpersPrintStringGivingRoster rn ry tVarGiftYear tVarPlayers
+
 --  a <- mainPrintAndAsk rn ry TVarGiftYear TVarPlayers
 --  putStrLn a
 -- helpersStartNewYear tVarGiftYear tVarPlayers tVarGiverHat tVarGiveeHat tVarMaybeGiver tVarMaybeGivee tVarDiscards
