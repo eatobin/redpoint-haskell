@@ -39,6 +39,7 @@ type TVarDiscards = STM.TVar Discards
 filePath :: FilePath
 filePath = "resources-test/beatles.json"
 
+--filePath = "resources/blackhawks.json"
 main :: IO ()
 main = do
   tVarPlayers <- STM.atomically (STM.newTVar (Map.empty :: Players))
@@ -51,13 +52,13 @@ main = do
   tVarDiscards <- STM.atomically (STM.newTVar Set.empty)
   let rn = fst ioPair
   let ry = snd ioPair
-  plrsX <- STM.readTVarIO tVarPlayers
-  gyX <- STM.readTVarIO tVarGiftYear
-  mgrX <- STM.readTVarIO tVarMaybeGiver
-  mgeX <- STM.readTVarIO tVarMaybeGivee
-  grh :: Hat <- STM.readTVarIO tVarGiverHat
-  geh :: Hat <- STM.readTVarIO tVarGiveeHat
-  dis :: Discards <- STM.readTVarIO tVarDiscards
+  --  plrsX <- STM.readTVarIO tVarPlayers
+  --  gyX <- STM.readTVarIO tVarGiftYear
+  --  mgrX <- STM.readTVarIO tVarMaybeGiver
+  --  mgeX <- STM.readTVarIO tVarMaybeGivee
+  --  grh :: Hat <- STM.readTVarIO tVarGiverHat
+  --  geh :: Hat <- STM.readTVarIO tVarGiveeHat
+  --  dis :: Discards <- STM.readTVarIO tVarDiscards
 
   --  print rn
   --  print ry
