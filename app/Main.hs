@@ -71,8 +71,9 @@ main = do
 
   helpersPrintStringGivingRoster rn ry tVarGiftYear tVarPlayers
 
---  a <- mainPrintAndAsk rn ry TVarGiftYear TVarPlayers
---  putStrLn a
+  a <- helpersPrintAndAsk rn ry tVarGiftYear tVarPlayers
+  putStrLn a
+
 -- helpersStartNewYear tVarGiftYear tVarPlayers tVarGiverHat tVarGiveeHat tVarMaybeGiver tVarMaybeGivee tVarDiscards
 --  mainRosterOrQuit filePath tvRosterName tvRosterYear TVarPlayers
 --  rn <- STM.readTVarIO tvRosterName
