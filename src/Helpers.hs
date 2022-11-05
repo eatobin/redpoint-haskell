@@ -81,26 +81,28 @@ helpersStartNewYear tVarGiftYear tVarPlayers tVarGiverHat tVarGiveeHat tVarMaybe
 helpersSelectNewGiver :: TVarMaybeGiver -> TVarGiverHat -> TVarGiveeHat -> TVarDiscards -> TVarMaybeGivee -> IO ()
 helpersSelectNewGiver tVarMaybeGiver tVarGiverHat tVarGiveeHat tVarDiscards tVarMaybeGivee = do
   mgr <- STM.readTVarIO tVarMaybeGiver
-  STM.atomically $ STM.modifyTVar tVarGiverHat (hatRemovePuck (fromJust mgr))
   dc <- STM.readTVarIO tVarDiscards
-  STM.atomically $ STM.modifyTVar tVarGiveeHat (hatReturnDiscards dc)
-  STM.atomically $ STM.writeTVar tVarDiscards Set.empty
   grh <- STM.readTVarIO tVarGiverHat
   mgr1 <- helpersDrawPuck grh
-  STM.atomically $ STM.writeTVar tVarMaybeGiver mgr1
   geh <- STM.readTVarIO tVarGiveeHat
   mge <- helpersDrawPuck geh
-  STM.atomically $ STM.writeTVar tVarMaybeGivee mge
+  STM.atomically $ do
+    STM.modifyTVar tVarGiverHat (hatRemovePuck (fromJust mgr))
+    STM.modifyTVar tVarGiveeHat (hatReturnDiscards dc)
+    STM.writeTVar tVarDiscards Set.empty
+    STM.writeTVar tVarMaybeGiver mgr1
+    STM.writeTVar tVarMaybeGivee mge
 
 helpersGiveeIsSuccess :: TVarMaybeGiver -> TVarGiftYear -> TVarMaybeGivee -> TVarPlayers -> TVarGiveeHat -> IO ()
 helpersGiveeIsSuccess tVarMaybeGiver tVarGiftYear tVarMaybeGivee tVarPlayers tVarGiveeHat = do
   mgr <- STM.readTVarIO tVarMaybeGiver
   gy <- STM.readTVarIO tVarGiftYear
   mge <- STM.readTVarIO tVarMaybeGivee
-  STM.atomically $ STM.modifyTVar tVarPlayers (playersUpdateGivee (fromJust mgr) (fromJust mge) gy)
-  STM.atomically $ STM.modifyTVar tVarPlayers (playersUpdateGiver (fromJust mge) (fromJust mgr) gy)
-  STM.atomically $ STM.modifyTVar tVarGiveeHat (hatRemovePuck (fromJust mge))
-  STM.atomically $ STM.writeTVar tVarMaybeGivee Nothing
+  STM.atomically $ do
+    STM.modifyTVar tVarPlayers (playersUpdateGivee (fromJust mgr) (fromJust mge) gy)
+    STM.modifyTVar tVarPlayers (playersUpdateGiver (fromJust mge) (fromJust mgr) gy)
+    STM.modifyTVar tVarGiveeHat (hatRemovePuck (fromJust mge))
+    STM.writeTVar tVarMaybeGivee Nothing
 
 helpersGiveeIsFailure :: TVarMaybeGivee -> TVarGiveeHat -> TVarDiscards -> IO ()
 helpersGiveeIsFailure tVarMaybeGivee tVarGiveeHat tVarDiscards = do
