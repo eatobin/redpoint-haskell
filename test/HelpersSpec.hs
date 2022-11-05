@@ -63,3 +63,5 @@ spec = do
       gyX `shouldBe` 1
       plrs <- STM.readTVarIO tVarPlayers
       plrs `shouldBe` players2
+      grh <- STM.readTVarIO tVarGiverHat
+      grh `shouldBe` Set.fromList ["GeoHar", "JohLen", "PauMcc", "RinSta"]
