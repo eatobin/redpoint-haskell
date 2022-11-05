@@ -37,9 +37,9 @@ type TVarMaybeGiver = STM.TVar (Maybe Giver)
 type TVarDiscards = STM.TVar Discards
 
 filePath :: FilePath
-filePath = "resources-test/beatles.json"
+--filePath = "resources-test/beatles.json"
 
---filePath = "resources/blackhawks.json"
+filePath = "resources/blackhawks.json"
 main :: IO ()
 main = do
   tVarPlayers <- STM.atomically (STM.newTVar (Map.empty :: Players))
@@ -85,13 +85,13 @@ main = do
     helpersStartNewYear tVarGiftYear tVarPlayers tVarGiverHat tVarGiveeHat tVarMaybeGiver tVarMaybeGivee tVarDiscards
     whileM_ (fmap DM.isJust (STM.readTVarIO tVarMaybeGiver)) $ do
       whileM_ (fmap DM.isJust (STM.readTVarIO tVarMaybeGivee)) $ do
-        mgr <- STM.readTVarIO tVarMaybeGiver
+        mself <- STM.readTVarIO tVarMaybeGiver
         mge <- STM.readTVarIO tVarMaybeGivee
         gy <- STM.readTVarIO tVarGiftYear
         plrs <- STM.readTVarIO tVarPlayers
-        if rulesGiveeNotSelf (DM.fromJust mgr) (DM.fromJust mge)
-          && rulesGiveeNotReciprocal (DM.fromJust mgr) plrs gy (DM.fromJust mge)
-          && rulesGiveeNotRepeat (DM.fromJust mgr) (DM.fromJust mge) gy plrs
+        if rulesGiveeNotSelf (DM.fromJust mself) (DM.fromJust mge)
+          && rulesGiveeNotReciprocal (DM.fromJust mself) (DM.fromJust mge) plrs gy
+          && rulesGiveeNotRepeat (DM.fromJust mself) (DM.fromJust mge) gy plrs
           then helpersGiveeIsSuccess tVarMaybeGiver tVarGiftYear tVarMaybeGivee tVarPlayers tVarGiveeHat
           else helpersGiveeIsFailure tVarMaybeGivee tVarGiveeHat tVarDiscards
       helpersSelectNewGiver tVarMaybeGiver tVarGiverHat tVarDiscards tVarGiveeHat tVarMaybeGivee
