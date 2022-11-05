@@ -59,46 +59,48 @@ main = do
   geh :: Hat <- STM.readTVarIO tVarGiveeHat
   dis :: Discards <- STM.readTVarIO tVarDiscards
 
-  print rn
-  print ry
-  print plrsX
-  print gyX
-  print (DM.fromMaybe "Nothing" mgrX)
-  print (DM.fromMaybe "Nothing" mgeX)
-  print grh
-  print geh
-  print dis
+  --  print rn
+  --  print ry
+  --  print plrsX
+  --  print gyX
+  --  print (DM.fromMaybe "Nothing" mgrX)
+  --  print (DM.fromMaybe "Nothing" mgeX)
+  --  print grh
+  --  print geh
+  --  print dis
+  --
+  --  helpersPrintStringGivingRoster rn ry tVarGiftYear tVarPlayers
 
-  helpersPrintStringGivingRoster rn ry tVarGiftYear tVarPlayers
+  --  a <- helpersPrintAndAsk rn ry tVarGiftYear tVarPlayers
 
-  a <- helpersPrintAndAsk rn ry tVarGiftYear tVarPlayers
-  putStrLn a
+  --  putStrLn a
 
--- helpersStartNewYear tVarGiftYear tVarPlayers tVarGiverHat tVarGiveeHat tVarMaybeGiver tVarMaybeGivee tVarDiscards
---  mainRosterOrQuit filePath tvRosterName tvRosterYear TVarPlayers
---  rn <- STM.readTVarIO tvRosterName
---  ry <- STM.readTVarIO tvRosterYear
---  whileM_ ((/= "q") . map toLower <$> mainPrintAndAsk rn ry TVarGiftYear TVarPlayers) $ do
---    mainStartNewYear TVarGiftYear TVarPlayers TVarGiverHat TVarGiveeHat TVarMaybeGiver TVarMaybeGivee TVarDiscards
---    whileM_ (fmap isJust (STM.readTVarIO TVarMaybeGiver)) $ do
---      whileM_ (fmap isJust (STM.readTVarIO TVarMaybeGivee)) $ do
---        mgr <- STM.readTVarIO TVarMaybeGiver
---        mge <- STM.readTVarIO TVarMaybeGivee
---        gy <- STM.readTVarIO TVarGiftYear
---        plrs <- STM.readTVarIO TVarPlayers
---        if rulesGiveeNotSelf (fromJust mgr) (fromJust mge)
---          && rulesGiveeNotReciprocal (fromJust mgr) plrs gy (fromJust mge)
---          && rulesGiveeNotRepeat (fromJust mgr) (fromJust mge) gy plrs
---          then mainGiveeIsSuccess TVarMaybeGiver TVarGiftYear TVarMaybeGivee TVarPlayers TVarGiveeHat
---          else mainGiveeIsFailure TVarMaybeGivee TVarGiveeHat TVarDiscards
---      mainSelectNewGiver TVarMaybeGiver TVarGiverHat TVarDiscards TVarGiveeHat TVarMaybeGivee
---    putStrLn ""
---  putStrLn ""
---  putStrLn "This was fun!"
---  putStrLn "Talk about a position with Redpoint?"
---  putStrLn "Please call: Eric Tobin 773-325-1516"
---  putStrLn "Thanks! Bye..."
---  putStrLn ""
+  -- helpersStartNewYear tVarGiftYear tVarPlayers tVarGiverHat tVarGiveeHat tVarMaybeGiver tVarMaybeGivee tVarDiscards
+  --  mainRosterOrQuit filePath tvRosterName tvRosterYear TVarPlayers
+  --  rn <- STM.readTVarIO tvRosterName
+  --  ry <- STM.readTVarIO tvRosterYear
+
+  whileM_ ((/= "q") . map toLower <$> helpersPrintAndAsk rn ry tVarGiftYear tVarPlayers) $ do
+    helpersStartNewYear tVarGiftYear tVarPlayers tVarGiverHat tVarGiveeHat tVarMaybeGiver tVarMaybeGivee tVarDiscards
+    whileM_ (fmap DM.isJust (STM.readTVarIO tVarMaybeGiver)) $ do
+      whileM_ (fmap DM.isJust (STM.readTVarIO tVarMaybeGivee)) $ do
+        mgr <- STM.readTVarIO tVarMaybeGiver
+        mge <- STM.readTVarIO tVarMaybeGivee
+        gy <- STM.readTVarIO tVarGiftYear
+        plrs <- STM.readTVarIO tVarPlayers
+        if rulesGiveeNotSelf (DM.fromJust mgr) (DM.fromJust mge)
+          && rulesGiveeNotReciprocal (DM.fromJust mgr) plrs gy (DM.fromJust mge)
+          && rulesGiveeNotRepeat (DM.fromJust mgr) (DM.fromJust mge) gy plrs
+          then helpersGiveeIsSuccess tVarMaybeGiver tVarGiftYear tVarMaybeGivee tVarPlayers tVarGiveeHat
+          else helpersGiveeIsFailure tVarMaybeGivee tVarGiveeHat tVarDiscards
+      helpersSelectNewGiver tVarMaybeGiver tVarGiverHat tVarDiscards tVarGiveeHat tVarMaybeGivee
+    putStrLn ""
+  putStrLn ""
+  putStrLn "This was fun!"
+  putStrLn "Talk about a position with Redpoint?"
+  putStrLn "Please call: Eric Tobin 773-325-1516"
+  putStrLn "Thanks! Bye..."
+  putStrLn ""
 
 --mainReadFileIntoJsonString :: FilePath -> IO (Either ErrorString JsonString)
 --mainReadFileIntoJsonString f = do
