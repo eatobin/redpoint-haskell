@@ -105,11 +105,12 @@ helpersGiveeIsSuccess tVarMaybeGiver tVarGiftYear tVarMaybeGivee tVarPlayers tVa
 helpersGiveeIsFailure :: TVarMaybeGivee -> TVarGiveeHat -> TVarDiscards -> IO ()
 helpersGiveeIsFailure tVarMaybeGivee tVarGiveeHat tVarDiscards = do
   mge <- STM.readTVarIO tVarMaybeGivee
-  STM.atomically $ STM.modifyTVar tVarGiveeHat (hatRemovePuck (fromJust mge))
-  STM.atomically $ STM.modifyTVar tVarDiscards (hatDiscardGivee (fromJust mge))
   geh <- STM.readTVarIO tVarGiveeHat
   mge1 <- helpersDrawPuck geh
-  STM.atomically $ STM.writeTVar tVarMaybeGivee mge1
+  STM.atomically $ do
+    STM.modifyTVar tVarGiveeHat (hatRemovePuck (fromJust mge))
+    STM.modifyTVar tVarDiscards (hatDiscardGivee (fromJust mge))
+    STM.writeTVar tVarMaybeGivee mge1
 
 helpersErrorListIsEmpty :: TVarPlayers -> TVarGiftYear -> IO Bool
 helpersErrorListIsEmpty tVarPlayers tVarGiftYear = do
