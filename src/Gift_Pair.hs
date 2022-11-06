@@ -1,8 +1,3 @@
--- λ> gp = GiftPair "gee" "ger"
--- λ> givee gp
--- "gee"
---λ> giver gp
--- "ger"
 {-# LANGUAGE DeriveGeneric #-}
 
 module Gift_Pair (PlayerSymbol, Givee, Giver, JsonString, GiftPair (..), giftPairUpdateGivee, giftPairUpdateGiver, giftPairJsonStringToGiftPair, giftPairGiftPairToJsonString) where
@@ -10,7 +5,7 @@ module Gift_Pair (PlayerSymbol, Givee, Giver, JsonString, GiftPair (..), giftPai
 import Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.ByteString.Lazy as BL
-import GHC.Generics
+import qualified GHC.Generics as G
 
 type PlayerSymbol = String
 
@@ -24,20 +19,20 @@ data GiftPair = GiftPair
   { givee :: Givee,
     giver :: Giver
   }
-  deriving (Show, Eq, Generic)
+  deriving (Show, Eq, G.Generic)
 
 instance FromJSON GiftPair
 
 instance ToJSON GiftPair
 
 giftPairUpdateGivee :: Givee -> GiftPair -> GiftPair
-giftPairUpdateGivee gee giftPair = giftPair {givee = gee}
+giftPairUpdateGivee givee1 giftPair = giftPair {givee = givee1}
 
 giftPairUpdateGiver :: Giver -> GiftPair -> GiftPair
-giftPairUpdateGiver ger giftPair = giftPair {giver = ger}
+giftPairUpdateGiver giver1 giftPair = giftPair {giver = giver1}
 
 giftPairJsonStringToGiftPair :: JsonString -> Maybe GiftPair
-giftPairJsonStringToGiftPair js = A.decodeStrict (BS.pack js) :: Maybe GiftPair
+giftPairJsonStringToGiftPair jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe GiftPair
 
 giftPairGiftPairToJsonString :: GiftPair -> JsonString
-giftPairGiftPairToJsonString gp = BS.unpack (BL.toStrict $ A.encode gp)
+giftPairGiftPairToJsonString giftPair = BS.unpack (BL.toStrict $ A.encode giftPair)
