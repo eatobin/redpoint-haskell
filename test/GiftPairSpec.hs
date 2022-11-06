@@ -13,6 +13,8 @@ spec :: Spec
 spec = do
   describe "giftPairUpdateGivee" $ do
     it " should update a givee" $ giftPairUpdateGivee "NewBee" giftPair `shouldBe` GiftPair "NewBee" "JohLen"
+  describe "giftPairUpdateGiver" $ do
+    it " should update a giver" $ giftPairUpdateGiver "NewBee" giftPair `shouldBe` GiftPair "GeoHar" "NewBee"
 
 --  describe "setName" $ do
 --    it "sets a new Borower name" $ setName "Borrower1" (Borrower "Jack" 1) `shouldBe` br1
