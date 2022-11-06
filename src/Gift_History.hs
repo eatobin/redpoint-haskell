@@ -19,7 +19,7 @@ giftHistoryUpdateGiftHistory :: GiftYear -> GiftPair -> GiftHistory -> GiftHisto
 giftHistoryUpdateGiftHistory = Seq.update
 
 giftHistoryJsonStringToGiftHistory :: JsonString -> Maybe GiftHistory
-giftHistoryJsonStringToGiftHistory js = A.decodeStrict (BS.pack js) :: Maybe GiftHistory
+giftHistoryJsonStringToGiftHistory jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe GiftHistory
 
 giftHistoryGiftHistoryToJsonString :: GiftHistory -> JsonString
-giftHistoryGiftHistoryToJsonString gh = BS.unpack (BL.toStrict $ A.encode gh)
+giftHistoryGiftHistoryToJsonString giftHistory = BS.unpack (BL.toStrict $ A.encode giftHistory)
