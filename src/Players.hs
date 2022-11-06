@@ -35,7 +35,7 @@ playersAddYear players =
   Map.fromList
     [ do
         let gh = giftHistory player
-        let ngh = giftHistoryAddYear gh playerKey
+        let ngh = giftHistoryAddYear playerKey gh
         let nplr = playerUpdateGiftHistory ngh player
         (playerKey, nplr)
       | (playerKey, player) <- Map.toAscList players
