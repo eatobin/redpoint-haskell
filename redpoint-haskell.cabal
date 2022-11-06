@@ -25,7 +25,6 @@ source-repository head
 
 library
   exposed-modules:
-      Borrower
       Gift_History
       Gift_Pair
       Hat
@@ -34,7 +33,6 @@ library
       Players
       Roster
       Rules
-      Transfer1
   other-modules:
       Paths_redpoint_haskell
   hs-source-dirs:
@@ -72,7 +70,6 @@ test-suite spec
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
-      BorrowerSpec
       GiftPairSpec
       HelpersSpec
       Paths_redpoint_haskell
