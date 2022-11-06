@@ -4,10 +4,10 @@ import Gift_Pair
 import Test.Hspec
 
 jsonString :: JsonString
-jsonString = "{\"givee\":\"GeoHar\",\"giver\":\"JohLen\"}"
+jsonString = "{\"giver\":\"JohLen\",\"givee\":\"GeoHar\"}"
 
 giftPair :: GiftPair
-giftPair = GiftPair {givee = "GeoHar", giver = "JohLen"}
+giftPair = GiftPair {giver = "JohLen", givee = "GeoHar"}
 
 spec :: Spec
 spec = do
@@ -16,4 +16,6 @@ spec = do
   describe "giftPairUpdateGiver" $ do
     it "should update a giver" $ giftPairUpdateGiver "NewBee" giftPair `shouldBe` GiftPair "GeoHar" "NewBee"
   describe "giftPairJsonStringToGiftPair" $ do
-    it "convert from JSON" $ giftPairJsonStringToGiftPair jsonString `shouldBe` Just (GiftPair "GeoHar" "JohLen")
+    it "convert from JSON" $ giftPairJsonStringToGiftPair jsonString `shouldBe` Just giftPair
+  describe "giftPairGiftPairToJsonString" $ do
+    it "convert to JSON" $ giftPairGiftPairToJsonString giftPair `shouldBe` jsonString
