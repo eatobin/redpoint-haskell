@@ -1,6 +1,6 @@
 module Gift_History (GiftHistory, GiftYear, giftHistoryAddYear, giftHistoryUpdateGiftHistory, giftHistoryJsonStringToGiftHistory, giftHistoryGiftHistoryToJsonString) where
 
-import Data.Aeson as A
+import qualified Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.Sequence as Seq

@@ -1,10 +1,10 @@
 module Players (SelfKey, Players, emptyPlayers, playersUpdatePlayer, playersGetPlayerName, playersAddYear, playersGetGivee, playersGetGiver, playersSetGiftPair, playersUpdateGivee, playersUpdateGiver, playersJsonStringToPlayers) where
 
-import Data.Aeson as A
+import qualified Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.Map.Strict as Map
-import Data.Maybe (fromJust, isNothing)
-import Data.Sequence as Seq
+import qualified Data.Maybe as DM
+import qualified Data.Sequence as Seq
 import Gift_History
 import Gift_Pair
 import Player
@@ -25,8 +25,8 @@ playersUpdatePlayer = Map.insert
 
 playersGetPlayerName :: PlayerSymbol -> Players -> PlayerName
 playersGetPlayerName playerKey players
-  | isNothing maybePlayer = "Error Finding Player"
-  | otherwise = playerName (fromJust maybePlayer)
+  | DM.isNothing maybePlayer = "Error Finding Player"
+  | otherwise = playerName (DM.fromJust maybePlayer)
   where
     maybePlayer = Map.lookup playerKey players
 
