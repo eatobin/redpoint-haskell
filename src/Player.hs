@@ -2,7 +2,7 @@
 
 module Player (PlayerName, Player (..), playerUpdateGiftHistory, playerJsonStringToPlayer, playerPlayerToJsonString) where
 
-import Data.Aeson as A
+import qualified Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.ByteString.Lazy as BL
 import GHC.Generics
