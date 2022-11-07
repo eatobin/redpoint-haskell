@@ -3,8 +3,8 @@
 module Helpers (helpersReadFileIntoJsonString, helpersRosterOrQuit, helpersDrawPuck, helpersStartNewYear, helpersSelectNewGiver, helpersGiveeIsSuccess, helpersGiveeIsFailure, helpersErrorListIsEmpty, helpersPrintResults, helpersPrintStringGivingRoster, helpersPromptLine, helpersPrintAndAsk) where
 
 import qualified Control.Concurrent.STM as STM
-import Control.Exception
-import Control.Monad
+import qualified Control.Exception as CE
+import qualified Control.Monad as CM
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.Map.Strict as Map
 import qualified Data.Maybe as DM
@@ -34,7 +34,7 @@ type TVarDiscards = STM.TVar Discards
 
 helpersReadFileIntoJsonString :: FilePath -> IO (Maybe JsonString)
 helpersReadFileIntoJsonString f = do
-  result <- try (BS.readFile f) :: IO (Either SomeException BS.ByteString)
+  result <- CE.try (BS.readFile f) :: IO (Either CE.SomeException BS.ByteString)
   case result of
     Right r -> do
       let s = BS.unpack r
@@ -146,7 +146,7 @@ helpersPrintResults tVarPlayers tVarGiftYear = do
                   else pn ++ " is buying for " ++ geeName
       | plrSymbol <- plrKeys
     ]
-  unless errorListIsEmpty $ do
+  CM.unless errorListIsEmpty $ do
     putStrLn "\nThere is a logic error in this year's pairings."
     putStrLn "Do you see how it occurs?"
     putStrLn "If not... call me and I'll explain!"

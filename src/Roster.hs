@@ -2,9 +2,9 @@
 
 module Roster (RosterName, RosterYear, Roster (..), rosterJsonStringToRoster) where
 
-import Data.Aeson as A
+import qualified Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
-import GHC.Generics
+import qualified GHC.Generics as G
 import Gift_Pair
 import Players
 
@@ -17,9 +17,9 @@ data Roster = Roster
     rosterYear :: RosterYear,
     players :: Players
   }
-  deriving (Show, Eq, Generic)
+  deriving (Show, Eq, G.Generic)
 
-instance FromJSON Roster
+instance A.FromJSON Roster
 
 rosterJsonStringToRoster :: JsonString -> Maybe Roster
 rosterJsonStringToRoster js = A.decodeStrict (BS.pack js) :: Maybe Roster

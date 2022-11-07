@@ -21,9 +21,9 @@ data GiftPair = GiftPair
   }
   deriving (Show, Eq, G.Generic)
 
-instance FromJSON GiftPair
+instance A.FromJSON GiftPair
 
-instance ToJSON GiftPair
+instance A.ToJSON GiftPair
 
 giftPairUpdateGivee :: Givee -> GiftPair -> GiftPair
 giftPairUpdateGivee givee1 giftPair = giftPair {givee = givee1}

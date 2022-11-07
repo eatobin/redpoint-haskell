@@ -5,7 +5,7 @@ module Player (PlayerName, Player (..), playerUpdateGiftHistory, playerJsonStrin
 import qualified Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.ByteString.Lazy as BL
-import GHC.Generics
+import qualified GHC.Generics as G
 import Gift_History
 import Gift_Pair
 
@@ -15,11 +15,11 @@ data Player = Player
   { playerName :: PlayerName,
     giftHistory :: GiftHistory
   }
-  deriving (Show, Eq, Generic)
+  deriving (Show, Eq, G.Generic)
 
-instance FromJSON Player
+instance A.FromJSON Player
 
-instance ToJSON Player
+instance A.ToJSON Player
 
 playerUpdateGiftHistory :: GiftHistory -> Player -> Player
 playerUpdateGiftHistory gh player = player {giftHistory = gh}
