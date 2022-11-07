@@ -11,20 +11,13 @@ jsonString = "[{\"giver\":\"JohLen\",\"givee\":\"GeoHar\"}]"
 giftHistory :: GiftHistory
 giftHistory = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}]
 
--- giftHistory2 :: GiftHistory
--- giftHistory2 = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}, GiftPair {givee = "Yippee", giver = "Yippee"}]
-
--- giftHistory3 :: GiftHistory
--- giftHistory3 = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}, GiftPair {givee = "Givee1", giver = "Giver1"}]
-
 spec :: Spec
 spec = do
   describe "giftHistoryAddYear" $ do
     it "should add a new year" $ giftHistoryAddYear "NewBee" giftHistory `shouldBe` Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}, GiftPair {givee = "NewBee", giver = "NewBee"}]
   describe "giftHistoryUpdateGiftHistory" $ do
     it "should return an updated giftHistory" $ giftHistoryUpdateGiftHistory 0 (GiftPair "me" "you") giftHistory `shouldBe` Seq.fromList [GiftPair {givee = "me", giver = "you"}]
-
---  describe "giftPairJsonStringToGiftPair" $ do
---    it "should convert from JSON" $ giftPairJsonStringToGiftPair jsonString `shouldBe` Just giftPair
---  describe "giftPairGiftPairToJsonString" $ do
---    it "should convert to JSON" $ giftPairGiftPairToJsonString giftPair `shouldBe` jsonString
+  describe "giftPairJsonStringToGiftPair" $ do
+    it "should convert from JSON" $ giftHistoryJsonStringToGiftHistory jsonString `shouldBe` Just giftHistory
+  describe "giftPairGiftPairToJsonString" $ do
+    it "should convert to JSON" $ giftHistoryGiftHistoryToJsonString giftHistory `shouldBe` jsonString
