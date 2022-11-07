@@ -22,10 +22,10 @@ instance A.FromJSON Player
 instance A.ToJSON Player
 
 playerUpdateGiftHistory :: GiftHistory -> Player -> Player
-playerUpdateGiftHistory gh player = player {giftHistory = gh}
+playerUpdateGiftHistory giftHistory1 player = player {giftHistory = giftHistory1}
 
 playerJsonStringToPlayer :: JsonString -> Maybe Player
-playerJsonStringToPlayer js = A.decodeStrict (BS.pack js) :: Maybe Player
+playerJsonStringToPlayer jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe Player
 
 playerPlayerToJsonString :: Player -> JsonString
-playerPlayerToJsonString plr = BS.unpack (BL.toStrict $ A.encode plr)
+playerPlayerToJsonString player = BS.unpack (BL.toStrict $ A.encode player)
