@@ -1,16 +1,15 @@
 module PlayerSpec (spec) where
 
 import qualified Data.Sequence as Seq
-import Gift_History
 import Gift_Pair
 import Player
 import Test.Hspec
 
 jsonString :: JsonString
-jsonString = "{\"playerName\":\"Paul McCartney\",\"giftHistory\":[{\"givee\":\"GeoHar\",\"giver\":\"JohLen\"}]}"
+jsonString = "{\"playerName\":\"Paul McCartney\",\"giftHistory\":[{\"giver\":\"JohLen\",\"givee\":\"GeoHar\"}]}"
 
 player :: Player
-player = Player {playerName = "Paul McCartney", giftHistory = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}]}
+player = Player {playerName = "Paul McCartney", giftHistory = Seq.fromList [GiftPair {giver = "JohLen", givee = "GeoHar"}]}
 
 spec :: Spec
 spec = do
@@ -20,6 +19,5 @@ spec = do
         `shouldBe` Player "Paul McCartney" (Seq.fromList [GiftPair "nope" "yup"])
   describe "playerJsonStringToPlayer" $ do
     it "should convert from JSON" $ playerJsonStringToPlayer jsonString `shouldBe` Just player
-
---  describe "giftPairGiftPairToJsonString" $ do
---    it "should convert to JSON" $ giftHistoryGiftHistoryToJsonString giftHistory `shouldBe` jsonString
+  describe "playerPlayerToJsonString" $ do
+    it "should convert to JSON" $ playerPlayerToJsonString player `shouldBe` jsonString
