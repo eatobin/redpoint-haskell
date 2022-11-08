@@ -15,12 +15,11 @@ player = Player {playerName = "Paul McCartney", giftHistory = Seq.fromList [Gift
 spec :: Spec
 spec = do
   describe "playerUpdateGiftHistory" $ do
-    it "should return an updated giftHistory" $ playerUpdateGiftHistory (Seq.fromList [GiftPair {givee = "nope", giver = "yup"}]) player
-      `shouldBe` Player "Paul McCartney" (Seq.fromList [GiftPair "nope" "yup"])
+    it "should return an updated giftHistory" $
+      playerUpdateGiftHistory (Seq.fromList [GiftPair {givee = "nope", giver = "yup"}]) player
+        `shouldBe` Player "Paul McCartney" (Seq.fromList [GiftPair "nope" "yup"])
+  describe "playerJsonStringToPlayer" $ do
+    it "should convert from JSON" $ playerJsonStringToPlayer jsonString `shouldBe` Just player
 
---  describe "giftHistoryUpdateGiftHistory" $ do
---    it "should return an updated giftHistory" $ giftHistoryUpdateGiftHistory 0 (GiftPair "me" "you") giftHistory `shouldBe` Seq.fromList [GiftPair {givee = "me", giver = "you"}]
---  describe "giftPairJsonStringToGiftPair" $ do
---    it "should convert from JSON" $ giftHistoryJsonStringToGiftHistory jsonString `shouldBe` Just giftHistory
 --  describe "giftPairGiftPairToJsonString" $ do
 --    it "should convert to JSON" $ giftHistoryGiftHistoryToJsonString giftHistory `shouldBe` jsonString
