@@ -14,9 +14,14 @@ import Gift_Pair
 import Hat
 import Players
 import Roster
-import qualified System.Exit as SE
 import System.IO
 import System.Random
+
+type ErrorString = String
+
+type TVarRosterName = STM.TVar RosterName
+
+type TVarRosterYear = STM.TVar RosterYear
 
 type TVarPlayers = STM.TVar Players
 
@@ -32,27 +37,28 @@ type TVarMaybeGiver = STM.TVar (Maybe Giver)
 
 type TVarDiscards = STM.TVar Discards
 
-helpersReadFileIntoJsonString :: FilePath -> IO (Maybe JsonString)
+helpersReadFileIntoJsonString :: FilePath -> IO (Either ErrorString JsonString)
 helpersReadFileIntoJsonString f = do
   result <- CE.try (BS.readFile f) :: IO (Either CE.SomeException BS.ByteString)
   case result of
     Right r -> do
       let s = BS.unpack r
-      return (Just s)
-    Left _ -> return Nothing
+      return (Right s)
+    Left _ -> return (Left "file read error")
 
-helpersRosterOrQuit :: FilePath -> TVarPlayers -> IO (RosterName, RosterYear)
-helpersRosterOrQuit fp tVarPlayers = do
-  rosterStringMaybe :: Maybe JsonString <- helpersReadFileIntoJsonString fp
-  case rosterStringMaybe of
-    Just rs -> do
-      let rosterMaybe :: Maybe Roster = rosterJsonStringToRoster rs
-      case rosterMaybe of
+helpersRosterOrQuit :: FilePath -> TVarRosterName -> TVarRosterYear -> TVarPlayers -> IO ()
+helpersRosterOrQuit fp tvRosterName tvRosterYear tvPlayers = do
+  rosterStringEither :: Either ErrorString JsonString <- helpersReadFileIntoJsonString fp
+  case rosterStringEither of
+    Right rs -> do
+      let maybeRoster :: Maybe Roster = rosterJsonStringToRoster rs
+      case maybeRoster of
         Just r -> do
-          STM.atomically $ STM.writeTVar tVarPlayers (players r)
-          return (rosterName r, rosterYear r)
-        Nothing -> SE.exitWith (SE.ExitFailure 22)
-    Nothing -> SE.exitWith (SE.ExitFailure 11)
+          STM.atomically $ STM.writeTVar tvRosterName (rosterName r)
+          STM.atomically $ STM.writeTVar tvRosterYear (rosterYear r)
+          STM.atomically $ STM.writeTVar tvPlayers (players r)
+        Nothing -> putStrLn "roster parse error"
+    Left fe -> putStrLn fe
 
 helpersDrawPuck :: Hat -> IO (Maybe PlayerSymbol)
 helpersDrawPuck hat =

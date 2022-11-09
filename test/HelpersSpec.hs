@@ -33,25 +33,32 @@ spec = do
   describe "helpersReadFileIntoJsonString - PASS" $ do
     it "given a valid filepath, returns a Right JsonString" $
       helpersReadFileIntoJsonString "resources-test/bad-json.json"
-        `shouldReturn` Just "[ \"test\" :: 123 ]\n"
+        `shouldReturn` Right "[ \"test\" :: 123 ]\n"
 
   describe "helpersReadFileIntoJsonString - FAIL" $ do
     it "given an invalid filepath, returns a Left ErrorString" $
       helpersReadFileIntoJsonString "resources-test/no-file.json"
-        `shouldReturn` Nothing
+        `shouldReturn` Left "file read error"
 
     describe "helpersRosterOrQuit" $ do
       it "given a valid filepath and TVarPlayers, returns an IO (RosterName, RosterYear)\n    and sets the TVarPlayers" $ do
+        tVarRosterName <- STM.atomically (STM.newTVar "")
+        tVarRosterYear <- STM.atomically (STM.newTVar (0 :: Int))
         tVarPlayers <- STM.atomically (STM.newTVar (Map.empty :: Players))
-        ioPair <- helpersRosterOrQuit "resources-test/beatles.json" tVarPlayers
+        helpersRosterOrQuit "resources-test/beatles.json" tVarRosterName tVarRosterYear tVarPlayers
+        rn <- STM.readTVarIO tVarRosterName
+        ry <- STM.readTVarIO tVarRosterYear
         plrs <- STM.readTVarIO tVarPlayers
-        ioPair `shouldBe` ("The Beatles", 2014)
+        rn `shouldBe` "The Beatles"
+        ry `shouldBe` 2014
         plrs `shouldBe` players1
 
   describe "helpersStartNewYear" $ do
     it "resets TVarGiftYear, TVarPlayers, TVarGiverHat, TVarGiveeHat,\n    TVarMaybeGiver, TVarMaybeGivee and TVarDiscards" $ do
+      tVarRosterName <- STM.atomically (STM.newTVar "")
+      tVarRosterYear <- STM.atomically (STM.newTVar (0 :: Int))
       tVarPlayers <- STM.atomically (STM.newTVar (Map.empty :: Players))
-      _ <- helpersRosterOrQuit "resources-test/beatles.json" tVarPlayers
+      helpersRosterOrQuit "resources-test/beatles.json" tVarRosterName tVarRosterYear tVarPlayers
       tVarGiftYear <- STM.atomically (STM.newTVar 0)
       tVarGiverHat <- STM.atomically (STM.newTVar Set.empty)
       tVarGiveeHat <- STM.atomically (STM.newTVar Set.empty)
