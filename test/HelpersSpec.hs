@@ -31,12 +31,12 @@ players2 =
 spec :: Spec
 spec = do
   describe "helpersReadFileIntoJsonString - PASS" $ do
-    it "given a valid filepath, returns a Right JsonString" $
+    it "should return a Right JsonString" $
       helpersReadFileIntoJsonString "resources-test/bad-json.json"
         `shouldReturn` Right "[ \"test\" :: 123 ]\n"
 
   describe "helpersReadFileIntoJsonString - FAIL" $ do
-    it "given an invalid filepath, returns a Left ErrorString" $
+    it "should return a  Left ErrorString" $
       helpersReadFileIntoJsonString "resources-test/no-file.json"
         `shouldReturn` Left "file read error"
 
