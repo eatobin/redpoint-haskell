@@ -47,16 +47,16 @@ helpersReadFileIntoJsonString f = do
     Left _ -> return (Left "file read error")
 
 helpersRosterOrQuit :: FilePath -> TVarRosterName -> TVarRosterYear -> TVarPlayers -> IO ()
-helpersRosterOrQuit fp tvRosterName tvRosterYear tvPlayers = do
+helpersRosterOrQuit fp tVarRosterName tVarRosterYear tVarPlayers = do
   rosterStringEither :: Either ErrorString JsonString <- helpersReadFileIntoJsonString fp
   case rosterStringEither of
     Right rs -> do
       let maybeRoster :: Maybe Roster = rosterJsonStringToRoster rs
       case maybeRoster of
-        Just r -> do
-          STM.atomically $ STM.writeTVar tvRosterName (rosterName r)
-          STM.atomically $ STM.writeTVar tvRosterYear (rosterYear r)
-          STM.atomically $ STM.writeTVar tvPlayers (players r)
+        Just r -> STM.atomically $ do
+          STM.writeTVar tVarRosterName (rosterName r)
+          STM.writeTVar tVarRosterYear (rosterYear r)
+          STM.writeTVar tVarPlayers (players r)
         Nothing -> putStrLn "roster parse error"
     Left fe -> putStrLn fe
 
