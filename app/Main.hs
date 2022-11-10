@@ -48,7 +48,7 @@ main :: IO ()
 main = do
   tVarPlayers <- STM.atomically (STM.newTVar (Map.empty :: Players))
   tVarRosterName <- STM.atomically (STM.newTVar "")
-  tVarRosterYear <- STM.atomically (STM.newTVar 0)
+  tVarRosterYear <- STM.atomically (STM.newTVar (0 :: Int))
   helpersRosterOrQuit filePath tVarRosterName tVarRosterYear tVarPlayers
   tVarGiftYear <- STM.atomically (STM.newTVar (0 :: Int))
   tVarGiverHat <- STM.atomically (STM.newTVar Set.empty)
