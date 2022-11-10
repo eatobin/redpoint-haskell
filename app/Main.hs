@@ -22,6 +22,10 @@ import qualified System.Exit as SE
 import System.IO
 import System.Random
 
+type TVarRosterName = STM.TVar RosterName
+
+type TVarRosterYear = STM.TVar RosterYear
+
 type TVarPlayers = STM.TVar Players
 
 type TVarGiftYear = STM.TVar GiftYear
@@ -43,15 +47,16 @@ filePath = "resources/blackhawks.json"
 main :: IO ()
 main = do
   tVarPlayers <- STM.atomically (STM.newTVar (Map.empty :: Players))
-  ioPair <- helpersRosterOrQuit filePath tVarPlayers
+  tVarRosterName <- STM.atomically (STM.newTVar "")
+  tVarRosterYear <- STM.atomically (STM.newTVar 0)
+  helpersRosterOrQuit filePath tVarRosterName tVarRosterYear tVarPlayers
   tVarGiftYear <- STM.atomically (STM.newTVar (0 :: Int))
   tVarGiverHat <- STM.atomically (STM.newTVar Set.empty)
   tVarGiveeHat <- STM.atomically (STM.newTVar Set.empty)
   tVarMaybeGiver <- STM.atomically (STM.newTVar Nothing)
   tVarMaybeGivee <- STM.atomically (STM.newTVar Nothing)
   tVarDiscards <- STM.atomically (STM.newTVar Set.empty)
-  let rn = fst ioPair
-  let ry = snd ioPair
+
   --  plrsX <- STM.readTVarIO tVarPlayers
   --  gyX <- STM.readTVarIO tVarGiftYear
   --  mgrX <- STM.readTVarIO tVarMaybeGiver
@@ -81,7 +86,7 @@ main = do
   --  rn <- STM.readTVarIO tvRosterName
   --  ry <- STM.readTVarIO tvRosterYear
 
-  whileM_ ((/= "q") . map toLower <$> helpersPrintAndAsk rn ry tVarGiftYear tVarPlayers) $ do
+  whileM_ ((/= "q") . map toLower <$> helpersPrintAndAsk tVarRosterName tVarRosterYear tVarGiftYear tVarPlayers) $ do
     helpersStartNewYear tVarGiftYear tVarPlayers tVarGiverHat tVarGiveeHat tVarMaybeGiver tVarMaybeGivee tVarDiscards
     whileM_ (fmap DM.isJust (STM.readTVarIO tVarMaybeGiver)) $ do
       whileM_ (fmap DM.isJust (STM.readTVarIO tVarMaybeGivee)) $ do

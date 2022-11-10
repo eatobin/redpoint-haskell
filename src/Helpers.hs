@@ -169,7 +169,9 @@ helpersPromptLine prompt = do
   hFlush stdout
   getLine
 
-helpersPrintAndAsk :: RosterName -> RosterYear -> TVarGiftYear -> TVarPlayers -> IO String
-helpersPrintAndAsk rn ry tVarGiftYear tVarPlayers = do
+helpersPrintAndAsk :: TVarRosterName -> TVarRosterYear -> TVarGiftYear -> TVarPlayers -> IO String
+helpersPrintAndAsk tVarRosterName tVarRosterYear tVarGiftYear tVarPlayers = do
+  rn <- STM.readTVarIO tVarRosterName
+  ry <- STM.readTVarIO tVarRosterYear
   helpersPrintStringGivingRoster rn ry tVarGiftYear tVarPlayers
   helpersPromptLine "\nContinue? ('q' to quit): "
