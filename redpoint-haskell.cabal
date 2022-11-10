@@ -74,6 +74,7 @@ test-suite spec
       GiftPairSpec
       HelpersSpec
       PlayerSpec
+      PlayersSpec
       Paths_redpoint_haskell
   hs-source-dirs:
       test
