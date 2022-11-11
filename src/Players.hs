@@ -85,4 +85,4 @@ playersUpdateMyGiver playerKey ger giftYear players =
         playersSetGiftPair playerKey giftYear ngp players
 
 playersJsonStringToPlayers :: JsonString -> Maybe Players
-playersJsonStringToPlayers js = A.decodeStrict (BS.pack js) :: Maybe Players
+playersJsonStringToPlayers jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe Players
