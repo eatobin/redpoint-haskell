@@ -31,9 +31,27 @@ newBeePlayers =
 spec :: Spec
 spec = do
   describe "playersUpdatePlayer" $ do
-      it "should return an updated player" $ playersUpdatePlayer "RinSta" Player {playerName = "New Bee", giftHistory = Seq.fromList [GiftPair {giver = "NewBee", givee = "NewBee"}]} players `shouldBe` newBeePlayers
+    it "should return an updated player" $ playersUpdatePlayer "RinSta" Player {playerName = "New Bee", giftHistory = Seq.fromList [GiftPair {giver = "NewBee", givee = "NewBee"}]} players `shouldBe` newBeePlayers
 
-  
-  
+  describe "playersGetPlayerName" $ do
+    it "should return a player name" $ playersGetPlayerName "PauMcc" players `shouldBe` "Paul McCartney"
+
   describe "playersJsonStringToPlayers" $ do
     it "should convert from JSON" $ playersJsonStringToPlayers jsonString `shouldBe` Just players
+
+--it should "return a player name" in {
+--    assert(playersGetPlayerName("PauMcc")(players) == "Paul McCartney")
+--  }
+--
+--  it should "add a new year" in {
+--    assert(playersAddYear(players) == playersExt)
+--  }
+--
+--  it should "return a givee and a giver" in {
+--    assert(playersGetMyGivee("GeoHar")(0)(players) == "RinSta")
+--    assert(playersGetMyGiver("GeoHar")(0)(players) == "PauMcc")
+--  }
+--
+--  it should "update a givee and a giver" in {
+--    assert(playersUpdateMyGivee("GeoHar")(0)("you")(players) == playersGivee)
+--    assert(playersUpdateMyGiver("GeoHar")(0)("you")(players) == playersGiver)
