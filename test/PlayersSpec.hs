@@ -51,9 +51,10 @@ spec = do
   describe "playersJsonStringToPlayers" $ do
     it "should convert from JSON" $ playersJsonStringToPlayers jsonString `shouldBe` Just players
 
---  it should "add a new year" in {
---    assert(playersAddYear(players) == playersExt)
---  }
+  describe "playersGetMyGivee and playersGetMyGiver" $ do
+    it "should return a givee" $ playersGetMyGivee "JohLen" players 0 `shouldBe` "PauMcc"
+    it "should return a giver" $ playersGetMyGiver "JohLen" players 0 `shouldBe` "RinSta"
+
 --
 --  it should "return a givee and a giver" in {
 --    assert(playersGetMyGivee("GeoHar")(0)(players) == "RinSta")

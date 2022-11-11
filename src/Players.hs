@@ -47,8 +47,8 @@ playersGetMyGivee selfKey players giftYear =
       Nothing -> "Error Finding GiftYear"
       (Just giftPair) -> givee giftPair
 
-playersGetMyGiver :: PlayerKey -> GiftYear -> Players -> Giver
-playersGetMyGiver selfKey giftYear players =
+playersGetMyGiver :: PlayerKey -> Players -> GiftYear -> Giver
+playersGetMyGiver selfKey players giftYear =
   case Map.lookup selfKey players of
     Nothing -> "Error Finding Player"
     (Just plr) -> case Seq.lookup giftYear (giftHistory plr) of
