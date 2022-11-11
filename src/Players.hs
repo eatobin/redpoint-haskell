@@ -1,4 +1,4 @@
-module Players (SelfKey, Players, emptyPlayers, playersUpdatePlayer, playersGetPlayerName, playersAddYear, playersGetGivee, playersGetGiver, playersSetGiftPair, playersUpdateGivee, playersUpdateGiver, playersJsonStringToPlayers) where
+module Players (Players, emptyPlayers, playersUpdatePlayer, playersGetPlayerName, playersAddYear, playersGetMyGivee, playersGetMyGiver, playersSetGiftPair, playersUpdateMyGivee, playersUpdateMyGiver, playersJsonStringToPlayers) where
 
 import qualified Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
@@ -10,20 +10,18 @@ import Gift_Pair
 import Player
 import Prelude hiding (lookup)
 
-type SelfKey = PlayerSymbol
-
-type Players = Map.Map PlayerSymbol Player
+type Players = Map.Map PlayerKey Player
 
 emptyPlayers :: Players
 emptyPlayers =
   Map.fromList
     [("EmptyPlayers", Player {playerName = "EmptyPlayers", giftHistory = Seq.fromList [GiftPair {givee = "EmptyPlayers", giver = "EmptyPlayers"}]})]
 
-playersUpdatePlayer :: PlayerSymbol -> Player -> Players -> Players
+playersUpdatePlayer :: PlayerKey -> Player -> Players -> Players
 -- playersUpdatePlayer playerKey player players = Map.insert playerKey player players
 playersUpdatePlayer = Map.insert
 
-playersGetPlayerName :: PlayerSymbol -> Players -> PlayerName
+playersGetPlayerName :: PlayerKey -> Players -> PlayerName
 playersGetPlayerName playerKey players
   | DM.isNothing maybePlayer = "Error Finding Player"
   | otherwise = playerName (DM.fromJust maybePlayer)
@@ -41,24 +39,24 @@ playersAddYear players =
       | (playerKey, player) <- Map.toAscList players
     ]
 
-playersGetGivee :: SelfKey -> Players -> GiftYear -> Givee
-playersGetGivee selfKey players giftYear =
+playersGetMyGivee :: PlayerKey -> Players -> GiftYear -> Givee
+playersGetMyGivee selfKey players giftYear =
   case Map.lookup selfKey players of
     Nothing -> "Error Finding Player"
     (Just plr) -> case Seq.lookup giftYear (giftHistory plr) of
       Nothing -> "Error Finding GiftYear"
       (Just giftPair) -> givee giftPair
 
-playersGetGiver :: SelfKey -> Players -> GiftYear -> Giver
-playersGetGiver selfKey players giftYear =
+playersGetMyGiver :: PlayerKey -> GiftYear -> Players -> Giver
+playersGetMyGiver selfKey giftYear players =
   case Map.lookup selfKey players of
     Nothing -> "Error Finding Player"
     (Just plr) -> case Seq.lookup giftYear (giftHistory plr) of
       Nothing -> "Error Finding GiftYear"
       (Just giftPair) -> giver giftPair
 
-playersSetGiftPair :: PlayerSymbol -> Players -> GiftYear -> GiftPair -> Players
-playersSetGiftPair playerKey players giftYear giftPair =
+playersSetGiftPair :: PlayerKey -> GiftYear -> GiftPair -> Players -> Players
+playersSetGiftPair playerKey giftYear giftPair players =
   case Map.lookup playerKey players of
     Nothing -> emptyPlayers
     (Just plr) -> do
@@ -66,25 +64,25 @@ playersSetGiftPair playerKey players giftYear giftPair =
       let nplr = playerUpdateGiftHistory ngh plr
       playersUpdatePlayer playerKey nplr players
 
-playersUpdateGivee :: PlayerSymbol -> Givee -> GiftYear -> Players -> Players
-playersUpdateGivee playerKey gee giftYear players =
+playersUpdateMyGivee :: PlayerKey -> Givee -> GiftYear -> Players -> Players
+playersUpdateMyGivee playerKey gee giftYear players =
   case Map.lookup playerKey players of
     Nothing -> emptyPlayers
     (Just plr) -> case Seq.lookup giftYear (giftHistory plr) of
       Nothing -> emptyPlayers
       (Just giftPair) -> do
         let ngp = giftPairUpdateGivee gee giftPair
-        playersSetGiftPair playerKey players giftYear ngp
+        playersSetGiftPair playerKey giftYear ngp players
 
-playersUpdateGiver :: PlayerSymbol -> Giver -> GiftYear -> Players -> Players
-playersUpdateGiver playerKey ger giftYear players =
+playersUpdateMyGiver :: PlayerKey -> Giver -> GiftYear -> Players -> Players
+playersUpdateMyGiver playerKey ger giftYear players =
   case Map.lookup playerKey players of
     Nothing -> emptyPlayers
     (Just plr) -> case Seq.lookup giftYear (giftHistory plr) of
       Nothing -> emptyPlayers
       (Just giftPair) -> do
         let ngp = giftPairUpdateGiver ger giftPair
-        playersSetGiftPair playerKey players giftYear ngp
+        playersSetGiftPair playerKey giftYear ngp players
 
 playersJsonStringToPlayers :: JsonString -> Maybe Players
 playersJsonStringToPlayers js = A.decodeStrict (BS.pack js) :: Maybe Players

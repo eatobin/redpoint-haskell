@@ -60,7 +60,7 @@ helpersRosterOrQuit fp tVarRosterName tVarRosterYear tVarPlayers = do
         Nothing -> putStrLn "roster parse error"
     Left fe -> putStrLn fe
 
-helpersDrawPuck :: Hat -> IO (Maybe PlayerSymbol)
+helpersDrawPuck :: Hat -> IO (Maybe PlayerKey)
 helpersDrawPuck hat =
   if Set.null hat
     then return Nothing
@@ -105,8 +105,8 @@ helpersGiveeIsSuccess tVarMaybeGiver tVarGiftYear tVarMaybeGivee tVarPlayers tVa
   gy <- STM.readTVarIO tVarGiftYear
   mge <- STM.readTVarIO tVarMaybeGivee
   STM.atomically $ do
-    STM.modifyTVar tVarPlayers (playersUpdateGivee (DM.fromJust mgr) (DM.fromJust mge) gy)
-    STM.modifyTVar tVarPlayers (playersUpdateGiver (DM.fromJust mge) (DM.fromJust mgr) gy)
+    STM.modifyTVar tVarPlayers (playersUpdateMyGivee (DM.fromJust mgr) (DM.fromJust mge) gy)
+    STM.modifyTVar tVarPlayers (playersUpdateMyGiver (DM.fromJust mge) (DM.fromJust mgr) gy)
     STM.modifyTVar tVarGiveeHat (hatRemovePuck (DM.fromJust mge))
     STM.writeTVar tVarMaybeGivee Nothing
 
@@ -140,7 +140,7 @@ helpersPrintResults tVarPlayers tVarGiftYear = do
         let pn = playersGetPlayerName plrSymbol plrs
         let geeCode = playersGetGivee plrSymbol plrs gy
         let geeName = playersGetPlayerName geeCode plrs
-        let gerCode = playersGetGiver plrSymbol plrs gy
+        let gerCode = playersGetMyGiver plrSymbol plrs gy
         if (plrSymbol == geeCode) && (plrSymbol == gerCode)
           then pn ++ " is neither **buying** for nor **receiving** from anyone - **ERROR**"
           else

@@ -10,7 +10,7 @@ type GiftHistory = Seq.Seq GiftPair
 
 type GiftYear = Int
 
-giftHistoryAddYear :: PlayerSymbol -> GiftHistory -> GiftHistory
+giftHistoryAddYear :: PlayerKey -> GiftHistory -> GiftHistory
 giftHistoryAddYear playerKey giftHistory = giftHistory Seq.|> (GiftPair {givee = playerKey, giver = playerKey})
 
 giftHistoryUpdateGiftHistory :: GiftYear -> GiftPair -> GiftHistory -> GiftHistory

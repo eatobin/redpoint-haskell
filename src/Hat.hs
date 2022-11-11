@@ -5,14 +5,14 @@ import qualified Data.Set as Set
 import Gift_Pair
 import Players
 
-type Hat = Set.Set PlayerSymbol
+type Hat = Set.Set PlayerKey
 
-type Discards = Set.Set PlayerSymbol
+type Discards = Set.Set PlayerKey
 
 hatMakeHat :: Players -> Hat
 hatMakeHat = Map.keysSet
 
-hatRemovePuck :: PlayerSymbol -> Hat -> Hat
+hatRemovePuck :: PlayerKey -> Hat -> Hat
 hatRemovePuck = Set.delete
 
 hatDiscardGivee :: Givee -> Discards -> Discards
