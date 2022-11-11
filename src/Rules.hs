@@ -6,7 +6,7 @@ import Gift_History
 import Gift_Pair
 import Players
 
-rulesGiveeNotSelf :: SelfKey -> Givee -> Bool
+rulesGiveeNotSelf :: PlayerKey -> Givee -> Bool
 rulesGiveeNotSelf selfKey gee =
   selfKey /= gee
 
@@ -16,15 +16,15 @@ rulesGiveeNotSelf selfKey gee =
 --  where
 --    myReciprocal = playersGetGivee gee plrs giftYear
 
-rulesGiveeNotReciprocal :: SelfKey -> Givee -> Players -> GiftYear -> Bool
+rulesGiveeNotReciprocal :: PlayerKey -> Givee -> Players -> GiftYear -> Bool
 rulesGiveeNotReciprocal selfKey gee plrs giftYear =
   selfKey /= myReciprocal
   where
-    myReciprocal = playersGetGivee gee plrs giftYear
+    myReciprocal = playersGetMyGivee gee plrs giftYear
 
-rulesGiveeNotRepeat :: SelfKey -> Givee -> GiftYear -> Players -> Bool
+rulesGiveeNotRepeat :: PlayerKey -> Givee -> GiftYear -> Players -> Bool
 rulesGiveeNotRepeat selfKey gee giftYear plrs =
   let past :: [GiftYear] = filter (>= 0) . takeWhile (>= (giftYear - 3)) $ iterate (subtract 1) (giftYear - 1)
-      giveeInYear :: (GiftYear -> Givee) = playersGetGivee selfKey plrs
+      giveeInYear :: (GiftYear -> Givee) = playersGetMyGivee selfKey plrs
       giveesInYears :: [Givee] = map giveeInYear past
    in notElem gee giveesInYears

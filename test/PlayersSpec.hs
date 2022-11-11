@@ -1,23 +1,25 @@
 module PlayersSpec (spec) where
 
+import qualified Data.Map.Strict as Map
 import qualified Data.Sequence as Seq
 import Gift_Pair
 import Player
+import Players
 import Test.Hspec
 
 jsonString :: JsonString
-jsonString = "{\"playerName\":\"Paul McCartney\",\"giftHistory\":[{\"giver\":\"JohLen\",\"givee\":\"GeoHar\"}]}"
+jsonString = "{\"PauMcc\":{\"playerName\":\"Paul McCartney\",\"giftHistory\":[{\"givee\":\"GeoHar\",\"giver\":\"JohLen\"}]},\"GeoHar\":{\"playerName\":\"George Harrison\",\"giftHistory\":[{\"givee\":\"RinSta\",\"giver\":\"PauMcc\"}]},\"JohLen\":{\"playerName\":\"John Lennon\",\"giftHistory\":[{\"givee\":\"PauMcc\",\"giver\":\"RinSta\"}]},\"RinSta\":{\"playerName\":\"Ringo Starr\",\"giftHistory\":[{\"givee\":\"JohLen\",\"giver\":\"GeoHar\"}]}}"
 
-player :: Player
-player = Player {playerName = "Paul McCartney", giftHistory = Seq.fromList [GiftPair {giver = "JohLen", givee = "GeoHar"}]}
+players :: Players
+players =
+  Map.fromList
+    [ ("GeoHar", Player {playerName = "George Harrison", giftHistory = Seq.fromList [GiftPair {givee = "RinSta", giver = "PauMcc"}]}),
+      ("JohLen", Player {playerName = "John Lennon", giftHistory = Seq.fromList [GiftPair {givee = "PauMcc", giver = "RinSta"}]}),
+      ("PauMcc", Player {playerName = "Paul McCartney", giftHistory = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}]}),
+      ("RinSta", Player {playerName = "Ringo Starr", giftHistory = Seq.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}]})
+    ]
 
 spec :: Spec
 spec = do
-  describe "playerSUpdateGiftHistory" $ do
-    it "should return an updated giftHistory" $
-      playerUpdateGiftHistory (Seq.fromList [GiftPair {givee = "nope", giver = "yup"}]) player
-        `shouldBe` Player "Paul McCartney" (Seq.fromList [GiftPair "nope" "yup"])
-  describe "playerSJsonStringToPlayer" $ do
-    it "should convert from JSON" $ playerJsonStringToPlayer jsonString `shouldBe` Just player
-  describe "playerSPlayerToJsonString" $ do
-    it "should convert to JSON" $ playerPlayerToJsonString player `shouldBe` jsonString
+  describe "playersJsonStringToPlayers" $ do
+    it "should convert from JSON" $ playersJsonStringToPlayers jsonString `shouldBe` Just players

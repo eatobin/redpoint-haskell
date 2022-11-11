@@ -72,7 +72,6 @@ test-suite spec
   other-modules:
       GiftHistorySpec
       GiftPairSpec
-      HelpersSpec
       PlayerSpec
       PlayersSpec
       Paths_redpoint_haskell
