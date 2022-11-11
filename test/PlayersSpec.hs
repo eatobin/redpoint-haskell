@@ -28,6 +28,15 @@ newBeePlayers =
       ("RinSta", Player {playerName = "New Bee", giftHistory = Seq.fromList [GiftPair {givee = "NewBee", giver = "NewBee"}]})
     ]
 
+playersExt :: Players
+playersExt =
+  Map.fromList
+    [ ("GeoHar", Player {playerName = "George Harrison", giftHistory = Seq.fromList [GiftPair {givee = "RinSta", giver = "PauMcc"}, GiftPair {givee = "GeoHar", giver = "GeoHar"}]}),
+      ("JohLen", Player {playerName = "John Lennon", giftHistory = Seq.fromList [GiftPair {givee = "PauMcc", giver = "RinSta"}, GiftPair {givee = "JohLen", giver = "JohLen"}]}),
+      ("PauMcc", Player {playerName = "Paul McCartney", giftHistory = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}, GiftPair {givee = "PauMcc", giver = "PauMcc"}]}),
+      ("RinSta", Player {playerName = "Ringo Starr", giftHistory = Seq.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}, GiftPair {givee = "RinSta", giver = "RinSta"}]})
+    ]
+
 spec :: Spec
 spec = do
   describe "playersUpdatePlayer" $ do
@@ -36,13 +45,12 @@ spec = do
   describe "playersGetPlayerName" $ do
     it "should return a player name" $ playersGetPlayerName "PauMcc" players `shouldBe` "Paul McCartney"
 
+  describe "playersAddYear" $ do
+    it "should add a new year" $ playersAddYear players `shouldBe` playersExt
+
   describe "playersJsonStringToPlayers" $ do
     it "should convert from JSON" $ playersJsonStringToPlayers jsonString `shouldBe` Just players
 
---it should "return a player name" in {
---    assert(playersGetPlayerName("PauMcc")(players) == "Paul McCartney")
---  }
---
 --  it should "add a new year" in {
 --    assert(playersAddYear(players) == playersExt)
 --  }
