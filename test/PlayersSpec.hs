@@ -37,6 +37,24 @@ playersExt =
       ("RinSta", Player {playerName = "Ringo Starr", giftHistory = Seq.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}, GiftPair {givee = "RinSta", giver = "RinSta"}]})
     ]
 
+playersGivee :: Players
+playersGivee =
+  Map.fromList
+    [ ("GeoHar", Player {playerName = "George Harrison", giftHistory = Seq.fromList [GiftPair {givee = "you", giver = "PauMcc"}]}),
+      ("JohLen", Player {playerName = "John Lennon", giftHistory = Seq.fromList [GiftPair {givee = "PauMcc", giver = "RinSta"}]}),
+      ("PauMcc", Player {playerName = "Paul McCartney", giftHistory = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}]}),
+      ("RinSta", Player {playerName = "New Bee", giftHistory = Seq.fromList [GiftPair {giver = "NewBee", givee = "NewBee"}]})
+    ]
+
+playersGiver :: Players
+playersGiver =
+  Map.fromList
+    [ ("GeoHar", Player {playerName = "George Harrison", giftHistory = Seq.fromList [GiftPair {givee = "RinSta", giver = "you"}]}),
+      ("JohLen", Player {playerName = "John Lennon", giftHistory = Seq.fromList [GiftPair {givee = "PauMcc", giver = "RinSta"}]}),
+      ("PauMcc", Player {playerName = "Paul McCartney", giftHistory = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}]}),
+      ("RinSta", Player {playerName = "New Bee", giftHistory = Seq.fromList [GiftPair {giver = "NewBee", givee = "NewBee"}]})
+    ]
+
 spec :: Spec
 spec = do
   describe "playersUpdatePlayer" $ do
@@ -48,19 +66,13 @@ spec = do
   describe "playersAddYear" $ do
     it "should add a new year" $ playersAddYear players `shouldBe` playersExt
 
-  describe "playersJsonStringToPlayers" $ do
-    it "should convert from JSON" $ playersJsonStringToPlayers jsonString `shouldBe` Just players
-
   describe "playersGetMyGivee and playersGetMyGiver" $ do
     it "should return a givee" $ playersGetMyGivee "JohLen" players 0 `shouldBe` "PauMcc"
     it "should return a giver" $ playersGetMyGiver "JohLen" players 0 `shouldBe` "RinSta"
 
---
---  it should "return a givee and a giver" in {
---    assert(playersGetMyGivee("GeoHar")(0)(players) == "RinSta")
---    assert(playersGetMyGiver("GeoHar")(0)(players) == "PauMcc")
---  }
---
---  it should "update a givee and a giver" in {
---    assert(playersUpdateMyGivee("GeoHar")(0)("you")(players) == playersGivee)
---    assert(playersUpdateMyGiver("GeoHar")(0)("you")(players) == playersGiver)
+  describe "playersUpdateMyGivee and playersUpdateMyGiver" $ do
+    it "should update a givee" $ playersUpdateMyGivee "GeoHar" "you" 0 newBeePlayers `shouldBe` playersGivee
+    it "should update a giver" $ playersUpdateMyGiver "GeoHar" "you" 0 newBeePlayers `shouldBe` playersGiver
+
+  describe "playersJsonStringToPlayers" $ do
+    it "should convert from JSON" $ playersJsonStringToPlayers jsonString `shouldBe` Just players
