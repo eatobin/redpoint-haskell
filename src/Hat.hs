@@ -28,4 +28,4 @@ hatJsonStringToHat :: JsonString -> Maybe Hat
 hatJsonStringToHat jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe Hat
 
 hatHatToJsonString :: Hat -> JsonString
-hatHatToJsonString giftHistory = BS.unpack (BL.toStrict $ A.encode giftHistory)
+hatHatToJsonString hat = BS.unpack (BL.toStrict $ A.encode hat)
