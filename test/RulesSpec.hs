@@ -2,9 +2,7 @@ module RulesSpec (spec) where
 
 import qualified Data.Map.Strict as Map
 import qualified Data.Sequence as Seq
-import qualified Data.Set as Set
 import Gift_Pair
-import Hat
 import Player
 import Players
 import Rules
@@ -28,6 +26,7 @@ playersP0 =
       ("RinSta", Player {playerName = "Ringo Starr", giftHistory = Seq.fromList [GiftPair {givee = "JohLen", giver = "KarLav"}]})
     ]
 
+players1 :: Players
 players1 =
   Map.fromList
     [ ("GeoHar", Player {playerName = "George Harrison", giftHistory = Seq.fromList [GiftPair {givee = "RinSta", giver = "PauMcc"}]}),
@@ -48,8 +47,12 @@ spec = do
   describe "rulesGiveeNotReciprocal" $ do
     it "A Player should not give to its reciprocal - Pass" $ rulesGiveeNotReciprocal "JohLen" "GeoHar" players1 0 `shouldBe` True
     it "A Player should not give to its reciprocal - Fail" $ rulesGiveeNotReciprocal "JohLen" "GeoHar" reciprocalPlayers 0 `shouldBe` False
-
---  describe "hatDiscardGivee" $ do
---    it "should discard a puck" $ hatDiscardGivee "JohLen" hat2 `shouldBe` hat1
---  describe "hatReturnDiscards" $ do
---    it "should return discarded givees" $ hatReturnDiscards discards hat2 `shouldBe` hat1
+  describe "rulesGiveeNotRepeat" $ do
+    it "A Player should not repeat a Givee for three years - Fail1" $ rulesGiveeNotRepeat "RinSta" "JohLen" 2 playersP4 `shouldBe` False
+    it "A Player should not repeat a Givee for three years - Fail2" $ rulesGiveeNotRepeat "RinSta" "GeoHar" 2 playersP4 `shouldBe` False
+    it "A Player should not repeat a Givee for three years - Pass3" $ rulesGiveeNotRepeat "RinSta" "KarLav" 2 playersP4 `shouldBe` True
+    it "A Player should not repeat a Givee for three years - Pass4" $ rulesGiveeNotRepeat "RinSta" "JohLen" 5 playersP4 `shouldBe` True
+    it "A Player should not repeat a Givee for three years - Pass5" $ rulesGiveeNotRepeat "RinSta" "GeoHar" 5 playersP4 `shouldBe` True
+    it "A Player should not repeat a Givee for three years - Fail6" $ rulesGiveeNotRepeat "RinSta" "PauMcc" 5 playersP4 `shouldBe` False
+    it "A Player should not repeat a Givee for three years - Fail7" $ rulesGiveeNotRepeat "RinSta" "EriTob" 5 playersP4 `shouldBe` False
+    it "A Player should not repeat a Givee for three years - Fail8" $ rulesGiveeNotRepeat "RinSta" "KarLav" 5 playersP4 `shouldBe` False
