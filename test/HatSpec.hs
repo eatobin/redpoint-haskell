@@ -31,8 +31,9 @@ spec :: Spec
 spec = do
   describe "hatMakeHat" $ do
     it "should make itself given players" $ hatMakeHat players1 `shouldBe` hat1
-
---  it "testHatMakeHat" $ hatMakeHat players1 `shouldBe` hat1
---  it "testHatRemovePuck" $ hatRemovePuck "JohLen" hat1 `shouldBe` hat2
---  it "testHatDiscardGivee" $ hatDiscardGivee "JohLen" hat2 `shouldBe` hat1
---  it "testHatReturnDiscards" $ hatReturnDiscards discards hat2 `shouldBe` hat1
+  describe "hatRemovePuck" $ do
+    it "should remove a puck" $ hatRemovePuck "JohLen" hat1 `shouldBe` hat2
+  describe "hatDiscardGivee" $ do
+    it "should discard a puck" $ hatDiscardGivee "JohLen" hat2 `shouldBe` hat1
+  describe "hatReturnDiscards" $ do
+    it "should return discarded givees" $ hatReturnDiscards discards hat2 `shouldBe` hat1
