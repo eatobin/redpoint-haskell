@@ -10,6 +10,13 @@ import Players
 import Rules
 import Test.Hspec
 
+reciprocalPlayers :: Players
+reciprocalPlayers =
+  Map.fromList
+    [ ("GeoHar", Player {playerName = "George Harrison", giftHistory = Seq.fromList [GiftPair {givee = "JohLen", giver = "JohLen"}]}),
+      ("JohLen", Player {playerName = "John Lennon", giftHistory = Seq.fromList [GiftPair {givee = "GeoHar", giver = "GeoHar"}]})
+    ]
+
 playersP0 :: Players
 playersP0 =
   Map.fromList
@@ -21,6 +28,14 @@ playersP0 =
       ("RinSta", Player {playerName = "Ringo Starr", giftHistory = Seq.fromList [GiftPair {givee = "JohLen", giver = "KarLav"}]})
     ]
 
+players1 =
+  Map.fromList
+    [ ("GeoHar", Player {playerName = "George Harrison", giftHistory = Seq.fromList [GiftPair {givee = "RinSta", giver = "PauMcc"}]}),
+      ("JohLen", Player {playerName = "John Lennon", giftHistory = Seq.fromList [GiftPair {givee = "PauMcc", giver = "RinSta"}]}),
+      ("PauMcc", Player {playerName = "Paul McCartney", giftHistory = Seq.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}]}),
+      ("RinSta", Player {playerName = "Ringo Starr", giftHistory = Seq.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}]})
+    ]
+
 playersP4 :: Players
 playersP4 =
   let extended = playersAddYear . playersAddYear . playersAddYear $ playersAddYear playersP0
@@ -30,9 +45,10 @@ spec :: Spec
 spec = do
   describe "rulesGiveeNotSelf" $ do
     it "A Player should not give to itself" $ rulesGiveeNotSelf "JohLen" "GeoHar" `shouldBe` True
+  describe "rulesGiveeNotReciprocal" $ do
+    it "A Player should not give to its reciprocal - Pass" $ rulesGiveeNotReciprocal "JohLen" "GeoHar" players1 0 `shouldBe` True
+    it "A Player should not give to its reciprocal - Fail" $ rulesGiveeNotReciprocal "JohLen" "GeoHar" reciprocalPlayers 0 `shouldBe` False
 
---  describe "hatRemovePuck" $ do
---    it "should remove a puck" $ hatRemovePuck "JohLen" hat1 `shouldBe` hat2
 --  describe "hatDiscardGivee" $ do
 --    it "should discard a puck" $ hatDiscardGivee "JohLen" hat2 `shouldBe` hat1
 --  describe "hatReturnDiscards" $ do
