@@ -75,6 +75,7 @@ test-suite spec
       HatSpec
       PlayerSpec
       PlayersSpec
+      RulesSpec
       Paths_redpoint_haskell
   hs-source-dirs:
       test
