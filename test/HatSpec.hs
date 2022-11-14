@@ -29,7 +29,7 @@ discards = Set.fromList ["JohLen"]
 
 spec :: Spec
 spec = do
-  describe "playerJsonStringToPlayer" $ do
+  describe "hatMakeHat" $ do
     it "should make itself given players" $ hatMakeHat players1 `shouldBe` hat1
 
 --  it "testHatMakeHat" $ hatMakeHat players1 `shouldBe` hat1
