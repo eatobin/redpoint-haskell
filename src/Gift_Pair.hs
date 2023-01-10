@@ -1,10 +1,9 @@
 {-# LANGUAGE DeriveGeneric #-}
 
-module Gift_Pair (PlayerKey, Givee, Giver, JsonString, GiftPair (..), giftPairUpdateGivee, giftPairUpdateGiver, giftPairJsonStringToGiftPair, giftPairGiftPairToJsonString) where
+module Gift_Pair (PlayerKey, Givee, Giver, JsonString, GiftPair (..), giftPairUpdateGivee, giftPairUpdateGiver, giftPairJsonStringToGiftPair) where
 
 import qualified Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
-import qualified Data.ByteString.Lazy as BL
 import qualified GHC.Generics as G
 
 type PlayerKey = String
@@ -33,6 +32,3 @@ giftPairUpdateGiver giver1 giftPair = giftPair {giver = giver1}
 
 giftPairJsonStringToGiftPair :: JsonString -> Maybe GiftPair
 giftPairJsonStringToGiftPair jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe GiftPair
-
-giftPairGiftPairToJsonString :: GiftPair -> JsonString
-giftPairGiftPairToJsonString giftPair = BS.unpack (BL.toStrict $ A.encode giftPair)
