@@ -32,12 +32,10 @@ playersUpdatePlayer = Map.insert
 --tester players playerKey = players Map.! playerKey
 
 playersGetPlayerName :: PlayerKey -> Players -> PlayerName
-playersGetPlayerName playerKey players
+playersGetPlayerName playerKey players =
   playerName player
   where
     player = players Map.! playerKey
---    where
---        player = players Map.! playerKey
 
 --playersGetPlayerName :: PlayerKey -> Players -> PlayerName
 --playersGetPlayerName playerKey players
