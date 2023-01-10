@@ -21,7 +21,6 @@ playersUpdatePlayer :: PlayerKey -> Player -> Players -> Players
 -- playersUpdatePlayer playerKey player players = Map.insert playerKey player players
 playersUpdatePlayer = Map.insert
 
-
 --(!) :: Ord k => Map k a -> k -> a infixl 9Source#
 --
 --𝑂(log𝑛). Find the value at a key. Calls error when the element can not be found.
@@ -29,15 +28,23 @@ playersUpdatePlayer = Map.insert
 --fromList [(5,'a'), (3,'b')] ! 1    Error: element not in the map
 --fromList [(5,'a'), (3,'b')] ! 5 == 'a'
 
-
-
+--tester :: Players -> PlayerKey -> Player
+--tester players playerKey = players Map.! playerKey
 
 playersGetPlayerName :: PlayerKey -> Players -> PlayerName
 playersGetPlayerName playerKey players
-  | DM.isNothing maybePlayer = "Error Finding Player"
-  | otherwise = playerName (DM.fromJust maybePlayer)
+  playerName player
   where
-    maybePlayer = Map.lookup playerKey players
+    player = players Map.! playerKey
+--    where
+--        player = players Map.! playerKey
+
+--playersGetPlayerName :: PlayerKey -> Players -> PlayerName
+--playersGetPlayerName playerKey players
+--  | DM.isNothing maybePlayer = "Error Finding Player"
+--  | otherwise = playerName (DM.fromJust maybePlayer)
+--  where
+--    maybePlayer = Map.lookup playerKey players
 
 playersAddYear :: Players -> Players
 playersAddYear players =
