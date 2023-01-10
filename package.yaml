@@ -28,6 +28,7 @@ dependencies:
   - random
   - stm
   - monad-loops
+  - vector
 
 ghc-options:
   - -Wall
