@@ -19,5 +19,3 @@ spec = do
         `shouldBe` Player "Paul McCartney" (Seq.fromList [GiftPair "nope" "yup"])
   describe "playerJsonStringToPlayer" $ do
     it "should convert from JSON" $ playerJsonStringToPlayer jsonString `shouldBe` Just player
-  describe "playerPlayerToJsonString" $ do
-    it "should convert to JSON" $ playerPlayerToJsonString player `shouldBe` jsonString

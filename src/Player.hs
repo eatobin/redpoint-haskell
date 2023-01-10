@@ -1,10 +1,9 @@
 {-# LANGUAGE DeriveGeneric #-}
 
-module Player (PlayerName, Player (..), playerUpdateGiftHistory, playerJsonStringToPlayer, playerPlayerToJsonString) where
+module Player (PlayerName, Player (..), playerUpdateGiftHistory, playerJsonStringToPlayer) where
 
 import qualified Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
-import qualified Data.ByteString.Lazy as BL
 import qualified GHC.Generics as G
 import Gift_History
 import Gift_Pair
@@ -26,6 +25,3 @@ playerUpdateGiftHistory giftHistory1 player = player {giftHistory = giftHistory1
 
 playerJsonStringToPlayer :: JsonString -> Maybe Player
 playerJsonStringToPlayer jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe Player
-
-playerPlayerToJsonString :: Player -> JsonString
-playerPlayerToJsonString player = BS.unpack (BL.toStrict $ A.encode player)
