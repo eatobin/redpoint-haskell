@@ -1,8 +1,7 @@
-module Gift_History (GiftHistory, GiftYear, giftHistoryAddYear, giftHistoryUpdateGiftHistory, giftHistoryJsonStringToGiftHistory, giftHistoryGiftHistoryToJsonString) where
+module Gift_History (GiftHistory, GiftYear, giftHistoryAddYear, giftHistoryUpdateGiftHistory, giftHistoryJsonStringToGiftHistory) where
 
 import qualified Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
-import qualified Data.ByteString.Lazy as BL
 import qualified Data.Sequence as Seq
 import Gift_Pair
 
@@ -20,6 +19,3 @@ giftHistoryUpdateGiftHistory = Seq.update
 
 giftHistoryJsonStringToGiftHistory :: JsonString -> Maybe GiftHistory
 giftHistoryJsonStringToGiftHistory jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe GiftHistory
-
-giftHistoryGiftHistoryToJsonString :: GiftHistory -> JsonString
-giftHistoryGiftHistoryToJsonString giftHistory = BS.unpack (BL.toStrict $ A.encode giftHistory)

@@ -19,5 +19,3 @@ spec = do
     it "should return an updated giftHistory" $ giftHistoryUpdateGiftHistory 0 (GiftPair "me" "you") giftHistory `shouldBe` Seq.fromList [GiftPair {givee = "me", giver = "you"}]
   describe "giftPairJsonStringToGiftPair" $ do
     it "should convert from JSON" $ giftHistoryJsonStringToGiftHistory jsonString `shouldBe` Just giftHistory
-  describe "giftPairGiftPairToJsonString" $ do
-    it "should convert to JSON" $ giftHistoryGiftHistoryToJsonString giftHistory `shouldBe` jsonString
