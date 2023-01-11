@@ -27,6 +27,7 @@ library
   exposed-modules:
       Gift_History
       Gift_Pair
+      Player
   other-modules:
       Paths_redpoint_haskell
   hs-source-dirs:
@@ -68,6 +69,7 @@ test-suite spec
   other-modules:
       GiftHistorySpec
       GiftPairSpec
+      PlayerSpec
       Paths_redpoint_haskell
   hs-source-dirs:
       test
