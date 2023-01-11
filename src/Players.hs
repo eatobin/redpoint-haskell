@@ -60,7 +60,7 @@ playersUpdateMyGiver :: PlayerKey -> Giver -> GiftYear -> Players -> Players
 playersUpdateMyGiver playerKey ger giftYear players =
   let player = players Map.! playerKey
       giftPair = giftHistory player Vec.! giftYear
-      ngp = giftPairUpdateGivee ger giftPair
+      ngp = giftPairUpdateGiver ger giftPair
    in playersSetGiftPair playerKey giftYear ngp players
 
 playersJsonStringToPlayers :: JsonString -> Maybe Players
