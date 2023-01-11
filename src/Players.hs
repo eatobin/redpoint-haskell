@@ -49,15 +49,12 @@ playersGetMyGiver selfKey players giftYear =
    in giver giftPair
 
 playersSetGiftPair :: PlayerKey -> GiftYear -> GiftPair -> Players -> Players
-playersSetGiftPair playerKey giftYear giftPair players = Prelude.undefined
+playersSetGiftPair playerKey giftYear giftPair players =
+  let player = players Map.! playerKey
+      ngh = giftHistoryUpdateGiftHistory giftYear giftPair (giftHistory player)
+      nplr = playerUpdateGiftHistory ngh player
+   in playersUpdatePlayer playerKey nplr players
 
---  case Map.lookup playerKey players of
---    Nothing -> emptyPlayers
---    (Just plr) -> do
---      let ngh = giftHistoryUpdateGiftHistory giftYear giftPair (giftHistory plr)
---      let nplr = playerUpdateGiftHistory ngh plr
---      playersUpdatePlayer playerKey nplr players
---
 playersUpdateMyGivee :: PlayerKey -> Givee -> GiftYear -> Players -> Players
 playersUpdateMyGivee playerKey gee giftYear players = Prelude.undefined
 
