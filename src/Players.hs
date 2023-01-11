@@ -63,15 +63,11 @@ playersUpdateMyGivee playerKey gee giftYear players =
    in playersSetGiftPair playerKey giftYear ngp players
 
 playersUpdateMyGiver :: PlayerKey -> Giver -> GiftYear -> Players -> Players
-playersUpdateMyGiver playerKey ger giftYear players = Prelude.undefined
-
---  case Map.lookup playerKey players of
---    Nothing -> emptyPlayers
---    (Just plr) -> case Vec.lookup giftYear (giftHistory plr) of
---      Nothing -> emptyPlayers
---      (Just giftPair) -> do
---        let ngp = giftPairUpdateGiver ger giftPair
---        playersSetGiftPair playerKey giftYear ngp players
+playersUpdateMyGiver playerKey ger giftYear players =
+  let player = players Map.! playerKey
+      giftPair = giftHistory player Vec.! giftYear
+      ngp = giftPairUpdateGivee ger giftPair
+   in playersSetGiftPair playerKey giftYear ngp players
 
 playersJsonStringToPlayers :: JsonString -> Maybe Players
 playersJsonStringToPlayers jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe Players
