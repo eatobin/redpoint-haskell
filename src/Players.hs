@@ -1,4 +1,4 @@
-module Players (Players, emptyPlayers, playersUpdatePlayer, playersGetPlayerName, playersAddYear, playersGetMyGivee, playersGetMyGiver, playersSetGiftPair, playersUpdateMyGivee, playersUpdateMyGiver, playersJsonStringToPlayers) where
+module Players (Players, playersUpdatePlayer, playersGetPlayerName, playersAddYear, playersGetMyGivee, playersGetMyGiver, playersSetGiftPair, playersUpdateMyGivee, playersUpdateMyGiver, playersJsonStringToPlayers) where
 
 import qualified Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
@@ -7,14 +7,8 @@ import qualified Data.Vector as Vec
 import Gift_History
 import Gift_Pair
 import Player
-import Prelude hiding (lookup)
 
 type Players = Map.Map PlayerKey Player
-
-emptyPlayers :: Players
-emptyPlayers =
-  Map.fromList
-    [("EmptyPlayers", Player {playerName = "EmptyPlayers", giftHistory = Vec.fromList [GiftPair {givee = "EmptyPlayers", giver = "EmptyPlayers"}]})]
 
 playersUpdatePlayer :: PlayerKey -> Player -> Players -> Players
 -- playersUpdatePlayer playerKey player players = Map.insert playerKey player players
