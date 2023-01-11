@@ -28,6 +28,7 @@ library
       Gift_History
       Gift_Pair
       Player
+      Players
   other-modules:
       Paths_redpoint_haskell
   hs-source-dirs:
