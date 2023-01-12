@@ -9,7 +9,7 @@ import Players
 
 type Hat = Set.Set PlayerKey
 
-type Discards = Set.Set PlayerKey
+type Discards = Hat
 
 hatMakeHat :: Players -> Hat
 hatMakeHat = Map.keysSet
