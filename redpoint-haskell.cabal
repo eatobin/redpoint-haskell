@@ -28,8 +28,10 @@ library
       Gift_History
       Gift_Pair
       Hat
+      Helpers
       Player
       Players
+      Roster
       Rules
   other-modules:
       Paths_redpoint_haskell
