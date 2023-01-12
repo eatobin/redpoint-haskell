@@ -27,6 +27,7 @@ library
   exposed-modules:
       Gift_History
       Gift_Pair
+      Hat
       Player
       Players
   other-modules:
@@ -70,6 +71,7 @@ test-suite spec
   other-modules:
       GiftHistorySpec
       GiftPairSpec
+      HatSpec
       PlayerSpec
       PlayersSpec
       Paths_redpoint_haskell
