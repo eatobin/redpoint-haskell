@@ -10,17 +10,10 @@ rulesGiveeNotSelf :: PlayerKey -> Givee -> Bool
 rulesGiveeNotSelf selfKey gee =
   selfKey /= gee
 
---rulesGiveeNotReciprocal :: Givee -> Players -> GiftYear -> SelfKey -> Bool
---rulesGiveeNotReciprocal gee plrs giftYear selfKey =
---  selfKey /= myReciprocal
---  where
---    myReciprocal = playersGetGivee gee plrs giftYear
-
 rulesGiveeNotReciprocal :: PlayerKey -> Givee -> Players -> GiftYear -> Bool
 rulesGiveeNotReciprocal selfKey gee plrs giftYear =
-  selfKey /= myReciprocal
-  where
-    myReciprocal = playersGetMyGivee gee plrs giftYear
+  let myReciprocal :: Givee = playersGetMyGivee gee plrs giftYear
+   in selfKey /= myReciprocal
 
 rulesGiveeNotRepeat :: PlayerKey -> Givee -> GiftYear -> Players -> Bool
 rulesGiveeNotRepeat selfKey gee giftYear plrs =
