@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module State (Quit, State (..), stateDrawPuck, stateStartNewYear, stateJsonStringToState) where
 
@@ -39,7 +40,7 @@ stateDrawPuck hat =
   if Set.null hat
     then return Nothing
     else do
-      i <- randomRIO (0, Prelude.length hat - 1)
+      i :: Int <- randomRIO (0, Prelude.length hat - 1)
       return (Just (Set.elemAt i hat))
 
 -- TODO finish State
