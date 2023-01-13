@@ -80,6 +80,7 @@ test-suite spec
       PlayersSpec
       RosterSpec
       RulesSpec
+      StateSpec
       Paths_redpoint_haskell
   hs-source-dirs:
       test
