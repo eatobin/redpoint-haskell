@@ -22,8 +22,6 @@ data GiftPair = GiftPair
 
 instance A.FromJSON GiftPair
 
-instance A.ToJSON GiftPair
-
 giftPairUpdateGivee :: Givee -> GiftPair -> GiftPair
 giftPairUpdateGivee givee1 giftPair = giftPair {givee = givee1}
 

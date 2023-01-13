@@ -18,8 +18,6 @@ data Player = Player
 
 instance A.FromJSON Player
 
-instance A.ToJSON Player
-
 playerUpdateGiftHistory :: GiftHistory -> Player -> Player
 playerUpdateGiftHistory giftHistory1 player = player {giftHistory = giftHistory1}
 
