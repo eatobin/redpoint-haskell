@@ -25,22 +25,8 @@ roster = Roster {rosterName = "The Beatles", rosterYear = 2014, players = roster
 
 spec :: Spec
 spec = do
-  --  describe "playersUpdatePlayer" $ do
-  --    it "should return an updated player" $ playersUpdatePlayer "RinSta" Player {playerName = "New Bee", giftHistory = Vec.fromList [GiftPair {giver = "NewBee", givee = "NewBee"}]} players `shouldBe` newBeePlayers
-  --
-  --  describe "playersGetPlayerName" $ do
-  --    it "should return a player name" $ playersGetPlayerName "PauMcc" players `shouldBe` "Paul McCartney"
-  --
-  --  describe "playersAddYear" $ do
-  --    it "should add a new year" $ playersAddYear players `shouldBe` playersExt
-  --
-  --  describe "playersGetMyGivee and playersGetMyGiver" $ do
-  --    it "should return a givee" $ playersGetMyGivee "JohLen" players 0 `shouldBe` "PauMcc"
-  --    it "should return a giver" $ playersGetMyGiver "JohLen" players 0 `shouldBe` "RinSta"
-  --
-  --    describe "playersUpdateMyGivee and playersUpdateMyGiver" $ do
-  --      it "should update a givee" $ playersUpdateMyGivee "GeoHar" "you" 0 players `shouldBe` playersGivee
-  --      it "should update a giver" $ playersUpdateMyGiver "GeoHar" "you" 0 players `shouldBe` playersGiver
+  describe "rosterName" $ do
+    it "should return \"The Beatles\" rosterName" $ rosterName roster `shouldBe` "The Beatles"
 
   describe "rosterJsonStringToRoster" $ do
     it "should convert from JSON" $ rosterJsonStringToRoster jsonString `shouldBe` Just roster
