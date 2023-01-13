@@ -33,6 +33,7 @@ library
       Players
       Roster
       Rules
+      State
   other-modules:
       Paths_redpoint_haskell
   hs-source-dirs:
