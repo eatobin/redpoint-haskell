@@ -10,8 +10,11 @@ import Gift_History
 import Gift_Pair
 import Hat
 import Players
-import Roster
 import System.Random.Stateful (randomRIO)
+
+type RosterName = String
+
+type RosterYear = Int
 
 type Quit = String
 
@@ -39,13 +42,14 @@ stateDrawPuck hat =
       i <- randomRIO (0, Prelude.length hat - 1)
       return (Just (Set.elemAt i hat))
 
+-- TODO finish State
 stateStartNewYear :: State -> State
 stateStartNewYear state =
-  let freshHat = hatMakeHat (State.players state)
+  let freshHat = hatMakeHat (players state)
       newState =
         state
-          { State.rosterName = State.rosterName state,
-            State.giveeHat = freshHat
+          { rosterName = rosterName state,
+            giveeHat = freshHat
           }
    in newState
 

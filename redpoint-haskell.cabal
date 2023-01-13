@@ -31,7 +31,6 @@ library
       Helpers
       Player
       Players
-      Roster
       Rules
       State
   other-modules:
@@ -78,7 +77,6 @@ test-suite spec
       HatSpec
       PlayerSpec
       PlayersSpec
-      RosterSpec
       RulesSpec
       StateSpec
       Paths_redpoint_haskell
