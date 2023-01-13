@@ -50,7 +50,11 @@ stateStartNewYear state =
       newState =
         state
           { rosterName = rosterName state,
-            giveeHat = freshHat
+            rosterYear = rosterYear state,
+            players = playersAddYear (players state),
+            giftYear = giftYear state + 1,
+            giveeHat = freshHat,
+            giverHat = freshHat
           }
    in newState
 
