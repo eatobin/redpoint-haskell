@@ -25,9 +25,9 @@ dependencies:
   - bytestring
   - containers
   - hspec
+  - monad-loops
   - random
   - stm
-  - monad-loops
   - vector
 
 ghc-options:
