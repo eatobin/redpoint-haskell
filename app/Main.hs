@@ -20,7 +20,8 @@ type RosterYear = Int
 type Quit = String
 
 data State = State
-  { players :: Players,
+  { rosterName :: RosterName,
+    players :: Players,
     maybeGivee :: Maybe Givee
   }
   deriving (Show, Eq)
@@ -35,7 +36,11 @@ mainDrawPuck hat
 mainStartNewYear :: State -> IO State
 mainStartNewYear state = do
   newPlrKy <- mainDrawPuck (hatMakeHat (players state))
-  return (state {maybeGivee = newPlrKy})
+  return
+    state
+      { rosterName = rosterName state,
+        maybeGivee = newPlrKy
+      }
 
 stateSpecPlayers :: Players
 stateSpecPlayers =
@@ -49,10 +54,12 @@ stateSpecPlayers =
 beatlesState :: State
 beatlesState =
   State
-    { players = stateSpecPlayers,
-      maybeGivee = Nothing
+    { rosterName = "HI",
+      players = stateSpecPlayers,
+      maybeGivee = Just "Heaven"
     }
 
 main :: IO ()
 main = do
-  print beatlesState
+  bb <- mainStartNewYear beatlesState
+  print bb
