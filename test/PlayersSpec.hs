@@ -13,8 +13,8 @@ jsonString = "{\"PauMcc\":{\"playerName\":\"Paul McCartney\",\"giftHistory\":[{\
 playerGeoHar :: Player
 playerGeoHar = Player {playerName = "George Harrison", giftHistory = Vec.fromList [GiftPair {givee = "RinSta", giver = "PauMcc"}]}
 
-players :: Players
-players =
+playersSpecPlayers :: Players
+playersSpecPlayers =
   Map.fromList
     [ ("GeoHar", playerGeoHar),
       ("JohLen", Player {playerName = "John Lennon", giftHistory = Vec.fromList [GiftPair {givee = "PauMcc", giver = "RinSta"}]}),
@@ -61,21 +61,21 @@ playersGiver =
 spec :: Spec
 spec = do
   describe "playersUpdatePlayer" $ do
-    it "should return an updated player" $ playersUpdatePlayer "RinSta" Player {playerName = "New Bee", giftHistory = Vec.fromList [GiftPair {giver = "NewBee", givee = "NewBee"}]} players `shouldBe` newBeePlayers
+    it "should return an updated player" $ playersUpdatePlayer "RinSta" Player {playerName = "New Bee", giftHistory = Vec.fromList [GiftPair {giver = "NewBee", givee = "NewBee"}]} playersSpecPlayers `shouldBe` newBeePlayers
 
   describe "playersGetPlayerName" $ do
-    it "should return a player name" $ playersGetPlayerName "PauMcc" players `shouldBe` "Paul McCartney"
+    it "should return a player name" $ playersGetPlayerName "PauMcc" playersSpecPlayers `shouldBe` "Paul McCartney"
 
   describe "playersAddYear" $ do
-    it "should add a new year" $ playersAddYear players `shouldBe` playersExt
+    it "should add a new year" $ playersAddYear playersSpecPlayers `shouldBe` playersExt
 
   describe "playersGetMyGivee and playersGetMyGiver" $ do
-    it "should return a givee" $ playersGetMyGivee "JohLen" players 0 `shouldBe` "PauMcc"
-    it "should return a giver" $ playersGetMyGiver "JohLen" players 0 `shouldBe` "RinSta"
+    it "should return a givee" $ playersGetMyGivee "JohLen" playersSpecPlayers 0 `shouldBe` "PauMcc"
+    it "should return a giver" $ playersGetMyGiver "JohLen" playersSpecPlayers 0 `shouldBe` "RinSta"
 
     describe "playersUpdateMyGivee and playersUpdateMyGiver" $ do
-      it "should update a givee" $ playersUpdateMyGivee "GeoHar" "you" 0 players `shouldBe` playersGivee
-      it "should update a giver" $ playersUpdateMyGiver "GeoHar" "you" 0 players `shouldBe` playersGiver
+      it "should update a givee" $ playersUpdateMyGivee "GeoHar" "you" 0 playersSpecPlayers `shouldBe` playersGivee
+      it "should update a giver" $ playersUpdateMyGiver "GeoHar" "you" 0 playersSpecPlayers `shouldBe` playersGiver
 
   describe "playersJsonStringToPlayers" $ do
-    it "should convert from JSON" $ playersJsonStringToPlayers jsonString `shouldBe` Just players
+    it "should convert from JSON" $ playersJsonStringToPlayers jsonString `shouldBe` Just playersSpecPlayers
