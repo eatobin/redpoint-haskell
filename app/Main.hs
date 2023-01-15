@@ -1,7 +1,7 @@
---{-# LANGUAGE ScopedTypeVariables #-}
---
---module Main (main) where
---
+{-# LANGUAGE ScopedTypeVariables #-}
+
+module Main (mainDrawPuck, main) where
+
 --import qualified Control.Concurrent.STM as STM
 --import Control.Exception
 --import Control.Monad
@@ -10,17 +10,18 @@
 --import Data.Char (toLower)
 --import qualified Data.Map.Strict as Map
 --import qualified Data.Maybe as DM
---import qualified Data.Set as Set
+import qualified Data.Set as Set
 --import Gift_History
---import Gift_Pair
---import Hat
+import Gift_Pair
+import Hat
 --import Helpers
 --import Players
 --import Roster
 --import Rules
 --import qualified System.Exit as SE
 --import System.IO
---import System.Random
+import System.Random
+
 --
 --type TVarRosterName = STM.TVar RosterName
 --
@@ -130,14 +131,14 @@
 ----        Nothing -> exitWith (ExitFailure 42)
 ----    Left _ -> exitWith (ExitFailure 99)
 ----
-----mainDrawPuck :: Hat -> IO (Maybe PlayerSymbol)
-----mainDrawPuck hat =
-----  if Set.null hat
-----    then return Nothing
-----    else do
-----      n <- randomRIO (0, Prelude.length hat - 1)
-----      return (Just (Set.elemAt n hat))
-----
+mainDrawPuck :: Hat -> IO (Maybe PlayerKey)
+mainDrawPuck hat =
+  if Set.null hat
+    then return Nothing
+    else do
+      i <- randomRIO (0, Prelude.length hat - 1)
+      return (Just (Set.elemAt i hat))
+
 ----mainStartNewYear :: TVarGiftYear -> TVarPlayers -> TVarGiverHat -> TVarGiveeHat -> TVarMaybeGiver -> TVarMaybeGivee -> TVarDiscards -> IO ()
 ----mainStartNewYear TVarGiftYear TVarPlayers TVarGiverHat TVarGiveeHat TVarMaybeGiver TVarMaybeGivee TVarDiscards = do
 ----  plrs <- STM.readTVarIO TVarPlayers
@@ -239,8 +240,6 @@
 ----mainPrintAndAsk rn ry TVarGiftYear TVarPlayers = do
 ----  mainPrintStringGivingRoster rn ry TVarGiftYear TVarPlayers
 ----  mainPromptLine "\nContinue? ('q' to quit): "
-
-module Main (main) where
 
 main :: IO ()
 main = do
