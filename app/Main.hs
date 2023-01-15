@@ -35,12 +35,14 @@ mainDrawPuck hat
 
 mainStartNewYear :: State -> IO State
 mainStartNewYear state = do
-  newPlrKy <- mainDrawPuck (hatMakeHat (players state))
-  return
-    state
-      { rosterName = rosterName state,
-        maybeGivee = newPlrKy
-      }
+  let freshHat = hatMakeHat (players state)
+   in do
+        newPlrKy <- mainDrawPuck freshHat
+        return
+          state
+            { rosterName = rosterName state,
+              maybeGivee = newPlrKy
+            }
 
 stateSpecPlayers :: Players
 stateSpecPlayers =
