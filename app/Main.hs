@@ -22,6 +22,16 @@ import Hat
 --import System.IO
 import System.Random
 
+data Point = Point
+  { x :: Maybe Int,
+    y :: Int
+  }
+  deriving (Show, Eq)
+
+setX :: Maybe Int -> Point -> IO Point
+setX i p = do
+  return p {x = i}
+
 --
 --type TVarRosterName = STM.TVar RosterName
 --
