@@ -36,5 +36,5 @@ beatlesState =
 
 main :: IO ()
 main = do
-  bb <- stateStartNewYear beatlesState
-  print bb
+  state <- stateStartNewYear beatlesState
+  print state
