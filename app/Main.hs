@@ -95,6 +95,8 @@ mainBeatlesState =
     }
 
 main :: IO ()
-main = do
-  state <- mainStartNewYear (mainAskContinue mainBeatlesState)
-  print state
+main =
+  do
+    state <- mainStartNewYear (mainAskContinue mainBeatlesState)
+    -- state <- mainAskContinue mainBeatlesState
+    print state
