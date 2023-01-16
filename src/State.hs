@@ -1,6 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module State (Quit, State (..), stateDrawPuck, stateStartNewYear) where
+module State (RosterName, RosterYear, Quit, State (..), stateDrawPuck, stateStartNewYear) where
 
 import qualified Data.Set as Set
 import Gift_History
@@ -22,35 +22,36 @@ data State = State
     giftYear :: GiftYear,
     giveeHat :: Hat,
     giverHat :: Hat,
-    maybeGivee :: IO (Maybe Givee),
-    maybeGiver :: IO (Maybe Giver),
+    maybeGivee :: Maybe Givee,
+    maybeGiver :: Maybe Giver,
     discards :: Discards,
     quit :: Quit
   }
+  deriving (Show, Eq)
 
 stateDrawPuck :: Hat -> IO (Maybe PlayerKey)
-stateDrawPuck hat =
-  if Set.null hat
-    then return Nothing
-    else do
-      i :: Int <- randomRIO (0, Prelude.length hat - 1)
-      return (Just (Set.elemAt i hat))
+stateDrawPuck hat
+  | Set.null hat = return Nothing
+  | otherwise = do
+    i :: Int <- randomRIO (0, Prelude.length hat - 1)
+    return (Just (Set.elemAt i hat))
 
-stateStartNewYear :: IO State -> IO State
-stateStartNewYear ioState = do
-  state <- ioState
+stateStartNewYear :: State -> IO State
+stateStartNewYear state = do
   let freshHat = hatMakeHat (players state)
-      newState :: State =
-        state
-          { rosterName = rosterName state,
-            rosterYear = rosterYear state,
-            players = playersAddYear (players state),
-            giftYear = giftYear state + 1,
-            giveeHat = freshHat,
-            giverHat = freshHat,
-            maybeGivee = stateDrawPuck freshHat,
-            maybeGiver = stateDrawPuck freshHat,
-            discards = Set.empty,
-            quit = quit state
-          }
-   in return newState
+   in do
+        newGivee <- stateDrawPuck freshHat
+        newGiver <- stateDrawPuck freshHat
+        return
+          state
+            { rosterName = rosterName state,
+              rosterYear = rosterYear state,
+              players = playersAddYear (players state),
+              giftYear = giftYear state + 1,
+              giveeHat = freshHat,
+              giverHat = freshHat,
+              maybeGivee = newGivee,
+              maybeGiver = newGiver,
+              discards = Set.empty,
+              quit = quit state
+            }
