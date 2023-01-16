@@ -41,8 +41,9 @@ mainDrawPuck hat
     i :: Int <- randomRIO (0, Prelude.length hat - 1)
     return (Just (Set.elemAt i hat))
 
-mainStartNewYear :: State -> IO State
-mainStartNewYear state = do
+mainStartNewYear :: IO State -> IO State
+mainStartNewYear ioState = do
+  state <- ioState
   let freshHat = hatMakeHat (players state)
    in do
         newGivee <- mainDrawPuck freshHat
@@ -95,5 +96,5 @@ mainBeatlesState =
 
 main :: IO ()
 main = do
-  state <- mainAskContinue mainBeatlesState
+  state <- mainStartNewYear (mainAskContinue mainBeatlesState)
   print state
