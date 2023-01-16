@@ -1,6 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Main (RosterName, RosterYear, Quit, State (..), mainDrawPuck, mainStartNewYear, main) where
+module Main (RosterName, RosterYear, Quit, State (..), mainDrawPuck, mainStartNewYear, mainAskContinue, main) where
 
 import qualified Data.Map.Strict as Map
 import qualified Data.Set as Set
@@ -10,6 +10,8 @@ import Gift_Pair
 import Hat
 import Player
 import Players
+import System.IO (stdout)
+import qualified System.IO as SIO
 import System.Random
 
 type RosterName = String
@@ -59,6 +61,14 @@ mainStartNewYear state = do
               quit = quit state
             }
 
+mainAskContinue :: State -> IO State
+mainAskContinue state = do
+  putStrLn ""
+  putStr "\nContinue? ('q' to quit): "
+  SIO.hFlush stdout
+  reply <- getLine
+  return state {quit = reply}
+
 mainPlayers :: Players
 mainPlayers =
   Map.fromList
@@ -85,5 +95,5 @@ mainBeatlesState =
 
 main :: IO ()
 main = do
-  state <- mainStartNewYear mainBeatlesState
+  state <- mainAskContinue mainBeatlesState
   print state
