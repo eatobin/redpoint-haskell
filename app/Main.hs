@@ -1,6 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Main (RosterName, RosterYear, Quit, State (..), mainDrawPuck, mainStartNewYear, mainAskContinue, main) where
+module Main (RosterName, RosterYear, Quit, State (..), mainDrawPuck, mainStartNewYear, mainAskContinue, mainErrors, main) where
 
 import qualified Data.Map.Strict as Map
 import qualified Data.Set as Set
@@ -61,6 +61,17 @@ mainStartNewYear ioState = do
               discards = Set.empty,
               quit = quit state
             }
+
+mainErrors :: IO State -> [PlayerKey]
+mainErrors ioState = undefined
+
+--helpersErrorListIsEmpty :: TVarPlayers -> TVarGiftYear -> IO Bool
+--helpersErrorListIsEmpty tVarPlayers tVarGiftYear = do
+--  plrs <- STM.readTVarIO tVarPlayers
+--  gy <- STM.readTVarIO tVarGiftYear
+--  let plrKeys = Map.keys plrs
+--  let errorList = [plrSymbol | plrSymbol <- plrKeys, let geeCode = playersGetGivee plrSymbol plrs gy, let gerCode = playersGetGiver plrSymbol plrs gy, (plrSymbol == gerCode) || (plrSymbol == geeCode)]
+--  return (null errorList)
 
 mainAskContinue :: State -> IO State
 mainAskContinue state = do
