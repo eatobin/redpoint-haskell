@@ -32,7 +32,6 @@ library
       Player
       Players
       Rules
-      State
   other-modules:
       Paths_redpoint_haskell
   hs-source-dirs:
@@ -78,7 +77,6 @@ test-suite spec
       PlayerSpec
       PlayersSpec
       RulesSpec
-      StateSpec
       Paths_redpoint_haskell
   hs-source-dirs:
       test
