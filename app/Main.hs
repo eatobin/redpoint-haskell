@@ -104,6 +104,7 @@ mainBeatlesState =
 main :: IO ()
 main =
   do
-    state <- mainStartNewYear (mainAskContinue mainBeatlesState)
+    errors <- mainErrors (mainStartNewYear (mainAskContinue mainBeatlesState))
+    -- state <- mainStartNewYear (mainAskContinue mainBeatlesState)
     -- state <- mainAskContinue mainBeatlesState
-    print state
+    print errors
