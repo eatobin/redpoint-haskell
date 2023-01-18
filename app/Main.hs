@@ -62,16 +62,12 @@ mainStartNewYear ioState = do
               quit = quit state
             }
 
-mainErrors :: IO State -> [PlayerKey]
-mainErrors ioState = undefined
-
---helpersErrorListIsEmpty :: TVarPlayers -> TVarGiftYear -> IO Bool
---helpersErrorListIsEmpty tVarPlayers tVarGiftYear = do
---  plrs <- STM.readTVarIO tVarPlayers
---  gy <- STM.readTVarIO tVarGiftYear
---  let plrKeys = Map.keys plrs
---  let errorList = [plrSymbol | plrSymbol <- plrKeys, let geeCode = playersGetGivee plrSymbol plrs gy, let gerCode = playersGetGiver plrSymbol plrs gy, (plrSymbol == gerCode) || (plrSymbol == geeCode)]
---  return (null errorList)
+mainErrors :: IO State -> IO [PlayerKey]
+mainErrors ioState = do
+  state <- ioState
+  let playerKeys = Map.keys (players state)
+      playerErrors = [playerKeyMe | playerKeyMe <- playerKeys, let myGiverKey = playersGetMyGiver playerKeyMe (players state) (giftYear state), let myGiveeKey = playersGetMyGivee playerKeyMe (players state) (giftYear state), (playerKeyMe == myGiverKey) || (playerKeyMe == myGiveeKey)]
+   in return playerErrors
 
 mainAskContinue :: State -> IO State
 mainAskContinue state = do
