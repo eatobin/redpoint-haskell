@@ -1,6 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Main (RosterName, RosterYear, Quit, State (..), mainDrawPuck, mainStartNewYear, mainAskContinue, mainErrors, main) where
+module Main (RosterName, RosterYear, Quit, State (..), mainPrintResults, mainDrawPuck, mainStartNewYear, mainAskContinue, mainErrors, main) where
 
 import qualified Data.Map.Strict as Map
 import qualified Data.Set as Set
@@ -69,6 +69,12 @@ mainErrors ioState = do
       playerErrors = [playerKeyMe | playerKeyMe <- playerKeys, let myGiverKey = playersGetMyGiver playerKeyMe (players state) (giftYear state), let myGiveeKey = playersGetMyGivee playerKeyMe (players state) (giftYear state), (playerKeyMe == myGiverKey) || (playerKeyMe == myGiveeKey)]
    in return playerErrors
 
+mainPrintResults :: IO State -> IO State
+mainPrintResults ioState = do
+  state <- ioState
+  putStrLn ("\n" ++ rosterName state ++ " - Year " ++ show (rosterYear state + giftYear state) ++ " Gifts:\n\n")
+  return state
+
 --def statePrintResults(state: State): State = {
 --    println()
 --    println("%s - Year %d Gifts:".format(state.rosterName, state.rosterYear + state.giftYear))
@@ -128,16 +134,9 @@ mainErrors ioState = do
 --    putStrLn "\nThere is a logic error in this year's pairings."
 --    putStrLn "Do you see how it occurs?"
 --    putStrLn "If not... call me and I'll explain!"
---
---helpersPrintStringGivingRoster :: RosterName -> RosterYear -> TVarGiftYear -> TVarPlayers -> IO ()
---helpersPrintStringGivingRoster rn ry tVarGiftYear tVarPlayers = do
---  gy <- STM.readTVarIO tVarGiftYear
---  putStrLn ("\n" ++ rn ++ " - Year " ++ show (ry + gy) ++ " Gifts:\n")
---  helpersPrintResults tVarPlayers tVarGiftYear
 
 mainAskContinue :: State -> IO State
 mainAskContinue state = do
-  putStrLn ""
   putStr "\nContinue? ('q' to quit): "
   SIO.hFlush stdout
   reply <- getLine
@@ -170,7 +169,8 @@ mainBeatlesState =
 main :: IO ()
 main =
   do
-    errors <- mainErrors (mainStartNewYear (mainAskContinue mainBeatlesState))
+    -- errors <- mainErrors (mainStartNewYear (mainAskContinue mainBeatlesState))
     -- state <- mainStartNewYear (mainAskContinue mainBeatlesState)
     -- state <- mainAskContinue mainBeatlesState
-    print errors
+    state <- mainPrintResults (mainAskContinue mainBeatlesState)
+    print state
