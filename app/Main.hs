@@ -100,8 +100,9 @@ mainPrintResults ioState = do
     putStrLn "If not... call me and I'll explain!"
   return state
 
-mainAskContinue :: State -> IO State
-mainAskContinue state = do
+mainAskContinue :: IO State -> IO State
+mainAskContinue ioState = do
+  state <- ioState
   putStr "\nContinue? ('q' to quit): "
   SIO.hFlush stdout
   reply <- getLine
@@ -136,7 +137,6 @@ main =
   do
     -- errors <- mainErrors (mainStartNewYear (mainAskContinue mainBeatlesState))
     -- state <- mainStartNewYear (mainAskContinue mainBeatlesState)
-    -- state <- mainAskContinue mainBeatlesState
-    lift mainBeatlesState
-    state <- mainPrintResults 
+    state <- mainAskContinue (return mainBeatlesState)
+    --    state <- mainPrintResults
     print state
