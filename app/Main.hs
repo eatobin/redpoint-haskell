@@ -81,7 +81,7 @@ mainPrintResults ioState = do
     [ do
         let pName = playersGetPlayerName playerKey (players state)
         let giveeKey = playersGetMyGivee playerKey (players state) (giftYear state)
-        let geeName = playersGetPlayerName giveeKey (players state)
+        let giveeName = playersGetPlayerName giveeKey (players state)
         let giverKey = playersGetMyGiver playerKey (players state) (giftYear state)
         if (playerKey == giveeKey) && (playerKey == giverKey)
           then pName ++ " is neither **buying** for nor **receiving** from anyone - **ERROR**"
@@ -91,7 +91,7 @@ mainPrintResults ioState = do
               else
                 if playerKey == giveeKey
                   then pName ++ " is **buying** for no one - **ERROR**"
-                  else pName ++ " is buying for " ++ geeName
+                  else pName ++ " is buying for " ++ giveeName
       | playerKey <- playerKeys
     ]
   CM.unless (null errorList) $ do
