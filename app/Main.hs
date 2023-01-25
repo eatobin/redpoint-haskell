@@ -2,6 +2,7 @@
 
 module Main (RosterName, RosterYear, Quit, State (..), mainPrintResults, mainDrawPuck, mainStartNewYear, mainAskContinue, mainErrors, main) where
 
+import qualified Control.Monad as CM
 import qualified Data.Map.Strict as Map
 import qualified Data.Set as Set
 import qualified Data.Vector as Vec
@@ -13,8 +14,6 @@ import Players
 import System.IO (stdout)
 import qualified System.IO as SIO
 import System.Random
-
---import qualified Control.Monad as CM
 
 type RosterName = String
 
@@ -74,95 +73,32 @@ mainErrors ioState = do
 mainPrintResults :: IO State -> IO State
 mainPrintResults ioState = do
   state <- ioState
+  errorList <- mainErrors ioState
   putStrLn ("\n" ++ rosterName state ++ " - Year " ++ show (rosterYear state + giftYear state) ++ " Gifts:\n\n")
   let playerKeys = Map.keys (players state)
   mapM_
     putStrLn
     [ do
-        let pn = playersGetPlayerName playerKey (players state)
+        let pName = playersGetPlayerName playerKey (players state)
         let giveeKey = playersGetMyGivee playerKey (players state) (giftYear state)
         let geeName = playersGetPlayerName giveeKey (players state)
         let giverKey = playersGetMyGiver playerKey (players state) (giftYear state)
         if (playerKey == giveeKey) && (playerKey == giverKey)
-          then pn ++ " is neither **buying** for nor **receiving** from anyone - **ERROR**"
+          then pName ++ " is neither **buying** for nor **receiving** from anyone - **ERROR**"
           else
             if playerKey == giverKey
-              then pn ++ " is **receiving** from no one - **ERROR**"
+              then pName ++ " is **receiving** from no one - **ERROR**"
               else
                 if playerKey == giveeKey
-                  then pn ++ " is **buying** for no one - **ERROR**"
-                  else pn ++ " is buying for " ++ geeName
+                  then pName ++ " is **buying** for no one - **ERROR**"
+                  else pName ++ " is buying for " ++ geeName
       | playerKey <- playerKeys
     ]
+  CM.unless (null errorList) $ do
+    putStrLn "\nThere is a logic error in this year's pairings."
+    putStrLn "Do you see how it occurs?"
+    putStrLn "If not... call me and I'll explain!"
   return state
-
---    if null mainErrors (state) then (return state) else return state
---    if (null mainErrors (state)) $ do
---      putStrLn "\nThere is a logic error in this year's pairings."
---      putStrLn "Do you see how it occurs?"
---      putStrLn "If not... call me and I'll explain!"
---    else
---        return state
-
---def statePrintResults(state: State): State = {
---    println()
---    println("%s - Year %d Gifts:".format(state.rosterName, state.rosterYear + state.giftYear))
---    println()
---
---    val playerKeys: Seq[PlayerKey] = state.players.keys.toSeq.sorted
---    for (playerKey <- playerKeys) yield {
---      val playerName = playersGetPlayerName(playerKey)(state.players)
---      val giveeKey = playersGetMyGivee(playerKey)(state.giftYear)(state.players)
---      val giveeName = playersGetPlayerName(giveeKey)(state.players)
---      val giverKey = playersGetMyGiver(playerKey)(state.giftYear)(state.players)
---
---      if (playerKey == giveeKey && playerKey == giverKey) {
---        println("%s is neither **buying** for nor **receiving** from anyone - **ERROR**".format(playerName))
---      } else if (playerKey == giverKey) {
---        println("%s is **receiving** from no one - **ERROR**".format(playerName))
---      } else if (playerKey == giveeKey) {
---        println("%s is **buying** for no one - **ERROR**".format(playerName))
---      } else {
---        println("%s is buying for %s".format(playerName, giveeName))
---      }
---    }
---    if (stateErrors(state).nonEmpty) {
---      println()
---      println("There is a logic error in this year's pairings.")
---      println("Do you see how it occurs?")
---      println("If not... call me and I'll explain!")
---    }
---    state
---  }
-
---helpersPrintResults :: TVarPlayers -> TVarGiftYear -> IO ()
---helpersPrintResults tVarPlayers tVarGiftYear = do
---  plrs <- STM.readTVarIO tVarPlayers
---  gy <- STM.readTVarIO tVarGiftYear
---  errorListIsEmpty <- helpersErrorListIsEmpty tVarPlayers tVarGiftYear
---  let plrKeys = Map.keys plrs
---  mapM_
---    putStrLn
---    [ do
---        let pn = playersGetPlayerName plrSymbol plrs
---        let geeCode = playersGetGivee plrSymbol plrs gy
---        let geeName = playersGetPlayerName geeCode plrs
---        let gerCode = playersGetMyGiver plrSymbol plrs gy
---        if (plrSymbol == geeCode) && (plrSymbol == gerCode)
---          then pn ++ " is neither **buying** for nor **receiving** from anyone - **ERROR**"
---          else
---            if plrSymbol == gerCode
---              then pn ++ " is **receiving** from no one - **ERROR**"
---              else
---                if plrSymbol == geeCode
---                  then pn ++ " is **buying** for no one - **ERROR**"
---                  else pn ++ " is buying for " ++ geeName
---      | plrSymbol <- plrKeys
---    ]
---  CM.unless errorListIsEmpty $ do
---    putStrLn "\nThere is a logic error in this year's pairings."
---    putStrLn "Do you see how it occurs?"
---    putStrLn "If not... call me and I'll explain!"
 
 mainAskContinue :: State -> IO State
 mainAskContinue state = do
