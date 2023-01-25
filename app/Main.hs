@@ -135,8 +135,10 @@ mainBeatlesState =
 main :: IO ()
 main =
   do
-    -- state <- mainStartNewYear (mainAskContinue (mainPrintResults (return mainBeatlesState)))
-    errors <- mainErrors (mainPrintResults (mainStartNewYear (return mainBeatlesState)))
-    -- state <- mainStartNewYear (mainAskContinue mainBeatlesState)
-    -- state <- mainAskContinue (return mainBeatlesState)
-    print errors
+    --    state <- mainStartNewYear (mainAskContinue (mainPrintResults (return mainBeatlesState)))
+    --errors <- mainErrors (mainPrintResults (mainStartNewYear (return mainBeatlesState)))
+    state1 <- mainPrintResults (return mainBeatlesState)
+    state2 <- mainStartNewYear (return state1)
+    state3 <- mainPrintResults (return state2)
+    --print errors
+    print state3
