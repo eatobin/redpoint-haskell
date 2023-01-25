@@ -74,7 +74,7 @@ mainPrintResults :: IO State -> IO State
 mainPrintResults ioState = do
   state <- ioState
   errorList <- mainErrors ioState
-  putStrLn ("\n" ++ rosterName state ++ " - Year " ++ show (rosterYear state + giftYear state) ++ " Gifts:\n\n")
+  putStrLn ("\n" ++ rosterName state ++ " - Year " ++ show (rosterYear state + giftYear state) ++ " Gifts:\n")
   let playerKeys = Map.keys (players state)
   mapM_
     putStrLn
@@ -97,7 +97,7 @@ mainPrintResults ioState = do
   CM.unless (null errorList) $ do
     putStrLn "\nThere is a logic error in this year's pairings."
     putStrLn "Do you see how it occurs?"
-    putStrLn "If not... call me and I'll explain!"
+    putStrLn "If not... call me and I'll explain!\n"
   return state
 
 mainAskContinue :: IO State -> IO State
@@ -135,8 +135,8 @@ mainBeatlesState =
 main :: IO ()
 main =
   do
-    -- errors <- mainErrors (mainStartNewYear (mainAskContinue mainBeatlesState))
+    -- state <- mainStartNewYear (mainAskContinue (mainPrintResults (return mainBeatlesState)))
+    errors <- mainErrors (mainPrintResults (mainStartNewYear (return mainBeatlesState)))
     -- state <- mainStartNewYear (mainAskContinue mainBeatlesState)
-    state <- mainAskContinue (return mainBeatlesState)
-    --    state <- mainPrintResults
-    print state
+    -- state <- mainAskContinue (return mainBeatlesState)
+    print errors
