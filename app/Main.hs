@@ -14,6 +14,8 @@ import System.IO (stdout)
 import qualified System.IO as SIO
 import System.Random
 
+--import qualified Control.Monad as CM
+
 type RosterName = String
 
 type RosterYear = Int
@@ -73,7 +75,34 @@ mainPrintResults :: IO State -> IO State
 mainPrintResults ioState = do
   state <- ioState
   putStrLn ("\n" ++ rosterName state ++ " - Year " ++ show (rosterYear state + giftYear state) ++ " Gifts:\n\n")
+  let playerKeys = Map.keys (players state)
+  mapM_
+    putStrLn
+    [ do
+        let pn = playersGetPlayerName playerKey (players state)
+        let giveeKey = playersGetMyGivee playerKey (players state) (giftYear state)
+        let geeName = playersGetPlayerName giveeKey (players state)
+        let giverKey = playersGetMyGiver playerKey (players state) (giftYear state)
+        if (playerKey == giveeKey) && (playerKey == giverKey)
+          then pn ++ " is neither **buying** for nor **receiving** from anyone - **ERROR**"
+          else
+            if playerKey == giverKey
+              then pn ++ " is **receiving** from no one - **ERROR**"
+              else
+                if playerKey == giveeKey
+                  then pn ++ " is **buying** for no one - **ERROR**"
+                  else pn ++ " is buying for " ++ geeName
+      | playerKey <- playerKeys
+    ]
   return state
+
+--    if null mainErrors (state) then (return state) else return state
+--    if (null mainErrors (state)) $ do
+--      putStrLn "\nThere is a logic error in this year's pairings."
+--      putStrLn "Do you see how it occurs?"
+--      putStrLn "If not... call me and I'll explain!"
+--    else
+--        return state
 
 --def statePrintResults(state: State): State = {
 --    println()
