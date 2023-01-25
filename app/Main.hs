@@ -137,5 +137,6 @@ main =
     -- errors <- mainErrors (mainStartNewYear (mainAskContinue mainBeatlesState))
     -- state <- mainStartNewYear (mainAskContinue mainBeatlesState)
     -- state <- mainAskContinue mainBeatlesState
-    state <- mainPrintResults (mainAskContinue mainBeatlesState)
+    lift mainBeatlesState
+    state <- mainPrintResults 
     print state
