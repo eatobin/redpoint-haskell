@@ -13,7 +13,7 @@ import Hat
 import Player
 import Players
 import qualified System.IO as SIO
-import System.Random
+import qualified System.Random as Ran
 
 type RosterName = String
 
@@ -39,7 +39,7 @@ mainDrawPuck :: Hat -> IO (Maybe PlayerKey)
 mainDrawPuck hat
   | Set.null hat = return Nothing
   | otherwise = do
-    i :: Int <- randomRIO (0, Prelude.length hat - 1)
+    i :: Int <- Ran.randomRIO (0, Prelude.length hat - 1)
     return (Just (Set.elemAt i hat))
 
 mainStartNewYear :: IO State -> IO State
