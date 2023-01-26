@@ -11,7 +11,6 @@ import Gift_Pair
 import Hat
 import Player
 import Players
-import System.IO (stdout)
 import qualified System.IO as SIO
 import System.Random
 
@@ -104,7 +103,7 @@ mainAskContinue :: IO State -> IO State
 mainAskContinue ioState = do
   state <- ioState
   putStr "\nContinue? ('q' to quit): "
-  SIO.hFlush stdout
+  SIO.hFlush SIO.stdout
   reply <- getLine
   return state {quit = reply}
 
