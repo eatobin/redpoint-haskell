@@ -205,6 +205,6 @@ main =
     state1 <- mainPrintResults (return mainBeatlesState)
     state2 <- mainStartNewYear (return state1)
     state3 <- mainPrintResults (return state2)
-    state4 <- mainGiveeIsSuccess (return state3)
+    state4 <- mainGiveeIsFailure (return state3)
     --print errors
     print state4
