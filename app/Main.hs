@@ -110,21 +110,21 @@ mainGiveeIsSuccess ioState = do
 mainGiveeIsFailure :: IO State -> IO State
 mainGiveeIsFailure ioState = do
   state <- ioState
-  let currentGiver :: Giver = DM.fromJust (maybeGiver state)
-      currentGivee :: Givee = DM.fromJust (maybeGivee state)
-      updatedGiveePlayers :: Players = playersUpdateMyGivee currentGiver currentGivee (giftYear state) (players state)
+  let giveeToRemove :: Givee = DM.fromJust (maybeGivee state)
+      diminishedGiveeHat :: Hat = hatRemovePuck giveeToRemove (giveeHat state)
    in do
+        newGivee <- mainDrawPuck diminishedGiveeHat
         return
           state
             { rosterName = rosterName state,
               rosterYear = rosterYear state,
-              players = playersUpdateMyGiver currentGivee currentGiver (giftYear state) updatedGiveePlayers,
+              players = players state,
               giftYear = giftYear state,
-              giveeHat = hatRemovePuck currentGivee (giveeHat state),
+              giveeHat = diminishedGiveeHat,
               giverHat = giverHat state,
-              maybeGivee = Nothing,
+              maybeGivee = newGivee,
               maybeGiver = maybeGiver state,
-              discards = discards state,
+              discards = hatDiscardGivee giveeToRemove (discards state),
               quit = quit state
             }
 
