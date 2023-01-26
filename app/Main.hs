@@ -91,13 +91,13 @@ mainGiveeIsSuccess ioState = do
   state <- ioState
   let currentGiver :: Giver = DM.fromJust (maybeGiver state)
       currentGivee :: Givee = DM.fromJust (maybeGivee state)
-      updatedGiveePlayers :: Players = playersUpdateMyGivee currentGiver currentGivee (giftYear state)(players state)
+      updatedGiveePlayers :: Players = playersUpdateMyGivee currentGiver currentGivee (giftYear state) (players state)
    in do
         return
           state
             { rosterName = rosterName state,
               rosterYear = rosterYear state,
-              players = playersUpdateMyGiver currentGivee currentGiver (giftYear state)updatedGiveePlayers,
+              players = playersUpdateMyGiver currentGivee currentGiver (giftYear state) updatedGiveePlayers,
               giftYear = giftYear state,
               giveeHat = hatRemovePuck currentGivee (giveeHat state),
               giverHat = giverHat state,
@@ -106,18 +106,6 @@ mainGiveeIsSuccess ioState = do
               discards = discards state,
               quit = quit state
             }
-
-
-
-
-
-
-
-
-
-
-
-
 
 mainErrors :: IO State -> IO [PlayerKey]
 mainErrors ioState = do
@@ -196,6 +184,6 @@ main =
     state1 <- mainPrintResults (return mainBeatlesState)
     state2 <- mainStartNewYear (return state1)
     state3 <- mainPrintResults (return state2)
-    state4 <- mainSelectNewGiver (return state3)
+    state4 <- mainGiveeIsSuccess (return state3)
     --print errors
     print state4

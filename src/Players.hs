@@ -50,18 +50,18 @@ playersSetGiftPair playerKey giftYear giftPair players =
    in playersUpdatePlayer playerKey nplr players
 
 playersUpdateMyGivee :: PlayerKey -> Givee -> GiftYear -> Players -> Players
-playersUpdateMyGivee playerKey gee giftYear players =
-  let player = players Map.! playerKey
+playersUpdateMyGivee selfKey gee giftYear players =
+  let player = players Map.! selfKey
       giftPair = giftHistory player Vec.! giftYear
       ngp = giftPairUpdateGivee gee giftPair
-   in playersSetGiftPair playerKey giftYear ngp players
+   in playersSetGiftPair selfKey giftYear ngp players
 
 playersUpdateMyGiver :: PlayerKey -> Giver -> GiftYear -> Players -> Players
-playersUpdateMyGiver playerKey ger giftYear players =
-  let player = players Map.! playerKey
+playersUpdateMyGiver selfKey ger giftYear players =
+  let player = players Map.! selfKey
       giftPair = giftHistory player Vec.! giftYear
       ngp = giftPairUpdateGiver ger giftPair
-   in playersSetGiftPair playerKey giftYear ngp players
+   in playersSetGiftPair selfKey giftYear ngp players
 
 playersJsonStringToPlayers :: JsonString -> Maybe Players
 playersJsonStringToPlayers jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe Players
