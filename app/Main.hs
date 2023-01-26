@@ -1,6 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Main (RosterName, RosterYear, Quit, State (..), mainPrintResults, mainSelectNewGiver, mainDrawPuck, mainStartNewYear, mainAskContinue, mainErrors, main) where
+module Main (RosterName, RosterYear, Quit, State (..), mainPrintResults, mainSelectNewGiver, mainGiveeIsSuccess, mainDrawPuck, mainStartNewYear, mainAskContinue, mainErrors, main) where
 
 import qualified Control.Monad as CM
 import qualified Data.Map.Strict as Map
@@ -85,6 +85,39 @@ mainSelectNewGiver ioState = do
               discards = Set.empty,
               quit = quit state
             }
+
+mainGiveeIsSuccess :: IO State -> IO State
+mainGiveeIsSuccess ioState = do
+  state <- ioState
+  let currentGiver :: Giver = DM.fromJust (maybeGiver state)
+      currentGivee :: Givee = DM.fromJust (maybeGivee state)
+      updatedGiveePlayers :: Players = playersUpdateMyGivee currentGiver currentGivee (giftYear state)(players state)
+   in do
+        return
+          state
+            { rosterName = rosterName state,
+              rosterYear = rosterYear state,
+              players = playersUpdateMyGiver currentGivee currentGiver (giftYear state)updatedGiveePlayers,
+              giftYear = giftYear state,
+              giveeHat = hatRemovePuck currentGivee (giveeHat state),
+              giverHat = giverHat state,
+              maybeGivee = Nothing,
+              maybeGiver = maybeGiver state,
+              discards = discards state,
+              quit = quit state
+            }
+
+
+
+
+
+
+
+
+
+
+
+
 
 mainErrors :: IO State -> IO [PlayerKey]
 mainErrors ioState = do
