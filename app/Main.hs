@@ -1,9 +1,10 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Main (RosterName, RosterYear, Quit, State (..), mainPrintResults, mainDrawPuck, mainStartNewYear, mainAskContinue, mainErrors, main) where
+module Main (RosterName, RosterYear, Quit, State (..), mainPrintResults, mainSelectNewGiver, mainDrawPuck, mainStartNewYear, mainAskContinue, mainErrors, main) where
 
 import qualified Control.Monad as CM
 import qualified Data.Map.Strict as Map
+import qualified Data.Maybe as DM
 import qualified Data.Set as Set
 import qualified Data.Vector as Vec
 import Gift_History
@@ -44,7 +45,7 @@ mainDrawPuck hat
 mainStartNewYear :: IO State -> IO State
 mainStartNewYear ioState = do
   state <- ioState
-  let freshHat = hatMakeHat (players state)
+  let freshHat :: Hat = hatMakeHat (players state)
    in do
         newGivee <- mainDrawPuck freshHat
         newGiver <- mainDrawPuck freshHat
@@ -62,11 +63,34 @@ mainStartNewYear ioState = do
               quit = quit state
             }
 
+mainSelectNewGiver :: IO State -> IO State
+mainSelectNewGiver ioState = do
+  state <- ioState
+  let giverToRemove :: Giver = DM.fromJust (maybeGiver state)
+      replenishedGiveeHat :: Hat = hatReturnDiscards (discards state) (giveeHat state)
+      diminishedGiverHat :: Hat = hatRemovePuck giverToRemove (giverHat state)
+   in do
+        newGivee <- mainDrawPuck replenishedGiveeHat
+        newGiver <- mainDrawPuck diminishedGiverHat
+        return
+          state
+            { rosterName = rosterName state,
+              rosterYear = rosterYear state,
+              players = players state,
+              giftYear = giftYear state,
+              giveeHat = replenishedGiveeHat,
+              giverHat = diminishedGiverHat,
+              maybeGivee = newGivee,
+              maybeGiver = newGiver,
+              discards = Set.empty,
+              quit = quit state
+            }
+
 mainErrors :: IO State -> IO [PlayerKey]
 mainErrors ioState = do
   state <- ioState
-  let playerKeys = Map.keys (players state)
-      playerErrors = [playerKeyMe | playerKeyMe <- playerKeys, let myGiverKey = playersGetMyGiver playerKeyMe (players state) (giftYear state), let myGiveeKey = playersGetMyGivee playerKeyMe (players state) (giftYear state), (playerKeyMe == myGiverKey) || (playerKeyMe == myGiveeKey)]
+  let playerKeys :: [PlayerKey] = Map.keys (players state)
+      playerErrors :: [PlayerKey] = [playerKeyMe | playerKeyMe <- playerKeys, let myGiverKey = playersGetMyGiver playerKeyMe (players state) (giftYear state), let myGiveeKey = playersGetMyGivee playerKeyMe (players state) (giftYear state), (playerKeyMe == myGiverKey) || (playerKeyMe == myGiveeKey)]
    in return playerErrors
 
 mainPrintResults :: IO State -> IO State
@@ -74,7 +98,7 @@ mainPrintResults ioState = do
   state <- ioState
   errorList <- mainErrors ioState
   putStrLn ("\n" ++ rosterName state ++ " - Year " ++ show (rosterYear state + giftYear state) ++ " Gifts:\n")
-  let playerKeys = Map.keys (players state)
+  let playerKeys :: [PlayerKey] = Map.keys (players state)
   mapM_
     putStrLn
     [ do
@@ -139,5 +163,6 @@ main =
     state1 <- mainPrintResults (return mainBeatlesState)
     state2 <- mainStartNewYear (return state1)
     state3 <- mainPrintResults (return state2)
+    state4 <- mainSelectNewGiver (return state3)
     --print errors
-    print state3
+    print state4
