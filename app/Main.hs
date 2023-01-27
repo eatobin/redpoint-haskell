@@ -136,31 +136,13 @@ mainLoop ioState = do
     then do
       if DM.isJust (maybeGivee alteredState)
         then do
-          if rulesGiveeNotSelf "me" "givee"
-            && rulesGiveeNotReciprocal "me" "givee" mainPlayers 6
-            && rulesGiveeNotRepeat "me" "givee" 6 mainPlayers
+          if rulesGiveeNotSelf (DM.fromJust (maybeGiver alteredState)) (DM.fromJust (maybeGivee alteredState))
+            && rulesGiveeNotReciprocal (DM.fromJust (maybeGiver alteredState)) (DM.fromJust (maybeGivee alteredState)) (players alteredState) (giftYear alteredState)
+            && rulesGiveeNotRepeat (DM.fromJust (maybeGiver alteredState)) (DM.fromJust (maybeGivee alteredState)) (giftYear alteredState) (players alteredState)
             then mainLoop (mainGiveeIsSuccess (return alteredState))
             else mainLoop (mainGiveeIsFailure (return alteredState))
         else mainLoop (mainSelectNewGiver (return alteredState))
     else return alteredState
-
---  private def stateLoop(alteredState: State): State = {
---    if (alteredState.maybeGiver.isDefined) {
---      if (alteredState.maybeGivee.isDefined) {
---        if (rulesGiveeNotSelf(alteredState.maybeGiver.get, alteredState.maybeGivee.get) &&
---          rulesGiveeNotRecip(alteredState.maybeGiver.get, alteredState.maybeGivee.get, alteredState.giftYear, alteredState.players) &&
---          rulesGiveeNotRepeat(alteredState.maybeGiver.get, alteredState.maybeGivee.get, alteredState.giftYear, alteredState.players)) {
---          stateLoop(stateGiveeIsSuccess(alteredState))
---        } else {
---          stateLoop(stateGiveeIsFailure(alteredState))
---        }
---      } else {
---        stateLoop(stateSelectNewGiver(alteredState))
---      }
---    } else {
---      alteredState
---    }
---  }
 
 mainErrors :: IO State -> IO [PlayerKey]
 mainErrors ioState = do
