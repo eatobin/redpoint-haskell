@@ -1,6 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Main (RosterName, RosterYear, Quit, State (..), mainPrintResults, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainLoop, mainDrawPuck, mainStartNewYear, mainAskContinue, mainErrors, main) where
+module Main (RosterName, RosterYear, Quit, State (..), mainPrintResults, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainUpdateAndRunNewYear, mainDrawPuck, mainStartNewYear, mainAskContinue, mainErrors, main) where
 
 import qualified Control.Monad as CM
 import qualified Data.Map.Strict as Map
@@ -129,6 +129,10 @@ mainGiveeIsFailure ioState = do
               quit = quit state
             }
 
+mainUpdateAndRunNewYear :: IO State -> IO State
+mainUpdateAndRunNewYear ioState = do
+  mainLoop (mainStartNewYear ioState)
+
 mainLoop :: IO State -> IO State
 mainLoop ioState = do
   alteredState <- ioState
@@ -216,11 +220,11 @@ mainBeatlesState =
 main :: IO ()
 main =
   do
-    --    state <- mainStartNewYear (mainAskContinue (mainPrintResults (return mainBeatlesState)))
+    --state <- mainStartNewYear (mainAskContinue (mainPrintResults (return mainBeatlesState)))
     --errors <- mainErrors (mainPrintResults (mainStartNewYear (return mainBeatlesState)))
     state1 <- mainPrintResults (return mainBeatlesState)
-    state2 <- mainStartNewYear (return state1)
-    state3 <- mainPrintResults (return state2)
-    state4 <- mainGiveeIsFailure (return state3)
+    state2 <- mainUpdateAndRunNewYear (return state1)
+    --state3 <- mainPrintResults (return state2)
+    --state4 <- mainGiveeIsFailure (return state3)
     --print errors
-    print state4
+    print state2
