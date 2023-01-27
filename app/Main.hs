@@ -1,12 +1,16 @@
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Main (RosterName, RosterYear, Quit, State (..), mainPrintResults, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainUpdateAndRunNewYear, mainDrawPuck, mainStartNewYear, mainAskContinue, mainErrors, main) where
+module Main (RosterName, RosterYear, Quit, State (..), mainPrintResults, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainUpdateAndRunNewYear, mainDrawPuck, mainStartNewYear, mainAskContinue, mainErrors, mainJsonStringToState, main) where
 
 import qualified Control.Monad as CM
+import qualified Data.Aeson as A
+import qualified Data.ByteString.Char8 as BS
 import qualified Data.Map.Strict as Map
 import qualified Data.Maybe as DM
 import qualified Data.Set as Set
 import qualified Data.Vector as Vec
+import qualified GHC.Generics as G
 import Gift_History
 import Gift_Pair
 import Hat
@@ -34,7 +38,9 @@ data State = State
     discards :: Discards,
     quit :: Quit
   }
-  deriving (Show, Eq)
+  deriving (Show, Eq, G.Generic)
+
+instance A.FromJSON State
 
 mainDrawPuck :: Hat -> IO (Maybe PlayerKey)
 mainDrawPuck hat
@@ -192,6 +198,9 @@ mainAskContinue ioState = do
   SIO.hFlush SIO.stdout
   reply <- getLine
   return state {quit = reply}
+
+mainJsonStringToState :: JsonString -> Maybe State
+mainJsonStringToState jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe State
 
 mainPlayers :: Players
 mainPlayers =
