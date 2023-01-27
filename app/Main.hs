@@ -1,6 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Main (RosterName, RosterYear, Quit, State (..), mainPrintResults, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainDrawPuck, mainStartNewYear, mainAskContinue, mainErrors, main) where
+module Main (RosterName, RosterYear, Quit, State (..), mainPrintResults, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainLoop, mainDrawPuck, mainStartNewYear, mainAskContinue, mainErrors, main) where
 
 import qualified Control.Monad as CM
 import qualified Data.Map.Strict as Map
@@ -12,6 +12,7 @@ import Gift_Pair
 import Hat
 import Player
 import Players
+import Rules
 import qualified System.IO as SIO
 import qualified System.Random as Ran
 
@@ -127,6 +128,39 @@ mainGiveeIsFailure ioState = do
               discards = hatDiscardGivee giveeToRemove (discards state),
               quit = quit state
             }
+
+mainLoop :: IO State -> IO State
+mainLoop ioState = do
+  alteredState <- ioState
+  if DM.isJust (maybeGiver alteredState)
+    then do
+      if DM.isJust (maybeGivee alteredState)
+        then do
+          if rulesGiveeNotSelf "me" "givee"
+            && rulesGiveeNotReciprocal "me" "givee" mainPlayers 6
+            && rulesGiveeNotRepeat "me" "givee" 6 mainPlayers
+            then mainLoop (mainGiveeIsSuccess (return alteredState))
+            else mainLoop (mainGiveeIsFailure (return alteredState))
+        else mainLoop (mainSelectNewGiver (return alteredState))
+    else return alteredState
+
+--  private def stateLoop(alteredState: State): State = {
+--    if (alteredState.maybeGiver.isDefined) {
+--      if (alteredState.maybeGivee.isDefined) {
+--        if (rulesGiveeNotSelf(alteredState.maybeGiver.get, alteredState.maybeGivee.get) &&
+--          rulesGiveeNotRecip(alteredState.maybeGiver.get, alteredState.maybeGivee.get, alteredState.giftYear, alteredState.players) &&
+--          rulesGiveeNotRepeat(alteredState.maybeGiver.get, alteredState.maybeGivee.get, alteredState.giftYear, alteredState.players)) {
+--          stateLoop(stateGiveeIsSuccess(alteredState))
+--        } else {
+--          stateLoop(stateGiveeIsFailure(alteredState))
+--        }
+--      } else {
+--        stateLoop(stateSelectNewGiver(alteredState))
+--      }
+--    } else {
+--      alteredState
+--    }
+--  }
 
 mainErrors :: IO State -> IO [PlayerKey]
 mainErrors ioState = do
