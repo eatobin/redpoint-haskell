@@ -159,7 +159,13 @@ mainErrors :: IO State -> IO [PlayerKey]
 mainErrors ioState = do
   state <- ioState
   let playerKeys :: [PlayerKey] = Map.keys (players state)
-      playerErrors :: [PlayerKey] = [playerKeyMe | playerKeyMe <- playerKeys, let myGiverKey = playersGetMyGiver playerKeyMe (players state) (giftYear state), let myGiveeKey = playersGetMyGivee playerKeyMe (players state) (giftYear state), (playerKeyMe == myGiverKey) || (playerKeyMe == myGiveeKey)]
+      playerErrors :: [PlayerKey] =
+        [ playerKeyMe
+          | playerKeyMe <- playerKeys,
+            let myGiverKey = playersGetMyGiver playerKeyMe (players state) (giftYear state),
+            let myGiveeKey = playersGetMyGivee playerKeyMe (players state) (giftYear state),
+            (playerKeyMe == myGiverKey) || (playerKeyMe == myGiveeKey)
+        ]
    in return playerErrors
 
 mainPrintResults :: IO State -> IO State
