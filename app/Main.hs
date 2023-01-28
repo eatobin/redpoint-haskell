@@ -137,10 +137,10 @@ mainGiveeIsFailure ioState = do
 
 mainUpdateAndRunNewYear :: IO State -> IO State
 mainUpdateAndRunNewYear ioState = do
-  mainLoop (mainStartNewYear ioState)
+  mainUpdateAndRunNewYearLoop (mainStartNewYear ioState)
 
-mainLoop :: IO State -> IO State
-mainLoop ioState = do
+mainUpdateAndRunNewYearLoop :: IO State -> IO State
+mainUpdateAndRunNewYearLoop ioState = do
   alteredState <- ioState
   if DM.isJust (maybeGiver alteredState)
     then do
@@ -149,9 +149,9 @@ mainLoop ioState = do
           if rulesGiveeNotSelf (DM.fromJust (maybeGiver alteredState)) (DM.fromJust (maybeGivee alteredState))
             && rulesGiveeNotReciprocal (DM.fromJust (maybeGiver alteredState)) (DM.fromJust (maybeGivee alteredState)) (players alteredState) (giftYear alteredState)
             && rulesGiveeNotRepeat (DM.fromJust (maybeGiver alteredState)) (DM.fromJust (maybeGivee alteredState)) (giftYear alteredState) (players alteredState)
-            then mainLoop (mainGiveeIsSuccess (return alteredState))
-            else mainLoop (mainGiveeIsFailure (return alteredState))
-        else mainLoop (mainSelectNewGiver (return alteredState))
+            then mainUpdateAndRunNewYearLoop (mainGiveeIsSuccess (return alteredState))
+            else mainUpdateAndRunNewYearLoop (mainGiveeIsFailure (return alteredState))
+        else mainUpdateAndRunNewYearLoop (mainSelectNewGiver (return alteredState))
     else return alteredState
 
 mainErrors :: IO State -> IO [PlayerKey]
