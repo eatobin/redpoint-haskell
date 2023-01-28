@@ -215,12 +215,12 @@ mainLoop nextIOState = do
       putStrLn "Talk about a position with Redpoint?"
       putStrLn "Please call: Eric Tobin 773-679-6617"
       putStrLn "Thanks! Bye...\n"
-    else putStrLn "Done!!"
+    else mainLoop (mainAskContinue (mainPrintResults (mainUpdateAndRunNewYear (return nextState))))
 
 main :: IO ()
 main =
   do
     let maybeState :: Maybe State = mainJsonStringToState hawksJson
     case maybeState of
+      Just firstState -> mainLoop (mainAskContinue (mainPrintResults (return firstState)))
       Nothing -> putStrLn "So sorry, there is an error here."
-      Just firstState -> mainLoop (return firstState)
