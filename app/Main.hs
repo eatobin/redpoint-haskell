@@ -231,6 +231,8 @@ mainBeatlesState =
 beatlesJson :: JsonString
 beatlesJson = [r|{"rosterName":"The Beatles","rosterYear":2014,"players":{"RinSta":{"playerName":"Ringo Starr","giftHistory":[{"givee":"JohLen","giver":"GeoHar"}]},"JohLen":{"playerName":"John Lennon","giftHistory":[{"givee":"PauMcc","giver":"RinSta"}]},"GeoHar":{"playerName":"George Harrison","giftHistory":[{"givee":"RinSta","giver":"PauMcc"}]},"PauMcc":{"playerName":"Paul McCartney","giftHistory":[{"givee":"GeoHar","giver":"JohLen"}]}},"giftYear":0,"giveeHat":[],"giverHat":[],"maybeGivee":null,"maybeGiver":null,"discards":[],"quit":"n"}|]
 
+--Just (State {rosterName = "The Beatles", rosterYear = 2014, players = fromList [("GeoHar",Player {playerName = "George Harrison", giftHistory = [GiftPair {givee = "RinSta", giver = "PauMcc"}]}),("JohLen",Player {playerName = "John Lennon", giftHistory = [GiftPair {givee = "PauMcc", giver = "RinSta"}]}),("PauMcc",Player {playerName = "Paul McCartney", giftHistory = [GiftPair {givee = "GeoHar", giver = "JohLen"}]}),("RinSta",Player {playerName = "Ringo Starr", giftHistory = [GiftPair {givee = "JohLen", giver = "GeoHar"}]})], giftYear = 0, giveeHat = fromList [], giverHat = fromList [], maybeGivee = Nothing, maybeGiver = Nothing, discards = fromList [], quit = "n"})
+
 main :: IO ()
 main =
   do
