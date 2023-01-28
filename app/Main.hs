@@ -10,12 +10,10 @@ import qualified Data.ByteString.Char8 as BS
 import qualified Data.Map.Strict as Map
 import qualified Data.Maybe as DM
 import qualified Data.Set as Set
-import qualified Data.Vector as Vec
 import qualified GHC.Generics as G
 import Gift_History
 import Gift_Pair
 import Hat
-import Player
 import Players
 import Rules
 import qualified System.IO as SIO
@@ -204,45 +202,13 @@ mainAskContinue ioState = do
 mainJsonStringToState :: JsonString -> Maybe State
 mainJsonStringToState jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe State
 
-mainPlayers :: Players
-mainPlayers =
-  Map.fromList
-    [ ("GeoHar", Player {playerName = "George Harrison", giftHistory = Vec.fromList [GiftPair {givee = "RinSta", giver = "PauMcc"}]}),
-      ("JohLen", Player {playerName = "John Lennon", giftHistory = Vec.fromList [GiftPair {givee = "PauMcc", giver = "RinSta"}]}),
-      ("PauMcc", Player {playerName = "Paul McCartney", giftHistory = Vec.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}]}),
-      ("RinSta", Player {playerName = "Ringo Starr", giftHistory = Vec.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}]})
-    ]
-
-mainBeatlesState :: State
-mainBeatlesState =
-  State
-    { rosterName = "The Beatles",
-      rosterYear = 2014,
-      players = mainPlayers,
-      giftYear = 0,
-      giveeHat = Set.empty,
-      giverHat = Set.empty,
-      maybeGivee = Nothing,
-      maybeGiver = Nothing,
-      discards = Set.empty,
-      quit = "n"
-    }
-
-beatlesJson :: JsonString
-beatlesJson = [r|{"rosterName":"The Beatles","rosterYear":2014,"players":{"RinSta":{"playerName":"Ringo Starr","giftHistory":[{"givee":"JohLen","giver":"GeoHar"}]},"JohLen":{"playerName":"John Lennon","giftHistory":[{"givee":"PauMcc","giver":"RinSta"}]},"GeoHar":{"playerName":"George Harrison","giftHistory":[{"givee":"RinSta","giver":"PauMcc"}]},"PauMcc":{"playerName":"Paul McCartney","giftHistory":[{"givee":"GeoHar","giver":"JohLen"}]}},"giftYear":0,"giveeHat":[],"giverHat":[],"maybeGivee":null,"maybeGiver":null,"discards":[],"quit":"n"}|]
-
---Just (State {rosterName = "The Beatles", rosterYear = 2014, players = fromList [("GeoHar",Player {playerName = "George Harrison", giftHistory = [GiftPair {givee = "RinSta", giver = "PauMcc"}]}),("JohLen",Player {playerName = "John Lennon", giftHistory = [GiftPair {givee = "PauMcc", giver = "RinSta"}]}),("PauMcc",Player {playerName = "Paul McCartney", giftHistory = [GiftPair {givee = "GeoHar", giver = "JohLen"}]}),("RinSta",Player {playerName = "Ringo Starr", giftHistory = [GiftPair {givee = "JohLen", giver = "GeoHar"}]})], giftYear = 0, giveeHat = fromList [], giverHat = fromList [], maybeGivee = Nothing, maybeGiver = Nothing, discards = fromList [], quit = "n"})
+hawksJson :: JsonString
+hawksJson = [r|{"rosterName":"Blackhawks","rosterYear":2010,"players":{"TroBro":{"playerName":"Troy Brouwer","giftHistory":[{"givee":"DavBol","giver":"JoeQue"}]},"PatKan":{"playerName":"Patrick Kane","giftHistory":[{"givee":"BryBic","giver":"CriHue"}]},"JoeQue":{"playerName":"Joel Quenneville","giftHistory":[{"givee":"TroBro","giver":"AndLad"}]},"NikHja":{"playerName":"Niklas Hjalmarsson","giftHistory":[{"givee":"BreSea","giver":"BriCam"}]},"TomKop":{"playerName":"Tomas Kopecky","giftHistory":[{"givee":"CriHue","giver":"DunKei"}]},"BryBic":{"playerName":"Bryan Bickell","giftHistory":[{"givee":"MarHos","giver":"PatKan"}]},"AntNie":{"playerName":"Antti Niemi","giftHistory":[{"givee":"JonToe","giver":"MarHos"}]},"PatSha":{"playerName":"Patrick Sharp","giftHistory":[{"givee":"BriCam","giver":"DavBol"}]},"DunKei":{"playerName":"Duncan Keith","giftHistory":[{"givee":"TomKop","giver":"AdaBur"}]},"BriCam":{"playerName":"Brian Campbell","giftHistory":[{"givee":"NikHja","giver":"PatSha"}]},"BreSea":{"playerName":"Brent Seabrook","giftHistory":[{"givee":"KriVer","giver":"NikHja"}]},"KriVer":{"playerName":"Kris Versteeg","giftHistory":[{"givee":"AndLad","giver":"BreSea"}]},"MarHos":{"playerName":"Marian Hossa","giftHistory":[{"givee":"AntNie","giver":"BryBic"}]},"AndLad":{"playerName":"Andrew Ladd","giftHistory":[{"givee":"JoeQue","giver":"KriVer"}]},"DavBol":{"playerName":"Dave Bolland","giftHistory":[{"givee":"PatSha","giver":"TroBro"}]},"CriHue":{"playerName":"Cristobal Huet","giftHistory":[{"givee":"PatKan","giver":"TomKop"}]},"JonToe":{"playerName":"Jonathan Toews","giftHistory":[{"givee":"AdaBur","giver":"AntNie"}]},"AdaBur":{"playerName":"Adam Burish","giftHistory":[{"givee":"DunKei","giver":"JonToe"}]}},"giftYear":0,"giveeHat":[],"giverHat":[],"maybeGivee":null,"maybeGiver":null,"discards":[],"quit":"n"}|]
 
 main :: IO ()
 main =
   do
-    --state <- mainStartNewYear (mainAskContinue (mainPrintResults (return mainBeatlesState)))
-    --errors <- mainErrors (mainPrintResults (mainStartNewYear (return mainBeatlesState)))
-    --    state1 <- mainPrintResults (return mainBeatlesState)
-    --    state2 <- mainUpdateAndRunNewYear (return state1)
-    --state3 <- mainPrintResults (return state2)
-    --state4 <- mainGiveeIsFailure (return state3)
-    --print errors
-    print (mainJsonStringToState beatlesJson)
-
---    putStrLn beatlesJson
+    let maybeState :: Maybe State = mainJsonStringToState hawksJson
+    case maybeState of
+      Nothing -> putStrLn "So sorry, there is an error here."
+      Just state -> print state
