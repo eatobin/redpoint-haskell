@@ -45,6 +45,7 @@ library
     , hspec
     , monad-loops
     , random
+    , raw-strings-qq
     , stm
     , vector
   default-language: Haskell2010
@@ -62,6 +63,7 @@ executable redpoint-haskell-exe
     , hspec
     , monad-loops
     , random
+    , raw-strings-qq
     , redpoint-haskell
     , stm
     , vector
@@ -89,6 +91,7 @@ test-suite spec
     , hspec ==2.*
     , monad-loops
     , random
+    , raw-strings-qq
     , redpoint-haskell
     , stm
     , vector

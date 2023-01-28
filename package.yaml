@@ -27,6 +27,7 @@ dependencies:
   - hspec
   - monad-loops
   - random
+  - raw-strings-qq
   - stm
   - vector
 

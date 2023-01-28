@@ -1,7 +1,8 @@
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Main (RosterName, RosterYear, Quit, State (..), mainPrintResults, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainUpdateAndRunNewYear, mainDrawPuck, mainStartNewYear, mainAskContinue, mainErrors, mainJsonStringToState, main) where
+module Main (RosterName, RosterYear, Quit, State (..), mainPrintResults, quote, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainUpdateAndRunNewYear, mainDrawPuck, mainStartNewYear, mainAskContinue, mainErrors, mainJsonStringToState, main) where
 
 import qualified Control.Monad as CM
 import qualified Data.Aeson as A
@@ -19,6 +20,7 @@ import Players
 import Rules
 import qualified System.IO as SIO
 import qualified System.Random as Ran
+import Text.RawString.QQ (r)
 
 type RosterName = String
 
@@ -226,14 +228,18 @@ mainBeatlesState =
       quit = "n"
     }
 
+beatlesJson :: JsonString
+beatlesJson = [r|{"rosterName":"The Beatles","rosterYear":2014,"players":{"RinSta":{"playerName":"Ringo Starr","giftHistory":[{"givee":"JohLen","giver":"GeoHar"}]},"JohLen":{"playerName":"John Lennon","giftHistory":[{"givee":"PauMcc","giver":"RinSta"}]},"GeoHar":{"playerName":"George Harrison","giftHistory":[{"givee":"RinSta","giver":"PauMcc"}]},"PauMcc":{"playerName":"Paul McCartney","giftHistory":[{"givee":"GeoHar","giver":"JohLen"}]}},"giftYear":0,"giveeHat":[],"giverHat":[],"maybeGivee":null,"maybeGiver":null,"discards":[],"quit":"n"}|]
+
 main :: IO ()
 main =
   do
     --state <- mainStartNewYear (mainAskContinue (mainPrintResults (return mainBeatlesState)))
     --errors <- mainErrors (mainPrintResults (mainStartNewYear (return mainBeatlesState)))
     state1 <- mainPrintResults (return mainBeatlesState)
-    state2 <- mainUpdateAndRunNewYear (return state1)
+--    state2 <- mainUpdateAndRunNewYear (return state1)
     --state3 <- mainPrintResults (return state2)
     --state4 <- mainGiveeIsFailure (return state3)
     --print errors
     print state2
+    putStrLn beatlesJson
