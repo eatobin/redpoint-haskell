@@ -11,6 +11,7 @@ import qualified Data.Char as DC
 import qualified Data.Map.Strict as Map
 import qualified Data.Maybe as DM
 import qualified Data.Set as Set
+import qualified Data.List as List
 import qualified GHC.Generics as G
 import Gift_History
 import Gift_Pair
@@ -166,13 +167,14 @@ mainErrors ioState = do
             let myGiveeKey = playersGetMyGivee playerKeyMe (players state) (giftYear state),
             (playerKeyMe == myGiverKey) || (playerKeyMe == myGiveeKey)
         ]
-   in return playerErrors
+   in return (List.sort playerErrors)
 
 mainPrintResults :: IO State -> IO State
 mainPrintResults ioState = do
   state <- ioState
   errorList <- mainErrors ioState
   print errorList
+  print (players state)
   putStrLn ("\n" ++ rosterName state ++ " - Year " ++ show (rosterYear state + giftYear state) ++ " Gifts:\n")
   let playerKeys :: [PlayerKey] = Map.keys (players state)
   mapM_
@@ -184,13 +186,11 @@ mainPrintResults ioState = do
         let giverKey = playersGetMyGiver playerKey (players state) (giftYear state)
         if (playerKey == giveeKey) && (playerKey == giverKey)
           then pName ++ " is neither **buying** for nor **receiving** from anyone - **ERROR**"
-          else
-            if playerKey == giverKey
-              then pName ++ " is **receiving** from no one - **ERROR**"
-              else
-                if playerKey == giveeKey
-                  then pName ++ " is **buying** for no one - **ERROR**"
-                  else pName ++ " is buying for " ++ giveeName
+        else if playerKey == giverKey
+          then pName ++ " is **receiving** from no one - **ERROR**"
+        else if playerKey == giveeKey
+          then pName ++ " is **buying** for no one - **ERROR**"
+        else pName ++ " is buying for " ++ giveeName
       | playerKey <- playerKeys
     ]
   CM.unless (null errorList) $ do
