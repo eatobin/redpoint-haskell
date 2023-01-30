@@ -174,7 +174,7 @@ mainPrintResults ioState = do
   state <- ioState
   errorList <- mainErrors ioState
   print errorList
-  print (players state)
+  print state
   putStrLn ("\n" ++ rosterName state ++ " - Year " ++ show (rosterYear state + giftYear state) ++ " Gifts:\n")
   let playerKeys :: [PlayerKey] = Map.keys (players state)
   mapM_
