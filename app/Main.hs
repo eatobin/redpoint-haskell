@@ -161,11 +161,10 @@ mainErrors ioState = do
   state <- ioState
   let playerKeys :: [PlayerKey] = List.sort (Map.keys (players state))
       playerErrors :: [PlayerKey] =
-        [ playerKeyMe
+        [ playerKeyMe ++ "-" ++ myGiveeKey++ "-" ++ myGiverKey
           | playerKeyMe <- playerKeys,
             let myGiverKey = playersGetMyGiver playerKeyMe (players state) (giftYear state),
-            let myGiveeKey = playersGetMyGivee playerKeyMe (players state) (giftYear state),
-            (playerKeyMe == myGiverKey) || (playerKeyMe == myGiveeKey)
+            let myGiveeKey = playersGetMyGivee playerKeyMe (players state) (giftYear state)
         ]
    in return (List.sort playerErrors)
 
