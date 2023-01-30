@@ -159,7 +159,7 @@ mainUpdateAndRunNewYearLoop ioState = do
 mainErrors :: IO State -> IO [PlayerKey]
 mainErrors ioState = do
   state <- ioState
-  let playerKeys :: [PlayerKey] = Map.keys (players state)
+  let playerKeys :: [PlayerKey] = List.sort (Map.keys (players state))
       playerErrors :: [PlayerKey] =
         [ playerKeyMe
           | playerKeyMe <- playerKeys,
@@ -176,7 +176,7 @@ mainPrintResults ioState = do
   print errorList
   print state
   putStrLn ("\n" ++ rosterName state ++ " - Year " ++ show (rosterYear state + giftYear state) ++ " Gifts:\n")
-  let playerKeys :: [PlayerKey] = Map.keys (players state)
+  let playerKeys :: [PlayerKey] = List.sort (Map.keys (players state))
   mapM_
     putStrLn
     [ do
