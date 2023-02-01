@@ -28,7 +28,17 @@ monday s0 =
       (a5, s5) = hastyPersonPush s4
    in ([a1, a2, a3, a4, a5], s5)
 
+tuesday :: TurnstileState -> ([TurnstileOutput], TurnstileState)
+tuesday s0 =
+  let (a1, s1) = regularPersonPush s0
+      (a2, s2) = hastyPersonPush s1
+      (a3, s3) = distractedPersonNoPush s2
+      (a4, s4) = hastyPersonPush s3
+      (a5, s5) = hastyPersonPush s4
+   in ([a1, a2, a3, a4, a5], s5)
+
 main :: IO ()
 main =
   do
     print (monday Locked)
+    print (tuesday Locked)
