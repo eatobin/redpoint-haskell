@@ -13,6 +13,12 @@ push :: TurnstileState -> (TurnstileOutput, TurnstileState)
 push Locked = (Tut, Locked)
 push Unlocked = (Open, Locked)
 
+regularPerson :: TurnstileState -> ([TurnstileOutput], TurnstileState)
+regularPerson s0 =
+  let (a1, s1) = coin s0
+      (a2, s2) = push s1
+   in ([a1, a2], s2)
+
 monday :: TurnstileState -> ([TurnstileOutput], TurnstileState)
 monday s0 =
   let (a1, s1) = coin s0
@@ -20,7 +26,7 @@ monday s0 =
       (a3, s3) = push s2
       (a4, s4) = coin s3
       (a5, s5) = push s4
-    in ([a1, a2, a3, a4, a5], s5)
+   in ([a1, a2, a3, a4, a5], s5)
 
 main :: IO ()
 main =
