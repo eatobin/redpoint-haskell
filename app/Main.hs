@@ -25,14 +25,14 @@ distractedPerson s0 =
    in ([a1], s1)
 
 hastyPerson :: TurnstileState -> ([TurnstileOutput], TurnstileState)
-hastyPerson s0 = do
+hastyPerson s0 =
   let (a1, s1) = push s0
-  if a1 == Open
-    then ([a1], s1)
-    else do
-      let (a2, s2) = coin s1
-          (a3, s3) = push s2
-      ([a1, a2, a3], s3)
+   in if a1 == Open
+        then ([a1], s1)
+        else
+          let (a2, s2) = coin s1
+              (a3, s3) = push s2
+           in ([a1, a2, a3], s3)
 
 monday :: TurnstileState -> ([TurnstileOutput], TurnstileState)
 monday s0 =
@@ -55,4 +55,8 @@ main :: IO ()
 main =
   do
     print (monday Locked)
+    print (regularPerson Locked)
+    print (distractedPerson Locked)
+    print (hastyPerson Locked)
+    print (hastyPerson Unlocked)
     print (tuesday Locked)
