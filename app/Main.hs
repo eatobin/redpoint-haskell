@@ -19,6 +19,11 @@ regularPerson s0 =
       (a2, s2) = push s1
    in ([a1, a2], s2)
 
+distractedPerson :: TurnstileState -> ([TurnstileOutput], TurnstileState)
+distractedPerson s0 =
+  let (a1, s1) = coin s0
+   in ([a1], s1)
+
 monday :: TurnstileState -> ([TurnstileOutput], TurnstileState)
 monday s0 =
   let (a1, s1) = coin s0
