@@ -34,6 +34,12 @@ hastyPerson s0 =
               (a3, s3) = push s2
            in ([a1, a2, a3], s3)
 
+luckyPair :: Bool -> TurnstileState -> (Bool, TurnstileState)
+luckyPair firstIsDistracted s0 =
+  let (_, s1) = if firstIsDistracted then distractedPerson s0 else regularPerson s0
+      (a2, s2) = push s1
+   in (a2 == Open, s2)
+
 monday :: TurnstileState -> ([TurnstileOutput], TurnstileState)
 monday s0 =
   let (a1, s1) = coin s0
@@ -60,5 +66,5 @@ main =
     print (hastyPerson Locked)
     print (hastyPerson Unlocked)
     print (tuesday Locked)
-
---Implement luckyPair :: Bool -> TurnstileState -> (Bool, TurnstileState) representing two people attempting to use the turnstile in succession. The first is either a regularPerson or a distractedPerson (depending on the Bool argument). The second person will simply push the arm without inserting a coin and give up if they don't get through. The Bool result should indicate whether the second person made it through.
+    print (luckyPair False Locked)
+    print (luckyPair True Locked)
