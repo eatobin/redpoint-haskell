@@ -60,3 +60,5 @@ main =
     print (hastyPerson Locked)
     print (hastyPerson Unlocked)
     print (tuesday Locked)
+
+--Implement luckyPair :: Bool -> TurnstileState -> (Bool, TurnstileState) representing two people attempting to use the turnstile in succession. The first is either a regularPerson or a distractedPerson (depending on the Bool argument). The second person will simply push the arm without inserting a coin and give up if they don't get through. The Bool result should indicate whether the second person made it through.
