@@ -225,10 +225,10 @@ mainLoop nextIOState = do
       putStrLn "Thanks! Bye...\n"
     else mainLoop (mainAskContinue (mainPrintResults (mainUpdateAndRunNewYear (return nextState))))
 
-main :: IO ()
-main =
-  do
-    let maybeState :: Maybe MyState = mainJsonStringToState hawksJson
-    case maybeState of
-      Just firstState -> mainLoop (mainAskContinue (mainPrintResults (return firstState)))
-      Nothing -> putStrLn "So sorry, there is an error here."
+-- main :: IO ()
+-- main =
+--   do
+--     let maybeState :: Maybe MyState = mainJsonStringToState hawksJson
+--     case maybeState of
+--       Just firstState -> mainLoop (mainAskContinue (mainPrintResults (return firstState)))
+--       Nothing -> putStrLn "So sorry, there is an error here."
