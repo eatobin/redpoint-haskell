@@ -2,7 +2,7 @@
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module MyState (RosterName, RosterYear, Quit, MyState (..), mainPrintResults, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainUpdateAndRunNewYear, mainDrawPuck, mainStartNewYear, mainAskContinue, mainErrors, mainJsonStringToState, stateMain) where
+module MyState (RosterName, RosterYear, Quit, MyState (..), myStatePrintResults, myStateSelectNewGiver, myStateGiveeIsSuccess, myStateGiveeIsFailure, myStateUpdateAndRunNewYear, myStateDrawPuck, myStateStartNewYear, myStateAskContinue, myStateErrors, myStateJsonStringToState, myStateMain) where
 
 import qualified Control.Monad as CM
 import qualified Data.Aeson as A
@@ -44,20 +44,20 @@ data MyState = MyState
 
 instance A.FromJSON MyState
 
-mainDrawPuck :: Hat -> IO (Maybe PlayerKey)
-mainDrawPuck hat
+myStateDrawPuck :: Hat -> IO (Maybe PlayerKey)
+myStateDrawPuck hat
   | Set.null hat = return Nothing
   | otherwise = do
     i :: Int <- Ran.randomRIO (0, Prelude.length hat - 1)
     return (Just (Set.elemAt i hat))
 
-mainStartNewYear :: IO MyState -> IO MyState
-mainStartNewYear ioState = do
+myStateStartNewYear :: IO MyState -> IO MyState
+myStateStartNewYear ioState = do
   state <- ioState
   let freshHat :: Hat = hatMakeHat (players state)
    in do
-        newGivee <- mainDrawPuck freshHat
-        newGiver <- mainDrawPuck freshHat
+        newGivee <- myStateDrawPuck freshHat
+        newGiver <- myStateDrawPuck freshHat
         return
           state
             { rosterName = rosterName state,
@@ -72,15 +72,15 @@ mainStartNewYear ioState = do
               quit = quit state
             }
 
-mainSelectNewGiver :: IO MyState -> IO MyState
-mainSelectNewGiver ioState = do
+myStateSelectNewGiver :: IO MyState -> IO MyState
+myStateSelectNewGiver ioState = do
   state <- ioState
   let giverToRemove :: Giver = DM.fromJust (maybeGiver state)
       replenishedGiveeHat :: Hat = hatReturnDiscards (discards state) (giveeHat state)
       diminishedGiverHat :: Hat = hatRemovePuck giverToRemove (giverHat state)
    in do
-        newGivee <- mainDrawPuck replenishedGiveeHat
-        newGiver <- mainDrawPuck diminishedGiverHat
+        newGivee <- myStateDrawPuck replenishedGiveeHat
+        newGiver <- myStateDrawPuck diminishedGiverHat
         return
           state
             { rosterName = rosterName state,
@@ -95,8 +95,8 @@ mainSelectNewGiver ioState = do
               quit = quit state
             }
 
-mainGiveeIsSuccess :: IO MyState -> IO MyState
-mainGiveeIsSuccess ioState = do
+myStateGiveeIsSuccess :: IO MyState -> IO MyState
+myStateGiveeIsSuccess ioState = do
   state <- ioState
   let currentGiver :: Giver = DM.fromJust (maybeGiver state)
       currentGivee :: Givee = DM.fromJust (maybeGivee state)
@@ -116,13 +116,13 @@ mainGiveeIsSuccess ioState = do
               quit = quit state
             }
 
-mainGiveeIsFailure :: IO MyState -> IO MyState
-mainGiveeIsFailure ioState = do
+myStateGiveeIsFailure :: IO MyState -> IO MyState
+myStateGiveeIsFailure ioState = do
   state <- ioState
   let giveeToRemove :: Givee = DM.fromJust (maybeGivee state)
       diminishedGiveeHat :: Hat = hatRemovePuck giveeToRemove (giveeHat state)
    in do
-        newGivee <- mainDrawPuck diminishedGiveeHat
+        newGivee <- myStateDrawPuck diminishedGiveeHat
         return
           state
             { rosterName = rosterName state,
@@ -137,12 +137,12 @@ mainGiveeIsFailure ioState = do
               quit = quit state
             }
 
-mainUpdateAndRunNewYear :: IO MyState -> IO MyState
-mainUpdateAndRunNewYear ioState = do
-  mainUpdateAndRunNewYearLoop (mainStartNewYear ioState)
+myStateUpdateAndRunNewYear :: IO MyState -> IO MyState
+myStateUpdateAndRunNewYear ioState = do
+  myStateUpdateAndRunNewYearLoop (myStateStartNewYear ioState)
 
-mainUpdateAndRunNewYearLoop :: IO MyState -> IO MyState
-mainUpdateAndRunNewYearLoop ioState = do
+myStateUpdateAndRunNewYearLoop :: IO MyState -> IO MyState
+myStateUpdateAndRunNewYearLoop ioState = do
   alteredState <- ioState
   if DM.isJust (maybeGiver alteredState)
     then do
@@ -151,13 +151,13 @@ mainUpdateAndRunNewYearLoop ioState = do
           if rulesGiveeNotSelf (DM.fromJust (maybeGiver alteredState)) (DM.fromJust (maybeGivee alteredState))
             && rulesGiveeNotReciprocal (DM.fromJust (maybeGiver alteredState)) (DM.fromJust (maybeGivee alteredState)) (players alteredState) (giftYear alteredState)
             && rulesGiveeNotRepeat (DM.fromJust (maybeGiver alteredState)) (DM.fromJust (maybeGivee alteredState)) (giftYear alteredState) (players alteredState)
-            then mainUpdateAndRunNewYearLoop (mainGiveeIsSuccess (return alteredState))
-            else mainUpdateAndRunNewYearLoop (mainGiveeIsFailure (return alteredState))
-        else mainUpdateAndRunNewYearLoop (mainSelectNewGiver (return alteredState))
+            then myStateUpdateAndRunNewYearLoop (myStateGiveeIsSuccess (return alteredState))
+            else myStateUpdateAndRunNewYearLoop (myStateGiveeIsFailure (return alteredState))
+        else myStateUpdateAndRunNewYearLoop (myStateSelectNewGiver (return alteredState))
     else return alteredState
 
-mainErrors :: IO MyState -> IO [PlayerKey]
-mainErrors ioState = do
+myStateErrors :: IO MyState -> IO [PlayerKey]
+myStateErrors ioState = do
   state <- ioState
   let playerKeys :: [PlayerKey] = List.sort (Map.keys (players state))
       playerErrors :: [PlayerKey] =
@@ -168,10 +168,10 @@ mainErrors ioState = do
         ]
    in return (List.sort playerErrors)
 
-mainPrintResults :: IO MyState -> IO MyState
-mainPrintResults ioState = do
+myStatePrintResults :: IO MyState -> IO MyState
+myStatePrintResults ioState = do
   state <- ioState
-  errorList <- mainErrors ioState
+  errorList <- myStateErrors ioState
   print errorList
   print state
   putStrLn ("\n" ++ rosterName state ++ " - Year " ++ show (rosterYear state + giftYear state) ++ " Gifts:\n")
@@ -200,22 +200,22 @@ mainPrintResults ioState = do
     putStrLn "If not... call me and I'll explain!\n"
   return state
 
-mainAskContinue :: IO MyState -> IO MyState
-mainAskContinue ioState = do
+myStateAskContinue :: IO MyState -> IO MyState
+myStateAskContinue ioState = do
   state <- ioState
   putStr "\nContinue? ('q' to quit): "
   SIO.hFlush SIO.stdout
   reply <- getLine
   return state {quit = reply}
 
-mainJsonStringToState :: JsonString -> Maybe MyState
-mainJsonStringToState jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe MyState
+myStateJsonStringToState :: JsonString -> Maybe MyState
+myStateJsonStringToState jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe MyState
 
 hawksJson :: JsonString
 hawksJson = [r|{"rosterName":"Blackhawks","rosterYear":2010,"players":{"TroBro":{"playerName":"Troy Brouwer","giftHistory":[{"givee":"DavBol","giver":"JoeQue"}]},"PatKan":{"playerName":"Patrick Kane","giftHistory":[{"givee":"BryBic","giver":"CriHue"}]},"JoeQue":{"playerName":"Joel Quenneville","giftHistory":[{"givee":"TroBro","giver":"AndLad"}]},"NikHja":{"playerName":"Niklas Hjalmarsson","giftHistory":[{"givee":"BreSea","giver":"BriCam"}]},"TomKop":{"playerName":"Tomas Kopecky","giftHistory":[{"givee":"CriHue","giver":"DunKei"}]},"BryBic":{"playerName":"Bryan Bickell","giftHistory":[{"givee":"MarHos","giver":"PatKan"}]},"AntNie":{"playerName":"Antti Niemi","giftHistory":[{"givee":"JonToe","giver":"MarHos"}]},"PatSha":{"playerName":"Patrick Sharp","giftHistory":[{"givee":"BriCam","giver":"DavBol"}]},"DunKei":{"playerName":"Duncan Keith","giftHistory":[{"givee":"TomKop","giver":"AdaBur"}]},"BriCam":{"playerName":"Brian Campbell","giftHistory":[{"givee":"NikHja","giver":"PatSha"}]},"BreSea":{"playerName":"Brent Seabrook","giftHistory":[{"givee":"KriVer","giver":"NikHja"}]},"KriVer":{"playerName":"Kris Versteeg","giftHistory":[{"givee":"AndLad","giver":"BreSea"}]},"MarHos":{"playerName":"Marian Hossa","giftHistory":[{"givee":"AntNie","giver":"BryBic"}]},"AndLad":{"playerName":"Andrew Ladd","giftHistory":[{"givee":"JoeQue","giver":"KriVer"}]},"DavBol":{"playerName":"Dave Bolland","giftHistory":[{"givee":"PatSha","giver":"TroBro"}]},"CriHue":{"playerName":"Cristobal Huet","giftHistory":[{"givee":"PatKan","giver":"TomKop"}]},"JonToe":{"playerName":"Jonathan Toews","giftHistory":[{"givee":"AdaBur","giver":"AntNie"}]},"AdaBur":{"playerName":"Adam Burish","giftHistory":[{"givee":"DunKei","giver":"JonToe"}]}},"giftYear":0,"giveeHat":[],"giverHat":[],"maybeGivee":null,"maybeGiver":null,"discards":[],"quit":"n"}|]
 
-mainLoop :: IO MyState -> IO ()
-mainLoop nextIOState = do
+myStateLoop :: IO MyState -> IO ()
+myStateLoop nextIOState = do
   nextState <- nextIOState
   if map DC.toLower (quit nextState) == "q"
     then do
@@ -223,12 +223,12 @@ mainLoop nextIOState = do
       putStrLn "Talk about a position with Redpoint?"
       putStrLn "Please call: Eric Tobin 773-679-6617"
       putStrLn "Thanks! Bye...\n"
-    else mainLoop (mainAskContinue (mainPrintResults (mainUpdateAndRunNewYear (return nextState))))
+    else myStateLoop (myStateAskContinue (myStatePrintResults (myStateUpdateAndRunNewYear (return nextState))))
 
-stateMain :: IO ()
-stateMain =
+myStateMain :: IO ()
+myStateMain =
   do
-    let maybeState :: Maybe MyState = mainJsonStringToState hawksJson
+    let maybeState :: Maybe MyState = myStateJsonStringToState hawksJson
     case maybeState of
-      Just firstState -> mainLoop (mainAskContinue (mainPrintResults (return firstState)))
+      Just firstState -> myStateLoop (myStateAskContinue (myStatePrintResults (return firstState)))
       Nothing -> putStrLn "So sorry, there is an error here."
