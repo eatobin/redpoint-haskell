@@ -3,7 +3,7 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
 --module MyState (RosterName, RosterYear, Quit, MyState (..), myStatePrintResults, myStateSelectNewGiver, myStateGiveeIsSuccess, myStateGiveeIsFailure, myStateUpdateAndRunNewYear, myStateDrawPuck, myStateStartNewYear, myStateAskContinue, myStateErrors, myStateJsonStringToState, myStateMain) where
-module MyState (RosterName, RosterYear, Quit, MyState (..), myStateDrawPuck) where
+module MyState (RosterName, RosterYear, Quit, MyState (..), myStateDrawPuck, myStateStartNewYear) where
 
 --import qualified Control.Monad as CM
 import qualified Data.Aeson as A
@@ -53,26 +53,26 @@ myStateDrawPuck hat
     i :: Int <- Ran.randomRIO (0, Prelude.length hat - 1)
     return (Just (Set.elemAt i hat))
 
---myStateStartNewYear :: IO MyState -> IO MyState
---myStateStartNewYear ioState = do
---  state <- ioState
---  let freshHat :: Hat = hatMakeHat (players state)
---   in do
---        newGivee <- myStateDrawPuck freshHat
---        newGiver <- myStateDrawPuck freshHat
---        return
---          state
---            { rosterName = rosterName state,
---              rosterYear = rosterYear state,
---              players = playersAddYear (players state),
---              giftYear = giftYear state + 1,
---              giveeHat = freshHat,
---              giverHat = freshHat,
---              maybeGivee = newGivee,
---              maybeGiver = newGiver,
---              discards = Set.empty,
---              quit = quit state
---            }
+myStateStartNewYear :: IO MyState -> IO MyState
+myStateStartNewYear ioState = do
+  state <- ioState
+  let freshHat :: Hat = hatMakeHat (players state)
+   in do
+        newGivee <- myStateDrawPuck freshHat
+        newGiver <- myStateDrawPuck freshHat
+        return
+          state
+            { rosterName = rosterName state,
+              rosterYear = rosterYear state,
+              players = playersAddYear (players state),
+              giftYear = giftYear state + 1,
+              giveeHat = freshHat,
+              giverHat = freshHat,
+              maybeGivee = newGivee,
+              maybeGiver = newGiver,
+              discards = Set.empty,
+              quit = quit state
+            }
 
 --myStateSelectNewGiver :: IO MyState -> IO MyState
 --myStateSelectNewGiver ioState = do
