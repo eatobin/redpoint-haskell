@@ -45,6 +45,7 @@ library
     , containers
     , hspec
     , monad-loops
+    , mtl
     , random
     , raw-strings-qq
     , stm
@@ -63,6 +64,7 @@ executable redpoint-haskell-exe
     , containers
     , hspec
     , monad-loops
+    , mtl
     , random
     , raw-strings-qq
     , redpoint-haskell
@@ -91,6 +93,7 @@ test-suite spec
     , containers
     , hspec ==2.*
     , monad-loops
+    , mtl
     , random
     , raw-strings-qq
     , redpoint-haskell
