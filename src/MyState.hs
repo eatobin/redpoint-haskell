@@ -2,7 +2,7 @@
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module MyState (RosterName, RosterYear, Quit, MyState (..), mainPrintResults, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainUpdateAndRunNewYear, mainDrawPuck, mainStartNewYear, mainAskContinue, mainErrors, mainJsonStringToState) where
+module MyState (RosterName, RosterYear, Quit, MyState (..), mainPrintResults, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainUpdateAndRunNewYear, mainDrawPuck, mainStartNewYear, mainAskContinue, mainErrors, mainJsonStringToState, stateMain) where
 
 import qualified Control.Monad as CM
 import qualified Data.Aeson as A
@@ -225,10 +225,10 @@ mainLoop nextIOState = do
       putStrLn "Thanks! Bye...\n"
     else mainLoop (mainAskContinue (mainPrintResults (mainUpdateAndRunNewYear (return nextState))))
 
--- main :: IO ()
--- main =
---   do
---     let maybeState :: Maybe MyState = mainJsonStringToState hawksJson
---     case maybeState of
---       Just firstState -> mainLoop (mainAskContinue (mainPrintResults (return firstState)))
---       Nothing -> putStrLn "So sorry, there is an error here."
+stateMain :: IO ()
+stateMain =
+  do
+    let maybeState :: Maybe MyState = mainJsonStringToState hawksJson
+    case maybeState of
+      Just firstState -> mainLoop (mainAskContinue (mainPrintResults (return firstState)))
+      Nothing -> putStrLn "So sorry, there is an error here."
