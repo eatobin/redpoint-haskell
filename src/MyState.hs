@@ -233,17 +233,22 @@ myStateMain =
       Just firstState -> myStateLoop (myStateAskContinue (myStatePrintResults (return firstState)))
       Nothing -> putStrLn "So sorry, there is an error here."
 
--- *HatSpec
+-- * HatSpec
+
 -- λ> Set.deleteAt 0 hat1
 -- fromList ["JohLen","PauMcc","RinSta"]
--- *HatSpec
+
+-- * HatSpec
+
 -- λ> Set.deleteAt 1 hat1
 -- fromList ["GeoHar","PauMcc","RinSta"]
--- *HatSpec
+
+-- * HatSpec
+
 -- λ>
 
-drawInt :: Int -> Int -> IO Int
-drawInt x y = Ran.getStdRandom (Ran.randomR (x,y))
-     
-drawDouble :: Double -> Double  -> IO Double
-drawDouble x y = Ran.getStdRandom (Ran.randomR (x,y))
+--drawInt :: Int -> Int -> IO Int
+--drawInt x y = Ran.getStdRandom (Ran.randomR (x,y))
+--
+--drawDouble :: Double -> Double  -> IO Double
+--drawDouble x y = Ran.getStdRandom (Ran.randomR (x,y))

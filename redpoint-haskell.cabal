@@ -79,6 +79,7 @@ test-suite spec
       GiftHistorySpec
       GiftPairSpec
       HatSpec
+      MyStateSpec
       PlayerSpec
       PlayersSpec
       RulesSpec
