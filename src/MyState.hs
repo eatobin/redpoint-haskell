@@ -2,7 +2,7 @@
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module MyState (RosterName, RosterYear, Quit, MyState (..), mainPrintResults, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainUpdateAndRunNewYear, mainDrawPuck, mainStartNewYear, mainAskContinue, mainErrors, mainJsonStringToState, main) where
+module MyState (RosterName, RosterYear, Quit, MyState (..), mainPrintResults, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainUpdateAndRunNewYear, mainDrawPuck, mainStartNewYear, mainAskContinue, mainErrors, mainJsonStringToState) where
 
 import qualified Control.Monad as CM
 import qualified Data.Aeson as A
