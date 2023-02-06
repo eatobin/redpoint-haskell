@@ -2,16 +2,16 @@
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module State (RosterName, RosterYear, Quit, State (..), mainPrintResults, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainUpdateAndRunNewYear, mainDrawPuck, mainStartNewYear, mainAskContinue, mainErrors, mainJsonStringToState, main) where
+module MyState (RosterName, RosterYear, Quit, MyState (..), mainPrintResults, mainSelectNewGiver, mainGiveeIsSuccess, mainGiveeIsFailure, mainUpdateAndRunNewYear, mainDrawPuck, mainStartNewYear, mainAskContinue, mainErrors, mainJsonStringToState, main) where
 
 import qualified Control.Monad as CM
 import qualified Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.Char as DC
+import qualified Data.List as List
 import qualified Data.Map.Strict as Map
 import qualified Data.Maybe as DM
 import qualified Data.Set as Set
-import qualified Data.List as List
 import qualified GHC.Generics as G
 import Gift_History
 import Gift_Pair
@@ -28,7 +28,7 @@ type RosterYear = Int
 
 type Quit = String
 
-data State = State
+data MyState = MyState
   { rosterName :: RosterName,
     rosterYear :: RosterYear,
     players :: Players,
@@ -42,7 +42,7 @@ data State = State
   }
   deriving (Show, Eq, G.Generic)
 
-instance A.FromJSON State
+instance A.FromJSON MyState
 
 mainDrawPuck :: Hat -> IO (Maybe PlayerKey)
 mainDrawPuck hat
@@ -51,7 +51,7 @@ mainDrawPuck hat
     i :: Int <- Ran.randomRIO (0, Prelude.length hat - 1)
     return (Just (Set.elemAt i hat))
 
-mainStartNewYear :: IO State -> IO State
+mainStartNewYear :: IO MyState -> IO MyState
 mainStartNewYear ioState = do
   state <- ioState
   let freshHat :: Hat = hatMakeHat (players state)
@@ -72,7 +72,7 @@ mainStartNewYear ioState = do
               quit = quit state
             }
 
-mainSelectNewGiver :: IO State -> IO State
+mainSelectNewGiver :: IO MyState -> IO MyState
 mainSelectNewGiver ioState = do
   state <- ioState
   let giverToRemove :: Giver = DM.fromJust (maybeGiver state)
@@ -95,7 +95,7 @@ mainSelectNewGiver ioState = do
               quit = quit state
             }
 
-mainGiveeIsSuccess :: IO State -> IO State
+mainGiveeIsSuccess :: IO MyState -> IO MyState
 mainGiveeIsSuccess ioState = do
   state <- ioState
   let currentGiver :: Giver = DM.fromJust (maybeGiver state)
@@ -116,7 +116,7 @@ mainGiveeIsSuccess ioState = do
               quit = quit state
             }
 
-mainGiveeIsFailure :: IO State -> IO State
+mainGiveeIsFailure :: IO MyState -> IO MyState
 mainGiveeIsFailure ioState = do
   state <- ioState
   let giveeToRemove :: Givee = DM.fromJust (maybeGivee state)
@@ -137,11 +137,11 @@ mainGiveeIsFailure ioState = do
               quit = quit state
             }
 
-mainUpdateAndRunNewYear :: IO State -> IO State
+mainUpdateAndRunNewYear :: IO MyState -> IO MyState
 mainUpdateAndRunNewYear ioState = do
   mainUpdateAndRunNewYearLoop (mainStartNewYear ioState)
 
-mainUpdateAndRunNewYearLoop :: IO State -> IO State
+mainUpdateAndRunNewYearLoop :: IO MyState -> IO MyState
 mainUpdateAndRunNewYearLoop ioState = do
   alteredState <- ioState
   if DM.isJust (maybeGiver alteredState)
@@ -156,19 +156,19 @@ mainUpdateAndRunNewYearLoop ioState = do
         else mainUpdateAndRunNewYearLoop (mainSelectNewGiver (return alteredState))
     else return alteredState
 
-mainErrors :: IO State -> IO [PlayerKey]
+mainErrors :: IO MyState -> IO [PlayerKey]
 mainErrors ioState = do
   state <- ioState
   let playerKeys :: [PlayerKey] = List.sort (Map.keys (players state))
       playerErrors :: [PlayerKey] =
-        [ playerKeyMe ++ "-" ++ myGiveeKey++ "-" ++ myGiverKey
+        [ playerKeyMe ++ "-" ++ myGiveeKey ++ "-" ++ myGiverKey
           | playerKeyMe <- playerKeys,
             let myGiverKey = playersGetMyGiver playerKeyMe (players state) (giftYear state),
             let myGiveeKey = playersGetMyGivee playerKeyMe (players state) (giftYear state)
         ]
    in return (List.sort playerErrors)
 
-mainPrintResults :: IO State -> IO State
+mainPrintResults :: IO MyState -> IO MyState
 mainPrintResults ioState = do
   state <- ioState
   errorList <- mainErrors ioState
@@ -185,11 +185,13 @@ mainPrintResults ioState = do
         let giverKey = playersGetMyGiver playerKey (players state) (giftYear state)
         if (playerKey == giveeKey) && (playerKey == giverKey)
           then pName ++ " is neither **buying** for nor **receiving** from anyone - **ERROR**"
-        else if playerKey == giverKey
-          then pName ++ " is **receiving** from no one - **ERROR**"
-        else if playerKey == giveeKey
-          then pName ++ " is **buying** for no one - **ERROR**"
-        else pName ++ " is buying for " ++ giveeName
+          else
+            if playerKey == giverKey
+              then pName ++ " is **receiving** from no one - **ERROR**"
+              else
+                if playerKey == giveeKey
+                  then pName ++ " is **buying** for no one - **ERROR**"
+                  else pName ++ " is buying for " ++ giveeName
       | playerKey <- playerKeys
     ]
   CM.unless (null errorList) $ do
@@ -198,7 +200,7 @@ mainPrintResults ioState = do
     putStrLn "If not... call me and I'll explain!\n"
   return state
 
-mainAskContinue :: IO State -> IO State
+mainAskContinue :: IO MyState -> IO MyState
 mainAskContinue ioState = do
   state <- ioState
   putStr "\nContinue? ('q' to quit): "
@@ -206,13 +208,13 @@ mainAskContinue ioState = do
   reply <- getLine
   return state {quit = reply}
 
-mainJsonStringToState :: JsonString -> Maybe State
-mainJsonStringToState jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe State
+mainJsonStringToState :: JsonString -> Maybe MyState
+mainJsonStringToState jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe MyState
 
 hawksJson :: JsonString
 hawksJson = [r|{"rosterName":"Blackhawks","rosterYear":2010,"players":{"TroBro":{"playerName":"Troy Brouwer","giftHistory":[{"givee":"DavBol","giver":"JoeQue"}]},"PatKan":{"playerName":"Patrick Kane","giftHistory":[{"givee":"BryBic","giver":"CriHue"}]},"JoeQue":{"playerName":"Joel Quenneville","giftHistory":[{"givee":"TroBro","giver":"AndLad"}]},"NikHja":{"playerName":"Niklas Hjalmarsson","giftHistory":[{"givee":"BreSea","giver":"BriCam"}]},"TomKop":{"playerName":"Tomas Kopecky","giftHistory":[{"givee":"CriHue","giver":"DunKei"}]},"BryBic":{"playerName":"Bryan Bickell","giftHistory":[{"givee":"MarHos","giver":"PatKan"}]},"AntNie":{"playerName":"Antti Niemi","giftHistory":[{"givee":"JonToe","giver":"MarHos"}]},"PatSha":{"playerName":"Patrick Sharp","giftHistory":[{"givee":"BriCam","giver":"DavBol"}]},"DunKei":{"playerName":"Duncan Keith","giftHistory":[{"givee":"TomKop","giver":"AdaBur"}]},"BriCam":{"playerName":"Brian Campbell","giftHistory":[{"givee":"NikHja","giver":"PatSha"}]},"BreSea":{"playerName":"Brent Seabrook","giftHistory":[{"givee":"KriVer","giver":"NikHja"}]},"KriVer":{"playerName":"Kris Versteeg","giftHistory":[{"givee":"AndLad","giver":"BreSea"}]},"MarHos":{"playerName":"Marian Hossa","giftHistory":[{"givee":"AntNie","giver":"BryBic"}]},"AndLad":{"playerName":"Andrew Ladd","giftHistory":[{"givee":"JoeQue","giver":"KriVer"}]},"DavBol":{"playerName":"Dave Bolland","giftHistory":[{"givee":"PatSha","giver":"TroBro"}]},"CriHue":{"playerName":"Cristobal Huet","giftHistory":[{"givee":"PatKan","giver":"TomKop"}]},"JonToe":{"playerName":"Jonathan Toews","giftHistory":[{"givee":"AdaBur","giver":"AntNie"}]},"AdaBur":{"playerName":"Adam Burish","giftHistory":[{"givee":"DunKei","giver":"JonToe"}]}},"giftYear":0,"giveeHat":[],"giverHat":[],"maybeGivee":null,"maybeGiver":null,"discards":[],"quit":"n"}|]
 
-mainLoop :: IO State -> IO ()
+mainLoop :: IO MyState -> IO ()
 mainLoop nextIOState = do
   nextState <- nextIOState
   if map DC.toLower (quit nextState) == "q"
@@ -226,7 +228,7 @@ mainLoop nextIOState = do
 main :: IO ()
 main =
   do
-    let maybeState :: Maybe State = mainJsonStringToState hawksJson
+    let maybeState :: Maybe MyState = mainJsonStringToState hawksJson
     case maybeState of
       Just firstState -> mainLoop (mainAskContinue (mainPrintResults (return firstState)))
       Nothing -> putStrLn "So sorry, there is an error here."
