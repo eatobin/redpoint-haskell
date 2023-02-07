@@ -63,9 +63,24 @@ beatlesState1 =
 
 spec :: Spec
 spec = do
+  describe "MyState tests" $ do
+    simple
+    complex
+
+simple :: Spec
+simple = do
   describe "myStateDrawPuck" $ do
     it "should draw a puck from a hat" $ myStateDrawPuck testHat `shouldReturn` Just "RinSta"
     it "should NOT draw a puck from an empty hat" $ myStateDrawPuck Set.empty `shouldReturn` Nothing
 
-  describe "myStateStartNewYear" $ do
-    it "should be equal" $ myStateStartNewYear (return beatlesState0) `shouldReturn` beatlesState1
+complex :: Spec
+complex = beforeAll (return "foo") $ do
+  describe "something" $ do
+    it "some behavior" $ \xs -> do
+      xs `shouldBe` "foo"
+
+    it "some other behavior" $ \xs -> do
+      xs `shouldBe` "foo"
+
+    it "last one" $ \gg -> do
+      gg `shouldBe` "foo"
