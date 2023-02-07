@@ -46,21 +46,6 @@ beatlesState0 =
       quit = "n"
     }
 
---beatlesStateXXX :: MyState
---beatlesStateXXX =
---  MyState
---    { rosterName = "The Beatles",
---      rosterYear = 2014,
---      players = players1,
---      giftYear = 1,
---      giveeHat = Set.fromList ["GeoHar", "JohLen", "PauMcc", "RinSta"],
---      giverHat = Set.fromList ["GeoHar", "JohLen", "PauMcc", "RinSta"],
---      maybeGivee = Just "GeoHar",
---      maybeGiver = Just "PauMcc",
---      discards = Set.empty,
---      quit = "n"
---    }
-
 spec :: Spec
 spec = do
   drawPuck
