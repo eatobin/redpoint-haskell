@@ -75,8 +75,8 @@ simple = do
 
 complex :: Spec
 complex = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
-  describe "check the first two" $ do
-    it "check the name" $ \bs -> do
-      rosterName bs `shouldBe` "The Beatles"
+  describe "myStateStartNewYear" $ do
+    it "should update the players" $ \bs -> do
+      players bs `shouldBe` players1
     it "check the year" $ \bs -> do
       rosterYear bs `shouldBe` 2014
