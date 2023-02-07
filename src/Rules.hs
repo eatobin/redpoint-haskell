@@ -17,7 +17,7 @@ rulesGiveeNotReciprocal selfKey gee plrs giftYear =
 
 rulesGiveeNotRepeat :: PlayerKey -> Givee -> GiftYear -> Players -> Bool
 rulesGiveeNotRepeat selfKey gee giftYear plrs =
-  let past :: [GiftYear] = filter (>= 0) . takeWhile (>= (giftYear - 3)) $ iterate (subtract 1) (giftYear - 1)
+  let past :: [GiftYear] = filter (>= 0) . takeWhile (>= (giftYear - 4)) $ iterate (subtract 1) (giftYear - 1)
       giveeInYear :: (GiftYear -> Givee) = playersGetMyGivee selfKey plrs
       giveesInYears :: [Givee] = map giveeInYear past
    in notElem gee giveesInYears
