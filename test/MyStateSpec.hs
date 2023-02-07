@@ -46,36 +46,44 @@ beatlesState0 =
       quit = "n"
     }
 
-beatlesState1 :: MyState
-beatlesState1 =
-  MyState
-    { rosterName = "The Beatles",
-      rosterYear = 2014,
-      players = players1,
-      giftYear = 1,
-      giveeHat = Set.fromList ["GeoHar", "JohLen", "PauMcc", "RinSta"],
-      giverHat = Set.fromList ["GeoHar", "JohLen", "PauMcc", "RinSta"],
-      maybeGivee = Just "GeoHar",
-      maybeGiver = Just "PauMcc",
-      discards = Set.empty,
-      quit = "n"
-    }
+--beatlesStateXXX :: MyState
+--beatlesStateXXX =
+--  MyState
+--    { rosterName = "The Beatles",
+--      rosterYear = 2014,
+--      players = players1,
+--      giftYear = 1,
+--      giveeHat = Set.fromList ["GeoHar", "JohLen", "PauMcc", "RinSta"],
+--      giverHat = Set.fromList ["GeoHar", "JohLen", "PauMcc", "RinSta"],
+--      maybeGivee = Just "GeoHar",
+--      maybeGiver = Just "PauMcc",
+--      discards = Set.empty,
+--      quit = "n"
+--    }
 
 spec :: Spec
 spec = do
-  simple
-  complex
+  drawPuck
+  startNewYear
 
-simple :: Spec
-simple = do
+drawPuck :: Spec
+drawPuck = do
   describe "myStateDrawPuck" $ do
     it "should draw a puck from a hat" $ myStateDrawPuck testHat `shouldReturn` Just "RinSta"
     it "should NOT draw a puck from an empty hat" $ myStateDrawPuck Set.empty `shouldReturn` Nothing
 
-complex :: Spec
-complex = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
+startNewYear :: Spec
+startNewYear = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
   describe "myStateStartNewYear" $ do
-    it "should update the players" $ \bs -> do
-      players bs `shouldBe` players1
-    it "check the year" $ \bs -> do
-      rosterYear bs `shouldBe` 2014
+    it "should update players" $ \beatlesState1 -> do
+      players beatlesState1 `shouldBe` players1
+    it "should update giftYear" $ \beatlesState1 -> do
+      giftYear beatlesState1 `shouldBe` 1
+    it "should update giveeHat" $ \beatlesState1 -> do
+      giveeHat beatlesState1 `shouldBe` Set.fromList ["GeoHar", "JohLen", "PauMcc", "RinSta"]
+    it "should update giverHat" $ \beatlesState1 -> do
+      giverHat beatlesState1 `shouldBe` Set.fromList ["GeoHar", "JohLen", "PauMcc", "RinSta"]
+    it "should update maybeGivee" $ \beatlesState1 -> do
+      maybeGivee beatlesState1 `shouldNotBe` (Nothing :: Maybe Givee)
+    it "should update maybeGiver" $ \beatlesState1 -> do
+      maybeGiver beatlesState1 `shouldNotBe` (Nothing :: Maybe Giver)
