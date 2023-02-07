@@ -77,6 +77,11 @@ startNewYear = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
 selectNewGiver :: Spec
 selectNewGiver = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
   describe "myStateSelectNewGiver" $ do
-    it "select a new giver" $ \beatlesState1 -> do
+    it "should discard correctly" $ \beatlesState1 -> do
       let newDiscards = hatDiscardGivee "GeoHar" (discards beatlesState1)
       length newDiscards `shouldBe` 1
+    it "should draw a new giver correctly" $ \beatlesState1 -> do
+          let secondStateIO = myStateSelectNewGiver (return beatlesState1)
+          do
+            secondState <- secondStateIO
+            length (giverHat secondState) `shouldBe` 3
