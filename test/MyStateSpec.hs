@@ -50,6 +50,7 @@ spec :: Spec
 spec = do
   drawPuck
   startNewYear
+  selectNewGiver
 
 drawPuck :: Spec
 drawPuck = do
@@ -72,3 +73,10 @@ startNewYear = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
       maybeGivee beatlesState1 `shouldNotBe` (Nothing :: Maybe Givee)
     it "should update maybeGiver" $ \beatlesState1 -> do
       maybeGiver beatlesState1 `shouldNotBe` (Nothing :: Maybe Giver)
+
+selectNewGiver :: Spec
+selectNewGiver = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
+  describe "myStateSelectNewGiver" $ do
+    it "select a new giver" $ \beatlesState1 -> do
+      let newDiscards = hatDiscardGivee "GeoHar" (discards beatlesState1)
+      length newDiscards `shouldBe` 1
