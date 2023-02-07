@@ -63,9 +63,8 @@ beatlesState1 =
 
 spec :: Spec
 spec = do
-  describe "MyState tests" $ do
-    simple
-    complex
+  simple
+  complex
 
 simple :: Spec
 simple = do
