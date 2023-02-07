@@ -3,7 +3,7 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
 --module MyState (RosterName, RosterYear, Quit, MyState (..), myStatePrintResults, myStateSelectNewGiver, myStateGiveeIsSuccess, myStateGiveeIsFailure, myStateUpdateAndRunNewYear, myStateDrawPuck, myStateStartNewYear, myStateAskContinue, myStateErrors, myStateJsonStringToState, myStateMain) where
-module MyState (RosterName, RosterYear, Quit, MyState (..), myStateDrawPuck, myStateStartNewYear, myStateSelectNewGiver) where
+module MyState (RosterName, RosterYear, Quit, MyState (..), myStateDrawPuck, myStateStartNewYear, myStateGiveeIsFailure, myStateGiveeIsSuccess, myStateSelectNewGiver) where
 
 --import qualified Control.Monad as CM
 import qualified Data.Aeson as A
@@ -74,6 +74,48 @@ myStateStartNewYear ioState = do
               quit = quit state
             }
 
+myStateGiveeIsFailure :: IO MyState -> IO MyState
+myStateGiveeIsFailure ioState = do
+  state <- ioState
+  let giveeToRemove :: Givee = DM.fromJust (maybeGivee state)
+      diminishedGiveeHat :: Hat = hatRemovePuck giveeToRemove (giveeHat state)
+   in do
+        newGivee <- myStateDrawPuck diminishedGiveeHat
+        return
+          state
+            { rosterName = rosterName state,
+              rosterYear = rosterYear state,
+              players = players state,
+              giftYear = giftYear state,
+              giveeHat = diminishedGiveeHat,
+              giverHat = giverHat state,
+              maybeGivee = newGivee,
+              maybeGiver = maybeGiver state,
+              discards = hatDiscardGivee giveeToRemove (discards state),
+              quit = quit state
+            }
+
+myStateGiveeIsSuccess :: IO MyState -> IO MyState
+myStateGiveeIsSuccess ioState = do
+  state <- ioState
+  let currentGiver :: Giver = DM.fromJust (maybeGiver state)
+      currentGivee :: Givee = DM.fromJust (maybeGivee state)
+      updatedGiveePlayers :: Players = playersUpdateMyGivee currentGiver currentGivee (giftYear state) (players state)
+   in do
+        return
+          state
+            { rosterName = rosterName state,
+              rosterYear = rosterYear state,
+              players = playersUpdateMyGiver currentGivee currentGiver (giftYear state) updatedGiveePlayers,
+              giftYear = giftYear state,
+              giveeHat = hatRemovePuck currentGivee (giveeHat state),
+              giverHat = giverHat state,
+              maybeGivee = Nothing,
+              maybeGiver = maybeGiver state,
+              discards = discards state,
+              quit = quit state
+            }
+
 myStateSelectNewGiver :: IO MyState -> IO MyState
 myStateSelectNewGiver ioState = do
   state <- ioState
@@ -97,48 +139,6 @@ myStateSelectNewGiver ioState = do
               quit = quit state
             }
 
---myStateGiveeIsSuccess :: IO MyState -> IO MyState
---myStateGiveeIsSuccess ioState = do
---  state <- ioState
---  let currentGiver :: Giver = DM.fromJust (maybeGiver state)
---      currentGivee :: Givee = DM.fromJust (maybeGivee state)
---      updatedGiveePlayers :: Players = playersUpdateMyGivee currentGiver currentGivee (giftYear state) (players state)
---   in do
---        return
---          state
---            { rosterName = rosterName state,
---              rosterYear = rosterYear state,
---              players = playersUpdateMyGiver currentGivee currentGiver (giftYear state) updatedGiveePlayers,
---              giftYear = giftYear state,
---              giveeHat = hatRemovePuck currentGivee (giveeHat state),
---              giverHat = giverHat state,
---              maybeGivee = Nothing,
---              maybeGiver = maybeGiver state,
---              discards = discards state,
---              quit = quit state
---            }
---
---myStateGiveeIsFailure :: IO MyState -> IO MyState
---myStateGiveeIsFailure ioState = do
---  state <- ioState
---  let giveeToRemove :: Givee = DM.fromJust (maybeGivee state)
---      diminishedGiveeHat :: Hat = hatRemovePuck giveeToRemove (giveeHat state)
---   in do
---        newGivee <- myStateDrawPuck diminishedGiveeHat
---        return
---          state
---            { rosterName = rosterName state,
---              rosterYear = rosterYear state,
---              players = players state,
---              giftYear = giftYear state,
---              giveeHat = diminishedGiveeHat,
---              giverHat = giverHat state,
---              maybeGivee = newGivee,
---              maybeGiver = maybeGiver state,
---              discards = hatDiscardGivee giveeToRemove (discards state),
---              quit = quit state
---            }
---
 --myStateUpdateAndRunNewYear :: IO MyState -> IO MyState
 --myStateUpdateAndRunNewYear ioState = do
 --  myStateUpdateAndRunNewYearLoop (myStateStartNewYear ioState)
