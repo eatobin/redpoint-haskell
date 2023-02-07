@@ -74,13 +74,9 @@ simple = do
     it "should NOT draw a puck from an empty hat" $ myStateDrawPuck Set.empty `shouldReturn` Nothing
 
 complex :: Spec
-complex = beforeAll (return "foo") $ do
-  describe "something" $ do
-    it "some behavior" $ \xs -> do
-      xs `shouldBe` "foo"
-
-    it "some other behavior" $ \xs -> do
-      xs `shouldBe` "foo"
-
-    it "last one" $ \gg -> do
-      gg `shouldBe` "foo"
+complex = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
+  describe "check the first two" $ do
+    it "check the name" $ \bs -> do
+      rosterName bs `shouldBe` "The Beatles"
+    it "check the year" $ \bs -> do
+      rosterYear bs `shouldBe` 2014
