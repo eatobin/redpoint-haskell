@@ -3,7 +3,7 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
 --module MyState (RosterName, RosterYear, Quit, MyState (..), myStatePrintResults, myStateSelectNewGiver, myStateGiveeIsSuccess, myStateGiveeIsFailure, myStateUpdateAndRunNewYear, myStateDrawPuck, myStateStartNewYear, myStateAskContinue, myStateErrors, myStateJsonStringToState, myStateMain) where
-module MyState (RosterName, RosterYear, Quit, MyState (..), myStateDrawPuck, myStateStartNewYear) where
+module MyState (RosterName, RosterYear, Quit, MyState (..), myStateDrawPuck, myStateStartNewYear, myStateSelectNewGiver) where
 
 --import qualified Control.Monad as CM
 import qualified Data.Aeson as A
@@ -11,7 +11,7 @@ import qualified Data.Aeson as A
 --import qualified Data.Char as DC
 --import qualified Data.List as List
 --import qualified Data.Map.Strict as Map
---import qualified Data.Maybe as DM
+import qualified Data.Maybe as DM
 import qualified Data.Set as Set
 import qualified GHC.Generics as G
 import Gift_History
@@ -74,29 +74,29 @@ myStateStartNewYear ioState = do
               quit = quit state
             }
 
---myStateSelectNewGiver :: IO MyState -> IO MyState
---myStateSelectNewGiver ioState = do
---  state <- ioState
---  let giverToRemove :: Giver = DM.fromJust (maybeGiver state)
---      replenishedGiveeHat :: Hat = hatReturnDiscards (discards state) (giveeHat state)
---      diminishedGiverHat :: Hat = hatRemovePuck giverToRemove (giverHat state)
---   in do
---        newGivee <- myStateDrawPuck replenishedGiveeHat
---        newGiver <- myStateDrawPuck diminishedGiverHat
---        return
---          state
---            { rosterName = rosterName state,
---              rosterYear = rosterYear state,
---              players = players state,
---              giftYear = giftYear state,
---              giveeHat = replenishedGiveeHat,
---              giverHat = diminishedGiverHat,
---              maybeGivee = newGivee,
---              maybeGiver = newGiver,
---              discards = Set.empty,
---              quit = quit state
---            }
---
+myStateSelectNewGiver :: IO MyState -> IO MyState
+myStateSelectNewGiver ioState = do
+  state <- ioState
+  let giverToRemove :: Giver = DM.fromJust (maybeGiver state)
+      replenishedGiveeHat :: Hat = hatReturnDiscards (discards state) (giveeHat state)
+      diminishedGiverHat :: Hat = hatRemovePuck giverToRemove (giverHat state)
+   in do
+        newGivee <- myStateDrawPuck replenishedGiveeHat
+        newGiver <- myStateDrawPuck diminishedGiverHat
+        return
+          state
+            { rosterName = rosterName state,
+              rosterYear = rosterYear state,
+              players = players state,
+              giftYear = giftYear state,
+              giveeHat = replenishedGiveeHat,
+              giverHat = diminishedGiverHat,
+              maybeGivee = newGivee,
+              maybeGiver = newGiver,
+              discards = Set.empty,
+              quit = quit state
+            }
+
 --myStateGiveeIsSuccess :: IO MyState -> IO MyState
 --myStateGiveeIsSuccess ioState = do
 --  state <- ioState
