@@ -3,7 +3,7 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
 --module MyState (RosterName, RosterYear, Quit, MyState (..), myStatePrintResults, myStateSelectNewGiver, myStateGiveeIsSuccess, myStateGiveeIsFailure, myStateUpdateAndRunNewYear, myStateDrawPuck, myStateStartNewYear, myStateAskContinue, myStateErrors, myStateJsonStringToState, myStateMain) where
-module MyState (RosterName, RosterYear, Quit, MyState (..), myStateDrawPuck, myStateStartNewYear, myStateGiveeIsFailure, myStateGiveeIsSuccess, myStateSelectNewGiver, myStateErrors, myStatePrintResults) where
+module MyState (RosterName, RosterYear, Quit, MyState (..), myStateDrawPuck, myStateStartNewYear, myStateGiveeIsFailure, myStateGiveeIsSuccess, myStateSelectNewGiver, myStateErrors, myStatePrintResults, myStateAskContinue) where
 
 import qualified Control.Monad as CM
 import qualified Data.Aeson as A
@@ -19,7 +19,7 @@ import Gift_Pair
 import Hat
 import Players
 --import Rules
---import qualified System.IO as SIO
+import qualified System.IO as SIO
 import qualified System.Random as Ran
 
 --import Text.RawString.QQ (r)
@@ -184,6 +184,14 @@ myStatePrintResults ioState = do
     putStrLn "If not... call me and I'll explain!\n"
   return state
 
+myStateAskContinue :: IO MyState -> IO MyState
+myStateAskContinue ioState = do
+  state <- ioState
+  putStr "\nContinue? ('q' to quit): "
+  SIO.hFlush SIO.stdout
+  reply <- getLine
+  return state {quit = reply}
+
 --myStateUpdateAndRunNewYear :: IO MyState -> IO MyState
 --myStateUpdateAndRunNewYear ioState = do
 --  myStateUpdateAndRunNewYearLoop (myStateStartNewYear ioState)
@@ -207,13 +215,7 @@ myStatePrintResults ioState = do
 --
 
 --
---myStateAskContinue :: IO MyState -> IO MyState
---myStateAskContinue ioState = do
---  state <- ioState
---  putStr "\nContinue? ('q' to quit): "
---  SIO.hFlush SIO.stdout
---  reply <- getLine
---  return state {quit = reply}
+
 --
 --myStateJsonStringToState :: JsonString -> Maybe MyState
 --myStateJsonStringToState jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe MyState
