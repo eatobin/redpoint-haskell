@@ -3,7 +3,7 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
 --module MyState (RosterName, RosterYear, Quit, MyState (..), myStatePrintResults, myStateSelectNewGiver, myStateGiveeIsSuccess, myStateGiveeIsFailure, myStateUpdateAndRunNewYear, myStateDrawPuck, myStateStartNewYear, myStateAskContinue, myStateErrors, myStateJsonStringToState, myStateMain) where
-module MyState (RosterName, RosterYear, Quit, MyState (..), myStateDrawPuck, myStateStartNewYear, myStateGiveeIsFailure, myStateGiveeIsSuccess, myStateSelectNewGiver, myStateErrors, myStatePrintResults, myStateAskContinue, myStateJsonStringToMyState) where
+module MyState (RosterName, RosterYear, Quit, MyState (..), myStateDrawPuck, myStateStartNewYear, myStateGiveeIsFailure, myStateGiveeIsSuccess, myStateSelectNewGiver, myStateErrors, myStatePrintResults, myStateAskContinue, myStateJsonStringToMyState, myStateUpdateAndRunNewYear) where
 
 import qualified Control.Monad as CM
 import qualified Data.Aeson as A
@@ -195,24 +195,9 @@ myStateAskContinue ioState = do
 myStateJsonStringToMyState :: JsonString -> Maybe MyState
 myStateJsonStringToMyState jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe MyState
 
---myStateUpdateAndRunNewYear :: IO MyState -> IO MyState
---myStateUpdateAndRunNewYear ioState = do
---  myStateUpdateAndRunNewYearLoop (myStateStartNewYear ioState)
---
---myStateLoop :: IO MyState -> IO MyState
---myStateLoop alteredStateIO = do
---  alteredState <- alteredStateIO
---  if DM.isJust (maybeGiver alteredState)
---    then do
---      if DM.isJust (maybeGivee alteredState)
---        then do
---          if rulesGiveeNotSelf (DM.fromJust (maybeGiver alteredState)) (DM.fromJust (maybeGivee alteredState))
---            && rulesGiveeNotReciprocal (DM.fromJust (maybeGiver alteredState)) (DM.fromJust (maybeGivee alteredState)) (players alteredState) (giftYear alteredState)
---            && rulesGiveeNotRepeat (DM.fromJust (maybeGiver alteredState)) (DM.fromJust (maybeGivee alteredState)) (giftYear alteredState) (players alteredState)
---            then myStateLoop (myStateGiveeIsSuccess (return alteredState))
---            else myStateLoop (myStateGiveeIsFailure (return alteredState))
---        else myStateLoop (myStateSelectNewGiver (return alteredState))
---    else return alteredState
+myStateUpdateAndRunNewYear :: IO MyState -> IO MyState
+myStateUpdateAndRunNewYear ioState = do
+  myStateLoop (myStateStartNewYear ioState)
 
 myStateLoop :: IO MyState -> IO MyState
 myStateLoop alteredStateIO = do
