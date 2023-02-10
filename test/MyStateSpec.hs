@@ -121,6 +121,7 @@ selectNewGiver = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
           Set.notMember goodGivee (giveeHat beatlesState4) `shouldBe` True
           Set.notMember goodGiver (giverHat beatlesState4) `shouldBe` True
           DM.fromJust (maybeGivee beatlesState4) `shouldNotBe` goodGivee
+          DM.fromJust (maybeGiver beatlesState4) `shouldNotBe` goodGiver
 
 --        playersGetMyGivee goodGiver (players beatlesState2) (giftYear beatlesState2) `shouldBe` goodGivee
 --        playersGetMyGiver goodGivee (players beatlesState2) (giftYear beatlesState2) `shouldBe` goodGiver
