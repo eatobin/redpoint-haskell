@@ -38,10 +38,9 @@ spec = do
 
   describe "rulesGiveeNotRepeat" $ do
     it "A Player should not repeat a Givee for four years - Pass1" $ rulesGiveeNotRepeat "RinSta" "DonDuc" 2 beatlesPlus6 `shouldBe` True
-
---    it "A Player should not repeat a Givee for four years - Fail2" $ rulesGiveeNotRepeat "RinSta" "GeoHar" 2 beatlesPlus6 `shouldBe` False
---    it "A Player should not repeat a Givee for four years - Pass3" $ rulesGiveeNotRepeat "RinSta" "KarLav" 2 beatlesPlus6 `shouldBe` True
---    it "A Player should not repeat a Givee for four years - Pass4" $ rulesGiveeNotRepeat "RinSta" "JohLen" 5 beatlesPlus6 `shouldBe` True
+    it "A Player should not repeat a Givee for four years - Pass2" $ rulesGiveeNotRepeat "RinSta" "PauMcc" 2 beatlesPlus6 `shouldBe` True
+    it "A Player should not repeat a Givee for four years - Fail3" $ rulesGiveeNotRepeat "RinSta" "EriTob" 2 beatlesPlus6 `shouldBe` False
+    it "A Player should not repeat a Givee for four years - Fail4" $ rulesGiveeNotRepeat "RinSta" "GeoHar" 2 beatlesPlus6 `shouldBe` False
 --    it "A Player should not repeat a Givee for four years - Pass5" $ rulesGiveeNotRepeat "RinSta" "GeoHar" 5 beatlesPlus6 `shouldBe` True
 --    it "A Player should not repeat a Givee for four years - Fail6" $ rulesGiveeNotRepeat "RinSta" "PauMcc" 5 beatlesPlus6 `shouldBe` False
 --    it "A Player should not repeat a Givee for four years - Fail7" $ rulesGiveeNotRepeat "RinSta" "EriTob" 5 beatlesPlus6 `shouldBe` False
