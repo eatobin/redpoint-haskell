@@ -99,7 +99,7 @@ giveeIsSuccess = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
         beatlesState2 <- beatlesState2IO
         playersGetMyGivee goodGiver (players beatlesState2) (giftYear beatlesState2) `shouldBe` goodGivee
         playersGetMyGiver goodGivee (players beatlesState2) (giftYear beatlesState2) `shouldBe` goodGiver
-
+        Set.notMember goodGivee (giveeHat beatlesState2) `shouldBe` True
 --        Set.notMember goodGivee (giveeHat beatlesState2) `shouldBe` True
 --        DM.fromJust (maybeGivee beatlesState2) `shouldNotBe` goodGivee
 --        Set.member goodGivee (discards beatlesState2) `shouldBe` True
