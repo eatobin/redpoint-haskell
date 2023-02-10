@@ -18,7 +18,7 @@ import Gift_History
 import Gift_Pair
 import Hat
 import Players
---import Rules
+import Rules
 import qualified System.IO as SIO
 import qualified System.Random as Ran
 
@@ -199,9 +199,9 @@ myStateJsonStringToMyState jsonString = A.decodeStrict (BS.pack jsonString) :: M
 --myStateUpdateAndRunNewYear ioState = do
 --  myStateUpdateAndRunNewYearLoop (myStateStartNewYear ioState)
 --
---myStateUpdateAndRunNewYearLoop :: IO MyState -> IO MyState
---myStateUpdateAndRunNewYearLoop ioState = do
---  alteredState <- ioState
+--myStateLoop :: IO MyState -> IO MyState
+--myStateLoop alteredStateIO = do
+--  alteredState <- alteredStateIO
 --  if DM.isJust (maybeGiver alteredState)
 --    then do
 --      if DM.isJust (maybeGivee alteredState)
@@ -209,17 +209,51 @@ myStateJsonStringToMyState jsonString = A.decodeStrict (BS.pack jsonString) :: M
 --          if rulesGiveeNotSelf (DM.fromJust (maybeGiver alteredState)) (DM.fromJust (maybeGivee alteredState))
 --            && rulesGiveeNotReciprocal (DM.fromJust (maybeGiver alteredState)) (DM.fromJust (maybeGivee alteredState)) (players alteredState) (giftYear alteredState)
 --            && rulesGiveeNotRepeat (DM.fromJust (maybeGiver alteredState)) (DM.fromJust (maybeGivee alteredState)) (giftYear alteredState) (players alteredState)
---            then myStateUpdateAndRunNewYearLoop (myStateGiveeIsSuccess (return alteredState))
---            else myStateUpdateAndRunNewYearLoop (myStateGiveeIsFailure (return alteredState))
---        else myStateUpdateAndRunNewYearLoop (myStateSelectNewGiver (return alteredState))
+--            then myStateLoop (myStateGiveeIsSuccess (return alteredState))
+--            else myStateLoop (myStateGiveeIsFailure (return alteredState))
+--        else myStateLoop (myStateSelectNewGiver (return alteredState))
 --    else return alteredState
---
 
---
+myStateLoop :: IO MyState -> IO MyState
+myStateLoop alteredStateIO = do
+  alteredState <- alteredStateIO
+  if DM.isJust (maybeGiver alteredState)
+    then
+      if DM.isJust (maybeGivee alteredState)
+        then
+          if rulesGiveeNotSelf (DM.fromJust (maybeGiver alteredState)) (DM.fromJust (maybeGivee alteredState)) && rulesGiveeNotReciprocal (DM.fromJust (maybeGiver alteredState)) (DM.fromJust (maybeGivee alteredState)) (players alteredState) (giftYear alteredState) && rulesGiveeNotRepeat (DM.fromJust (maybeGiver alteredState)) (DM.fromJust (maybeGivee alteredState)) (giftYear alteredState) (players alteredState)
+            then myStateLoop (myStateGiveeIsSuccess (return alteredState))
+            else myStateLoop (myStateGiveeIsFailure (return alteredState))
+        else myStateLoop (myStateSelectNewGiver (return alteredState))
+    else return alteredState
 
---
+--if DM.isJust (maybeGiver alteredState)
+--   then
+--     if DM.isJust (maybeGivee alteredState)
+--        then
+--          if rulesGiveeNotSelf (DM.fromJust (maybeGiver alteredState)) (DM.fromJust (maybeGivee alteredState)) && rulesGiveeNotReciprocal (DM.fromJust (maybeGiver alteredState)) (DM.fromJust (maybeGivee alteredState)) (players alteredState) (giftYear alteredState) && rulesGiveeNotRepeat (DM.fromJust (maybeGiver alteredState)) (DM.fromJust (maybeGivee alteredState)) (giftYear alteredState) (players alteredState)
+--             then
+--               myStateLoop (myStateGiveeIsSuccess (return alteredState))
+--             else
+--               myStateLoop (myStateGiveeIsFailure (return alteredState))
+--        else
+--          myStateLoop (myStateSelectNewGiver (return alteredState))
+--   else
+--     return alteredState
 
---
+--if foo1
+--   then
+--     if foo2
+--        then
+--          if foo3
+--             then
+--               thing3
+--             else
+--               otherThing3
+--        else
+--          otherThing2
+--   else
+--     otherThing1
 
 --myStateLoop :: IO MyState -> IO ()
 --myStateLoop nextIOState = do
