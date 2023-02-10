@@ -23,6 +23,15 @@ players0 =
       ("RinSta", Player {playerName = "Ringo Starr", giftHistory = Vec.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}]})
     ]
 
+playersWeird :: Players
+playersWeird =
+  Map.fromList
+    [ ("GeoHar", Player {playerName = "geoWhoops", giftHistory = Vec.fromList [GiftPair {givee = "GeoHar", giver = "PauMcc"}]}),
+      ("JohLen", Player {playerName = "John Lennon", giftHistory = Vec.fromList [GiftPair {givee = "PauMcc", giver = "RinSta"}]}),
+      ("PauMcc", Player {playerName = "pauYikes", giftHistory = Vec.fromList [GiftPair {givee = "GeoHar", giver = "PauMcc"}]}),
+      ("RinSta", Player {playerName = "Ringo Starr", giftHistory = Vec.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}]})
+    ]
+
 rinStaPlus :: Player
 rinStaPlus =
   Player {playerName = "Ringo Starr", giftHistory = Vec.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}, GiftPair {givee = "RinSta", giver = "RinSta"}]}
@@ -42,6 +51,21 @@ beatlesState0 =
       quit = "n"
     }
 
+weirdState :: MyState
+weirdState =
+  MyState
+    { rosterName = "The Beatles",
+      rosterYear = 2014,
+      players = playersWeird,
+      giftYear = 0,
+      giveeHat = Set.empty,
+      giverHat = Set.empty,
+      maybeGivee = Nothing,
+      maybeGiver = Nothing,
+      discards = Set.empty,
+      quit = "n"
+    }
+
 spec :: Spec
 spec = do
   drawPuck
@@ -49,6 +73,7 @@ spec = do
   giveeIsFailure
   giveeIsSuccess
   selectNewGiver
+  errors
 
 drawPuck :: Spec
 drawPuck = do
@@ -118,3 +143,9 @@ selectNewGiver = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
           DM.fromJust (maybeGivee beatlesState4) `shouldNotBe` goodGivee
           DM.fromJust (maybeGiver beatlesState4) `shouldNotBe` goodGiver
           null (discards beatlesState4) `shouldBe` True
+
+errors :: Spec
+errors = beforeAll (myStateErrors (return weirdState)) $ do
+  describe "myStateErrors" $ do
+    it "report player errors" $ \playerErrors -> do
+      playerErrors `shouldBe` ["GeoHar", "PauMcc"]

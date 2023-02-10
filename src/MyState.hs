@@ -3,14 +3,14 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
 --module MyState (RosterName, RosterYear, Quit, MyState (..), myStatePrintResults, myStateSelectNewGiver, myStateGiveeIsSuccess, myStateGiveeIsFailure, myStateUpdateAndRunNewYear, myStateDrawPuck, myStateStartNewYear, myStateAskContinue, myStateErrors, myStateJsonStringToState, myStateMain) where
-module MyState (RosterName, RosterYear, Quit, MyState (..), myStateDrawPuck, myStateStartNewYear, myStateGiveeIsFailure, myStateGiveeIsSuccess, myStateSelectNewGiver) where
+module MyState (RosterName, RosterYear, Quit, MyState (..), myStateDrawPuck, myStateStartNewYear, myStateGiveeIsFailure, myStateGiveeIsSuccess, myStateSelectNewGiver, myStateErrors) where
 
 --import qualified Control.Monad as CM
 import qualified Data.Aeson as A
 --import qualified Data.ByteString.Char8 as BS
 --import qualified Data.Char as DC
---import qualified Data.List as List
---import qualified Data.Map.Strict as Map
+import qualified Data.List as List
+import qualified Data.Map.Strict as Map
 import qualified Data.Maybe as DM
 import qualified Data.Set as Set
 import qualified GHC.Generics as G
@@ -139,6 +139,32 @@ myStateSelectNewGiver ioState = do
               quit = quit state
             }
 
+myStateErrors :: IO MyState -> IO [PlayerKey]
+myStateErrors ioState = do
+  state <- ioState
+  let playerKeys :: [PlayerKey] = List.sort (Map.keys (players state))
+      playerErrors :: [PlayerKey] =
+        [ playerKeyMe
+          | playerKeyMe <- playerKeys,
+            let myGiverKey = playersGetMyGiver playerKeyMe (players state) (giftYear state),
+            let myGiveeKey = playersGetMyGivee playerKeyMe (players state) (giftYear state),
+            (playerKeyMe == myGiverKey) || (playerKeyMe == myGiveeKey)
+        ]
+   in return (List.sort playerErrors)
+
+--mainErrors :: IO State -> IO [PlayerKey]
+--mainErrors ioState = do
+--  state <- ioState
+--  let playerKeys :: [PlayerKey] = Map.keys (players state)
+--      playerErrors :: [PlayerKey] =
+--        [ playerKeyMe
+--          | playerKeyMe <- playerKeys,
+--            let myGiverKey = playersGetMyGiver playerKeyMe (players state) (giftYear state),
+--            let myGiveeKey = playersGetMyGivee playerKeyMe (players state) (giftYear state),
+--            (playerKeyMe == myGiverKey) || (playerKeyMe == myGiveeKey)
+--        ]
+--   in return (List.sort playerErrors)
+
 --myStateUpdateAndRunNewYear :: IO MyState -> IO MyState
 --myStateUpdateAndRunNewYear ioState = do
 --  myStateUpdateAndRunNewYearLoop (myStateStartNewYear ioState)
@@ -158,17 +184,7 @@ myStateSelectNewGiver ioState = do
 --        else myStateUpdateAndRunNewYearLoop (myStateSelectNewGiver (return alteredState))
 --    else return alteredState
 --
---myStateErrors :: IO MyState -> IO [PlayerKey]
---myStateErrors ioState = do
---  state <- ioState
---  let playerKeys :: [PlayerKey] = List.sort (Map.keys (players state))
---      playerErrors :: [PlayerKey] =
---        [ playerKeyMe ++ "-" ++ myGiveeKey ++ "-" ++ myGiverKey
---          | playerKeyMe <- playerKeys,
---            let myGiverKey = playersGetMyGiver playerKeyMe (players state) (giftYear state),
---            let myGiveeKey = playersGetMyGivee playerKeyMe (players state) (giftYear state)
---        ]
---   in return (List.sort playerErrors)
+
 --
 --myStatePrintResults :: IO MyState -> IO MyState
 --myStatePrintResults ioState = do
