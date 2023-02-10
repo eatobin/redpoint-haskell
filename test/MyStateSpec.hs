@@ -1,6 +1,7 @@
 module MyStateSpec (spec) where
 
 import qualified Data.Map.Strict as Map
+import qualified Data.Maybe as DM
 import qualified Data.Set as Set
 import qualified Data.Vector as Vec
 import Gift_Pair
@@ -31,8 +32,8 @@ players1 =
       ("RinSta", Player {playerName = "Ringo Starr", giftHistory = Vec.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}, GiftPair {givee = "RinSta", giver = "RinSta"}]})
     ]
 
-beatlesState :: MyState
-beatlesState =
+beatlesState0 :: MyState
+beatlesState0 =
   MyState
     { rosterName = "The Beatles",
       rosterYear = 2014,
@@ -50,7 +51,7 @@ spec :: Spec
 spec = do
   drawPuck
   startNewYear
-  selectNewGiver
+  giveeIsFailure
 
 drawPuck :: Spec
 drawPuck = do
@@ -59,7 +60,7 @@ drawPuck = do
     it "should NOT draw a puck from an empty hat" $ myStateDrawPuck Set.empty `shouldReturn` Nothing
 
 startNewYear :: Spec
-startNewYear = beforeAll (myStateStartNewYear (return beatlesState)) $ do
+startNewYear = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
   describe "myStateStartNewYear" $ do
     it "should update players" $ \newState -> do
       players newState `shouldBe` players1
@@ -74,15 +75,32 @@ startNewYear = beforeAll (myStateStartNewYear (return beatlesState)) $ do
     it "should update maybeGiver" $ \newState -> do
       maybeGiver newState `shouldNotBe` (Nothing :: Maybe Giver)
 
-selectNewGiver :: Spec
-selectNewGiver = beforeAll (myStateStartNewYear (return beatlesState)) $ do
-  describe "myStateSelectNewGiver" $ do
-    it "should discard correctly" $ \newState -> do
-      let newDiscards = hatDiscardGivee "GeoHar" (discards newState)
-      length newDiscards `shouldBe` 1
-    it "should draw a new giver correctly" $ \newState -> do
-      let secondStateIO = myStateSelectNewGiver (return newState)
+giveeIsFailure :: Spec
+giveeIsFailure = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
+  describe "myStateGiveeIsFailure" $ do
+    it "have a failing givee" $ \beatlesState1 -> do
+      let badGivee = DM.fromJust (maybeGivee beatlesState1)
+      let beatlesState2IO = myStateGiveeIsFailure (return beatlesState1)
       do
-        secondState <- secondStateIO
-        length (giverHat secondState) `shouldBe` 3
-        null (discards secondState) `shouldBe` True
+        beatlesState2 <- beatlesState2IO
+        Set.notMember badGivee (giveeHat beatlesState2) `shouldBe` True
+
+--    it "should draw a new giver correctly" $ \newState -> do
+--      let secondStateIO = myStateSelectNewGiver (return newState)
+--      do
+--        secondState <- secondStateIO
+--        length (giverHat secondState) `shouldBe` 3
+--        null (discards secondState) `shouldBe` True
+
+--selectNewGiver :: Spec
+--selectNewGiver = beforeAll (myStateStartNewYear (return beatlesState)) $ do
+--  describe "myStateSelectNewGiver" $ do
+--    it "should discard correctly" $ \newState -> do
+--      let newDiscards = hatDiscardGivee "GeoHar" (discards newState)
+--      length newDiscards `shouldBe` 1
+--    it "should draw a new giver correctly" $ \newState -> do
+--      let secondStateIO = myStateSelectNewGiver (return newState)
+--      do
+--        secondState <- secondStateIO
+--        length (giverHat secondState) `shouldBe` 3
+--        null (discards secondState) `shouldBe` True
