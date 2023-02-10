@@ -152,19 +152,6 @@ myStateErrors ioState = do
         ]
    in return (List.sort playerErrors)
 
---mainErrors :: IO State -> IO [PlayerKey]
---mainErrors ioState = do
---  state <- ioState
---  let playerKeys :: [PlayerKey] = Map.keys (players state)
---      playerErrors :: [PlayerKey] =
---        [ playerKeyMe
---          | playerKeyMe <- playerKeys,
---            let myGiverKey = playersGetMyGiver playerKeyMe (players state) (giftYear state),
---            let myGiveeKey = playersGetMyGivee playerKeyMe (players state) (giftYear state),
---            (playerKeyMe == myGiverKey) || (playerKeyMe == myGiveeKey)
---        ]
---   in return (List.sort playerErrors)
-
 --myStateUpdateAndRunNewYear :: IO MyState -> IO MyState
 --myStateUpdateAndRunNewYear ioState = do
 --  myStateUpdateAndRunNewYearLoop (myStateStartNewYear ioState)
