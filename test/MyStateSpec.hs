@@ -154,4 +154,5 @@ errors = beforeAll (myStateErrors (return weirdState)) $ do
 printResults :: Spec
 printResults = do
   describe "myStatePrintResults" $ do
-    it "should print itself and return itself" $ myStatePrintResults (return beatlesState0) `shouldReturn` beatlesState0
+    it "should print itself and return itself - beatlesState0" $ myStatePrintResults (return beatlesState0) `shouldReturn` beatlesState0
+    it "should print itself and return itself - weirdState" $ myStatePrintResults (return weirdState) `shouldReturn` weirdState
