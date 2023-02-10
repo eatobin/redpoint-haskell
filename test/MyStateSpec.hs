@@ -105,8 +105,9 @@ giveeIsSuccess = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
 
 selectNewGiver :: Spec
 selectNewGiver = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
-  describe "myStateGiveeIsSuccess" $ do
-    it "have a successful givee" $ \beatlesState1 -> do
+  describe "myStateSelectNewGiver" $ do
+    it "select a new giver" $ \beatlesState1 -> do
+      let badGivee = DM.fromJust (maybeGivee beatlesState1)
       let goodGivee = DM.fromJust (maybeGivee beatlesState1)
       let goodGiver = DM.fromJust (maybeGiver beatlesState1)
       let beatlesState2IO = myStateGiveeIsSuccess (return beatlesState1)
