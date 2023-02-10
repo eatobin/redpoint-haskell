@@ -36,12 +36,13 @@ spec = do
     it "A Player should not give to its reciprocal - Pass" $ rulesGiveeNotReciprocal "RinSta" "GeoHar" beatlesPlusPM 0 `shouldBe` True
     it "A Player should not give to its reciprocal - Fail" $ rulesGiveeNotReciprocal "RinSta" "EriTob" beatlesPlusPM 0 `shouldBe` False
 
---  describe "rulesGiveeNotRepeat" $ do
---    it "A Player should not repeat a Givee for three years - Fail1" $ rulesGiveeNotRepeat "RinSta" "JohLen" 2 playersP4 `shouldBe` False
---    it "A Player should not repeat a Givee for three years - Fail2" $ rulesGiveeNotRepeat "RinSta" "GeoHar" 2 playersP4 `shouldBe` False
---    it "A Player should not repeat a Givee for three years - Pass3" $ rulesGiveeNotRepeat "RinSta" "KarLav" 2 playersP4 `shouldBe` True
---    it "A Player should not repeat a Givee for three years - Pass4" $ rulesGiveeNotRepeat "RinSta" "JohLen" 5 playersP4 `shouldBe` True
---    it "A Player should not repeat a Givee for three years - Pass5" $ rulesGiveeNotRepeat "RinSta" "GeoHar" 5 playersP4 `shouldBe` True
---    it "A Player should not repeat a Givee for three years - Fail6" $ rulesGiveeNotRepeat "RinSta" "PauMcc" 5 playersP4 `shouldBe` False
---    it "A Player should not repeat a Givee for three years - Fail7" $ rulesGiveeNotRepeat "RinSta" "EriTob" 5 playersP4 `shouldBe` False
---    it "A Player should not repeat a Givee for three years - Fail8" $ rulesGiveeNotRepeat "RinSta" "KarLav" 5 playersP4 `shouldBe` False
+  describe "rulesGiveeNotRepeat" $ do
+    it "A Player should not repeat a Givee for four years - Pass1" $ rulesGiveeNotRepeat "RinSta" "DonDuc" 2 beatlesPlus6 `shouldBe` True
+
+--    it "A Player should not repeat a Givee for four years - Fail2" $ rulesGiveeNotRepeat "RinSta" "GeoHar" 2 beatlesPlus6 `shouldBe` False
+--    it "A Player should not repeat a Givee for four years - Pass3" $ rulesGiveeNotRepeat "RinSta" "KarLav" 2 beatlesPlus6 `shouldBe` True
+--    it "A Player should not repeat a Givee for four years - Pass4" $ rulesGiveeNotRepeat "RinSta" "JohLen" 5 beatlesPlus6 `shouldBe` True
+--    it "A Player should not repeat a Givee for four years - Pass5" $ rulesGiveeNotRepeat "RinSta" "GeoHar" 5 beatlesPlus6 `shouldBe` True
+--    it "A Player should not repeat a Givee for four years - Fail6" $ rulesGiveeNotRepeat "RinSta" "PauMcc" 5 beatlesPlus6 `shouldBe` False
+--    it "A Player should not repeat a Givee for four years - Fail7" $ rulesGiveeNotRepeat "RinSta" "EriTob" 5 beatlesPlus6 `shouldBe` False
+--    it "A Player should not repeat a Givee for four years - Fail8" $ rulesGiveeNotRepeat "RinSta" "KarLav" 5 beatlesPlus6 `shouldBe` False
