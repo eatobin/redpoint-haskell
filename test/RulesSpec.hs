@@ -44,4 +44,4 @@ spec = do
     it "A Player should not repeat a Givee for four years - Fail5" $ rulesGiveeNotRepeat "RinSta" "MicMou" 7 beatlesPlus6 `shouldBe` False
     it "A Player should not repeat a Givee for four years - Pass6" $ rulesGiveeNotRepeat "RinSta" "MicMou" 6 beatlesPlus6 `shouldBe` True
     it "A Player should not repeat a Givee for four years - Fail7" $ rulesGiveeNotRepeat "RinSta" "PauMcc" 6 beatlesPlus6 `shouldBe` False
---    it "A Player should not repeat a Givee for four years - Fail8" $ rulesGiveeNotRepeat "RinSta" "KarLav" 5 beatlesPlus6 `shouldBe` False
+    it "A Player should not repeat a Givee for four years - Pass8" $ rulesGiveeNotRepeat "RinSta" "GeoHar" 6 beatlesPlus6 `shouldBe` True
