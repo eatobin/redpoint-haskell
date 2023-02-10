@@ -56,12 +56,13 @@ beatlesPlusPM =
 spec :: Spec
 spec = do
   describe "rulesGiveeNotSelf" $ do
-    it "A Player should not give to itself" $ rulesGiveeNotSelf "RinSta" "GeoHar" `shouldBe` True
-    it "A Player should not give to itself - 2" $ rulesGiveeNotSelf "RinSta" "RinSta" `shouldBe` False
+    it "A Player should not give to itself - Pass" $ rulesGiveeNotSelf "RinSta" "GeoHar" `shouldBe` True
+    it "A Player should not give to itself  - Fail" $ rulesGiveeNotSelf "RinSta" "RinSta" `shouldBe` False
 
---  describe "rulesGiveeNotReciprocal" $ do
---    it "A Player should not give to its reciprocal - Pass" $ rulesGiveeNotReciprocal "JohLen" "GeoHar" players1 0 `shouldBe` True
---    it "A Player should not give to its reciprocal - Fail" $ rulesGiveeNotReciprocal "JohLen" "GeoHar" reciprocalPlayers 0 `shouldBe` False
+  describe "rulesGiveeNotReciprocal" $ do
+    it "A Player should not give to its reciprocal - Pass" $ rulesGiveeNotReciprocal "RinSta" "GeoHar" beatlesPlusPM 0 `shouldBe` True
+    it "A Player should not give to its reciprocal - Fail" $ rulesGiveeNotReciprocal "RinSta" "EriTob" beatlesPlusPM 0 `shouldBe` False
+
 --  describe "rulesGiveeNotRepeat" $ do
 --    it "A Player should not repeat a Givee for three years - Fail1" $ rulesGiveeNotRepeat "RinSta" "JohLen" 2 playersP4 `shouldBe` False
 --    it "A Player should not repeat a Givee for three years - Fail2" $ rulesGiveeNotRepeat "RinSta" "GeoHar" 2 playersP4 `shouldBe` False
