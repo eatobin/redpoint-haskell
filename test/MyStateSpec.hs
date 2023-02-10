@@ -52,6 +52,7 @@ spec = do
   drawPuck
   startNewYear
   giveeIsFailure
+  giveeIsSuccess
 
 drawPuck :: Spec
 drawPuck = do
@@ -79,6 +80,18 @@ giveeIsFailure :: Spec
 giveeIsFailure = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
   describe "myStateGiveeIsFailure" $ do
     it "should have a failing givee" $ \beatlesState1 -> do
+      let badGivee = DM.fromJust (maybeGivee beatlesState1)
+      let beatlesState2IO = myStateGiveeIsFailure (return beatlesState1)
+      do
+        beatlesState2 <- beatlesState2IO
+        Set.notMember badGivee (giveeHat beatlesState2) `shouldBe` True
+        DM.fromJust (maybeGivee beatlesState2) `shouldNotBe` badGivee
+        Set.member badGivee (discards beatlesState2) `shouldBe` True
+
+giveeIsSuccess :: Spec
+giveeIsSuccess = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
+  describe "myStateGiveeIsSuccess" $ do
+    it "have a successful givee" $ \beatlesState1 -> do
       let badGivee = DM.fromJust (maybeGivee beatlesState1)
       let beatlesState2IO = myStateGiveeIsFailure (return beatlesState1)
       do
