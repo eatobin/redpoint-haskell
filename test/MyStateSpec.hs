@@ -1,3 +1,5 @@
+{-# LANGUAGE QuasiQuotes #-}
+
 module MyStateSpec (spec) where
 
 import qualified Data.Map.Strict as Map
