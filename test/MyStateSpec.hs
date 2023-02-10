@@ -108,12 +108,18 @@ selectNewGiver = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
   describe "myStateSelectNewGiver" $ do
     it "select a new giver" $ \beatlesState1 -> do
       let badGivee = DM.fromJust (maybeGivee beatlesState1)
-      let goodGivee = DM.fromJust (maybeGivee beatlesState1)
-      let goodGiver = DM.fromJust (maybeGiver beatlesState1)
-      let beatlesState2IO = myStateGiveeIsSuccess (return beatlesState1)
+      let beatlesState2IO = myStateGiveeIsFailure (return beatlesState1)
       do
         beatlesState2 <- beatlesState2IO
-        playersGetMyGivee goodGiver (players beatlesState2) (giftYear beatlesState2) `shouldBe` goodGivee
-        playersGetMyGiver goodGivee (players beatlesState2) (giftYear beatlesState2) `shouldBe` goodGiver
-        Set.notMember goodGivee (giveeHat beatlesState2) `shouldBe` True
-        DM.isNothing (maybeGivee beatlesState2) `shouldBe` True
+        let goodGivee = DM.fromJust (maybeGivee beatlesState2)
+        let goodGiver = DM.fromJust (maybeGiver beatlesState2)
+        let beatlesState3IO = myStateGiveeIsSuccess (return beatlesState2)
+        let beatlesState4IO = myStateSelectNewGiver beatlesState3IO
+        do
+          beatlesState4 <- beatlesState4IO
+          Set.member badGivee (giveeHat beatlesState4) `shouldBe` True
+
+--        playersGetMyGivee goodGiver (players beatlesState2) (giftYear beatlesState2) `shouldBe` goodGivee
+--        playersGetMyGiver goodGivee (players beatlesState2) (giftYear beatlesState2) `shouldBe` goodGiver
+--        Set.notMember goodGivee (giveeHat beatlesState2) `shouldBe` True
+--        DM.isNothing (maybeGivee beatlesState2) `shouldBe` True
