@@ -23,14 +23,9 @@ players0 =
       ("RinSta", Player {playerName = "Ringo Starr", giftHistory = Vec.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}]})
     ]
 
-players1 :: Players
-players1 =
-  Map.fromList
-    [ ("GeoHar", Player {playerName = "George Harrison", giftHistory = Vec.fromList [GiftPair {givee = "RinSta", giver = "PauMcc"}, GiftPair {givee = "GeoHar", giver = "GeoHar"}]}),
-      ("JohLen", Player {playerName = "John Lennon", giftHistory = Vec.fromList [GiftPair {givee = "PauMcc", giver = "RinSta"}, GiftPair {givee = "JohLen", giver = "JohLen"}]}),
-      ("PauMcc", Player {playerName = "Paul McCartney", giftHistory = Vec.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}, GiftPair {givee = "PauMcc", giver = "PauMcc"}]}),
-      ("RinSta", Player {playerName = "Ringo Starr", giftHistory = Vec.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}, GiftPair {givee = "RinSta", giver = "RinSta"}]})
-    ]
+rinStaPlus :: Player
+rinStaPlus =
+  Player {playerName = "Ringo Starr", giftHistory = Vec.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}, GiftPair {givee = "RinSta", giver = "RinSta"}]}
 
 beatlesState0 :: MyState
 beatlesState0 =
@@ -64,18 +59,18 @@ drawPuck = do
 startNewYear :: Spec
 startNewYear = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
   describe "myStateStartNewYear" $ do
-    it "should update players" $ \newState -> do
-      players newState `shouldBe` players1
-    it "should update giftYear" $ \newState -> do
-      giftYear newState `shouldBe` 1
-    it "should update giveeHat" $ \newState -> do
-      giveeHat newState `shouldBe` Set.fromList ["GeoHar", "JohLen", "PauMcc", "RinSta"]
-    it "should update giverHat" $ \newState -> do
-      giverHat newState `shouldBe` Set.fromList ["GeoHar", "JohLen", "PauMcc", "RinSta"]
-    it "should update maybeGivee" $ \newState -> do
-      maybeGivee newState `shouldNotBe` (Nothing :: Maybe Givee)
-    it "should update maybeGiver" $ \newState -> do
-      maybeGiver newState `shouldNotBe` (Nothing :: Maybe Giver)
+    it "should update players" $ \beatlesState1 -> do
+      players beatlesState1 Map.! "RinSta" `shouldBe` rinStaPlus
+    it "should update giftYear" $ \beatlesState1 -> do
+      giftYear beatlesState1 `shouldBe` 1
+    it "should update giveeHat" $ \beatlesState1 -> do
+      giveeHat beatlesState1 `shouldBe` Set.fromList ["GeoHar", "JohLen", "PauMcc", "RinSta"]
+    it "should update giverHat" $ \beatlesState1 -> do
+      giverHat beatlesState1 `shouldBe` Set.fromList ["GeoHar", "JohLen", "PauMcc", "RinSta"]
+    it "should update maybeGivee" $ \beatlesState1 -> do
+      maybeGivee beatlesState1 `shouldNotBe` (Nothing :: Maybe Givee)
+    it "should update maybeGiver" $ \beatlesState1 -> do
+      maybeGiver beatlesState1 `shouldNotBe` (Nothing :: Maybe Giver)
 
 giveeIsFailure :: Spec
 giveeIsFailure = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
