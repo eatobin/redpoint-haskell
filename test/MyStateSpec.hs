@@ -84,23 +84,5 @@ giveeIsFailure = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
       do
         beatlesState2 <- beatlesState2IO
         Set.notMember badGivee (giveeHat beatlesState2) `shouldBe` True
-
---    it "should draw a new giver correctly" $ \newState -> do
---      let secondStateIO = myStateSelectNewGiver (return newState)
---      do
---        secondState <- secondStateIO
---        length (giverHat secondState) `shouldBe` 3
---        null (discards secondState) `shouldBe` True
-
---selectNewGiver :: Spec
---selectNewGiver = beforeAll (myStateStartNewYear (return beatlesState)) $ do
---  describe "myStateSelectNewGiver" $ do
---    it "should discard correctly" $ \newState -> do
---      let newDiscards = hatDiscardGivee "GeoHar" (discards newState)
---      length newDiscards `shouldBe` 1
---    it "should draw a new giver correctly" $ \newState -> do
---      let secondStateIO = myStateSelectNewGiver (return newState)
---      do
---        secondState <- secondStateIO
---        length (giverHat secondState) `shouldBe` 3
---        null (discards secondState) `shouldBe` True
+        DM.fromJust (maybeGivee beatlesState2) `shouldNotBe` badGivee
+        Set.member badGivee (discards beatlesState2) `shouldBe` True
