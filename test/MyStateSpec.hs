@@ -92,10 +92,14 @@ giveeIsSuccess :: Spec
 giveeIsSuccess = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
   describe "myStateGiveeIsSuccess" $ do
     it "have a successful givee" $ \beatlesState1 -> do
-      let badGivee = DM.fromJust (maybeGivee beatlesState1)
-      let beatlesState2IO = myStateGiveeIsFailure (return beatlesState1)
+      let goodGivee = DM.fromJust (maybeGivee beatlesState1)
+      let goodGiver = DM.fromJust (maybeGiver beatlesState1)
+      let beatlesState2IO = myStateGiveeIsSuccess (return beatlesState1)
       do
         beatlesState2 <- beatlesState2IO
-        Set.notMember badGivee (giveeHat beatlesState2) `shouldBe` True
-        DM.fromJust (maybeGivee beatlesState2) `shouldNotBe` badGivee
-        Set.member badGivee (discards beatlesState2) `shouldBe` True
+        playersGetMyGivee goodGiver (players beatlesState2) (giftYear beatlesState2) `shouldBe` goodGivee
+        playersGetMyGiver goodGivee (players beatlesState2) (giftYear beatlesState2) `shouldBe` goodGiver
+
+--        Set.notMember goodGivee (giveeHat beatlesState2) `shouldBe` True
+--        DM.fromJust (maybeGivee beatlesState2) `shouldNotBe` goodGivee
+--        Set.member goodGivee (discards beatlesState2) `shouldBe` True
