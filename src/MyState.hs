@@ -3,11 +3,11 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
 --module MyState (RosterName, RosterYear, Quit, MyState (..), myStatePrintResults, myStateSelectNewGiver, myStateGiveeIsSuccess, myStateGiveeIsFailure, myStateUpdateAndRunNewYear, myStateDrawPuck, myStateStartNewYear, myStateAskContinue, myStateErrors, myStateJsonStringToState, myStateMain) where
-module MyState (RosterName, RosterYear, Quit, MyState (..), myStateDrawPuck, myStateStartNewYear, myStateGiveeIsFailure, myStateGiveeIsSuccess, myStateSelectNewGiver, myStateErrors, myStatePrintResults, myStateAskContinue) where
+module MyState (RosterName, RosterYear, Quit, MyState (..), myStateDrawPuck, myStateStartNewYear, myStateGiveeIsFailure, myStateGiveeIsSuccess, myStateSelectNewGiver, myStateErrors, myStatePrintResults, myStateAskContinue, myStateJsonStringToState) where
 
 import qualified Control.Monad as CM
 import qualified Data.Aeson as A
---import qualified Data.ByteString.Char8 as BS
+import qualified Data.ByteString.Char8 as BS
 --import qualified Data.Char as DC
 import qualified Data.List as List
 import qualified Data.Map.Strict as Map
@@ -192,6 +192,9 @@ myStateAskContinue ioState = do
   reply <- getLine
   return state {quit = reply}
 
+myStateJsonStringToState :: JsonString -> Maybe MyState
+myStateJsonStringToState jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe MyState
+
 --myStateUpdateAndRunNewYear :: IO MyState -> IO MyState
 --myStateUpdateAndRunNewYear ioState = do
 --  myStateUpdateAndRunNewYearLoop (myStateStartNewYear ioState)
@@ -217,12 +220,7 @@ myStateAskContinue ioState = do
 --
 
 --
---myStateJsonStringToState :: JsonString -> Maybe MyState
---myStateJsonStringToState jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe MyState
---
---hawksJson :: JsonString
---hawksJson = [r|{"rosterName":"Blackhawks","rosterYear":2010,"players":{"TroBro":{"playerName":"Troy Brouwer","giftHistory":[{"givee":"DavBol","giver":"JoeQue"}]},"PatKan":{"playerName":"Patrick Kane","giftHistory":[{"givee":"BryBic","giver":"CriHue"}]},"JoeQue":{"playerName":"Joel Quenneville","giftHistory":[{"givee":"TroBro","giver":"AndLad"}]},"NikHja":{"playerName":"Niklas Hjalmarsson","giftHistory":[{"givee":"BreSea","giver":"BriCam"}]},"TomKop":{"playerName":"Tomas Kopecky","giftHistory":[{"givee":"CriHue","giver":"DunKei"}]},"BryBic":{"playerName":"Bryan Bickell","giftHistory":[{"givee":"MarHos","giver":"PatKan"}]},"AntNie":{"playerName":"Antti Niemi","giftHistory":[{"givee":"JonToe","giver":"MarHos"}]},"PatSha":{"playerName":"Patrick Sharp","giftHistory":[{"givee":"BriCam","giver":"DavBol"}]},"DunKei":{"playerName":"Duncan Keith","giftHistory":[{"givee":"TomKop","giver":"AdaBur"}]},"BriCam":{"playerName":"Brian Campbell","giftHistory":[{"givee":"NikHja","giver":"PatSha"}]},"BreSea":{"playerName":"Brent Seabrook","giftHistory":[{"givee":"KriVer","giver":"NikHja"}]},"KriVer":{"playerName":"Kris Versteeg","giftHistory":[{"givee":"AndLad","giver":"BreSea"}]},"MarHos":{"playerName":"Marian Hossa","giftHistory":[{"givee":"AntNie","giver":"BryBic"}]},"AndLad":{"playerName":"Andrew Ladd","giftHistory":[{"givee":"JoeQue","giver":"KriVer"}]},"DavBol":{"playerName":"Dave Bolland","giftHistory":[{"givee":"PatSha","giver":"TroBro"}]},"CriHue":{"playerName":"Cristobal Huet","giftHistory":[{"givee":"PatKan","giver":"TomKop"}]},"JonToe":{"playerName":"Jonathan Toews","giftHistory":[{"givee":"AdaBur","giver":"AntNie"}]},"AdaBur":{"playerName":"Adam Burish","giftHistory":[{"givee":"DunKei","giver":"JonToe"}]}},"giftYear":0,"giveeHat":[],"giverHat":[],"maybeGivee":null,"maybeGiver":null,"discards":[],"quit":"n"}|]
---
+
 --myStateLoop :: IO MyState -> IO ()
 --myStateLoop nextIOState = do
 --  nextState <- nextIOState
