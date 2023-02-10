@@ -74,6 +74,7 @@ spec = do
   giveeIsSuccess
   selectNewGiver
   errors
+  printResults
 
 drawPuck :: Spec
 drawPuck = do
@@ -112,7 +113,7 @@ giveeIsFailure = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
 giveeIsSuccess :: Spec
 giveeIsSuccess = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
   describe "myStateGiveeIsSuccess" $ do
-    it "have a successful givee" $ \beatlesState1 -> do
+    it "should have a successful givee" $ \beatlesState1 -> do
       let goodGivee = DM.fromJust (maybeGivee beatlesState1)
       let goodGiver = DM.fromJust (maybeGiver beatlesState1)
       let beatlesState2IO = myStateGiveeIsSuccess (return beatlesState1)
@@ -126,7 +127,7 @@ giveeIsSuccess = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
 selectNewGiver :: Spec
 selectNewGiver = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
   describe "myStateSelectNewGiver" $ do
-    it "select a new giver" $ \beatlesState1 -> do
+    it "should select a new giver" $ \beatlesState1 -> do
       let badGivee = DM.fromJust (maybeGivee beatlesState1)
       let beatlesState2IO = myStateGiveeIsFailure (return beatlesState1)
       do
@@ -147,5 +148,10 @@ selectNewGiver = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
 errors :: Spec
 errors = beforeAll (myStateErrors (return weirdState)) $ do
   describe "myStateErrors" $ do
-    it "report player errors" $ \playerErrors -> do
+    it "should report player errors" $ \playerErrors -> do
       playerErrors `shouldBe` ["GeoHar", "PauMcc"]
+
+printResults :: Spec
+printResults = do
+  describe "myStatePrintResults" $ do
+    it "should print itself and return itself" $ myStatePrintResults (return beatlesState0) `shouldReturn` beatlesState0

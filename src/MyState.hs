@@ -3,9 +3,9 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
 --module MyState (RosterName, RosterYear, Quit, MyState (..), myStatePrintResults, myStateSelectNewGiver, myStateGiveeIsSuccess, myStateGiveeIsFailure, myStateUpdateAndRunNewYear, myStateDrawPuck, myStateStartNewYear, myStateAskContinue, myStateErrors, myStateJsonStringToState, myStateMain) where
-module MyState (RosterName, RosterYear, Quit, MyState (..), myStateDrawPuck, myStateStartNewYear, myStateGiveeIsFailure, myStateGiveeIsSuccess, myStateSelectNewGiver, myStateErrors) where
+module MyState (RosterName, RosterYear, Quit, MyState (..), myStateDrawPuck, myStateStartNewYear, myStateGiveeIsFailure, myStateGiveeIsSuccess, myStateSelectNewGiver, myStateErrors, myStatePrintResults) where
 
---import qualified Control.Monad as CM
+import qualified Control.Monad as CM
 import qualified Data.Aeson as A
 --import qualified Data.ByteString.Char8 as BS
 --import qualified Data.Char as DC
@@ -152,6 +152,38 @@ myStateErrors ioState = do
         ]
    in return (List.sort playerErrors)
 
+myStatePrintResults :: IO MyState -> IO MyState
+myStatePrintResults ioState = do
+  state <- ioState
+  errorList <- myStateErrors ioState
+  print errorList
+  print state
+  putStrLn ("\n" ++ rosterName state ++ " - Year " ++ show (rosterYear state + giftYear state) ++ " Gifts:\n")
+  let playerKeys :: [PlayerKey] = List.sort (Map.keys (players state))
+  mapM_
+    putStrLn
+    [ do
+        let pName = playersGetPlayerName playerKey (players state)
+        let giveeKey = playersGetMyGivee playerKey (players state) (giftYear state)
+        let giveeName = playersGetPlayerName giveeKey (players state)
+        let giverKey = playersGetMyGiver playerKey (players state) (giftYear state)
+        if (playerKey == giveeKey) && (playerKey == giverKey)
+          then pName ++ " is neither **buying** for nor **receiving** from anyone - **ERROR**"
+          else
+            if playerKey == giverKey
+              then pName ++ " is **receiving** from no one - **ERROR**"
+              else
+                if playerKey == giveeKey
+                  then pName ++ " is **buying** for no one - **ERROR**"
+                  else pName ++ " is buying for " ++ giveeName
+      | playerKey <- playerKeys
+    ]
+  CM.unless (null errorList) $ do
+    putStrLn "\nThere is a logic error in this year's pairings."
+    putStrLn "Do you see how it occurs?"
+    putStrLn "If not... call me and I'll explain!\n"
+  return state
+
 --myStateUpdateAndRunNewYear :: IO MyState -> IO MyState
 --myStateUpdateAndRunNewYear ioState = do
 --  myStateUpdateAndRunNewYearLoop (myStateStartNewYear ioState)
@@ -173,37 +205,7 @@ myStateErrors ioState = do
 --
 
 --
---myStatePrintResults :: IO MyState -> IO MyState
---myStatePrintResults ioState = do
---  state <- ioState
---  errorList <- myStateErrors ioState
---  print errorList
---  print state
---  putStrLn ("\n" ++ rosterName state ++ " - Year " ++ show (rosterYear state + giftYear state) ++ " Gifts:\n")
---  let playerKeys :: [PlayerKey] = List.sort (Map.keys (players state))
---  mapM_
---    putStrLn
---    [ do
---        let pName = playersGetPlayerName playerKey (players state)
---        let giveeKey = playersGetMyGivee playerKey (players state) (giftYear state)
---        let giveeName = playersGetPlayerName giveeKey (players state)
---        let giverKey = playersGetMyGiver playerKey (players state) (giftYear state)
---        if (playerKey == giveeKey) && (playerKey == giverKey)
---          then pName ++ " is neither **buying** for nor **receiving** from anyone - **ERROR**"
---          else
---            if playerKey == giverKey
---              then pName ++ " is **receiving** from no one - **ERROR**"
---              else
---                if playerKey == giveeKey
---                  then pName ++ " is **buying** for no one - **ERROR**"
---                  else pName ++ " is buying for " ++ giveeName
---      | playerKey <- playerKeys
---    ]
---  CM.unless (null errorList) $ do
---    putStrLn "\nThere is a logic error in this year's pairings."
---    putStrLn "Do you see how it occurs?"
---    putStrLn "If not... call me and I'll explain!\n"
---  return state
+
 --
 --myStateAskContinue :: IO MyState -> IO MyState
 --myStateAskContinue ioState = do
