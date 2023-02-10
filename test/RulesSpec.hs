@@ -21,38 +21,11 @@ beatlesPlusPM =
       ("MicMou", Player {playerName = "Mickey Mouse", giftHistory = Vec.fromList [GiftPair {giver = "EriTob", givee = "PauMcc"}]})
     ]
 
---reciprocalPlayers :: Players
---reciprocalPlayers =
---  Map.fromList
---    [ ("GeoHar", Player {playerName = "George Harrison", giftHistory = Vec.fromList [GiftPair {givee = "JohLen", giver = "JohLen"}]}),
---      ("JohLen", Player {playerName = "John Lennon", giftHistory = Vec.fromList [GiftPair {givee = "GeoHar", giver = "GeoHar"}]})
---    ]
---
---playersP0 :: Players
---playersP0 =
---  Map.fromList
---    [ ("EriTob", Player {playerName = "Eric Tobin", giftHistory = Vec.fromList [GiftPair {givee = "KarLav", giver = "PauMcc"}]}),
---      ("GeoHar", Player {playerName = "George Harrison", giftHistory = Vec.fromList [GiftPair {givee = "PauMcc", giver = "JohLen"}]}),
---      ("JohLen", Player {playerName = "John Lennon", giftHistory = Vec.fromList [GiftPair {givee = "GeoHar", giver = "RinSta"}]}),
---      ("KarLav", Player {playerName = "Karen Lavengood", giftHistory = Vec.fromList [GiftPair {givee = "RinSta", giver = "EriTob"}]}),
---      ("PauMcc", Player {playerName = "Paul McCartney", giftHistory = Vec.fromList [GiftPair {givee = "EriTob", giver = "GeoHar"}]}),
---      ("RinSta", Player {playerName = "Ringo Starr", giftHistory = Vec.fromList [GiftPair {givee = "JohLen", giver = "KarLav"}]})
---    ]
---
---players1 :: Players
---players1 =
---  Map.fromList
---    [ ("GeoHar", Player {playerName = "George Harrison", giftHistory = Vec.fromList [GiftPair {givee = "RinSta", giver = "PauMcc"}]}),
---      ("JohLen", Player {playerName = "John Lennon", giftHistory = Vec.fromList [GiftPair {givee = "PauMcc", giver = "RinSta"}]}),
---      ("PauMcc", Player {playerName = "Paul McCartney", giftHistory = Vec.fromList [GiftPair {givee = "GeoHar", giver = "JohLen"}]}),
---      ("RinSta", Player {playerName = "Ringo Starr", giftHistory = Vec.fromList [GiftPair {givee = "JohLen", giver = "GeoHar"}]})
---    ]
---
---playersP4 :: Players
---playersP4 =
---  let extended = playersAddYear . playersAddYear . playersAddYear $ playersAddYear playersP0
---   in playersUpdateMyGivee "RinSta" "KarLav" 4 . playersUpdateMyGivee "RinSta" "EriTob" 3 . playersUpdateMyGivee "RinSta" "PauMcc" 2 $ playersUpdateMyGivee "RinSta" "GeoHar" 1 extended
---
+beatlesPlus6 :: Players
+beatlesPlus6 =
+  let extended = playersAddYear . playersAddYear . playersAddYear . playersAddYear . playersAddYear $ playersAddYear beatlesPlusPM
+   in playersUpdateMyGivee "RinSta" "MicMou" 6 . playersUpdateMyGivee "RinSta" "DonDuc" 5 . playersUpdateMyGivee "RinSta" "SusSmi" 4 . playersUpdateMyGivee "RinSta" "EriTob" 3 . playersUpdateMyGivee "RinSta" "PauMcc" 2 $ playersUpdateMyGivee "RinSta" "GeoHar" 1 extended
+
 spec :: Spec
 spec = do
   describe "rulesGiveeNotSelf" $ do
