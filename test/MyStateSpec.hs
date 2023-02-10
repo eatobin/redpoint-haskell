@@ -78,7 +78,7 @@ startNewYear = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
 giveeIsFailure :: Spec
 giveeIsFailure = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
   describe "myStateGiveeIsFailure" $ do
-    it "have a failing givee" $ \beatlesState1 -> do
+    it "should have a failing givee" $ \beatlesState1 -> do
       let badGivee = DM.fromJust (maybeGivee beatlesState1)
       let beatlesState2IO = myStateGiveeIsFailure (return beatlesState1)
       do
