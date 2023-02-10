@@ -56,7 +56,8 @@ beatlesPlusPM =
 spec :: Spec
 spec = do
   describe "rulesGiveeNotSelf" $ do
-    it "A Player should not give to itself" $ rulesGiveeNotSelf "JohLen" "GeoHar" `shouldBe` True
+    it "A Player should not give to itself" $ rulesGiveeNotSelf "RinSta" "GeoHar" `shouldBe` True
+    it "A Player should not give to itself - 2" $ rulesGiveeNotSelf "RinSta" "RinSta" `shouldBe` False
 
 --  describe "rulesGiveeNotReciprocal" $ do
 --    it "A Player should not give to its reciprocal - Pass" $ rulesGiveeNotReciprocal "JohLen" "GeoHar" players1 0 `shouldBe` True
