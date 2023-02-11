@@ -139,9 +139,8 @@ myStateSelectNewGiver ioState = do
               quit = quit state
             }
 
-myStateErrors :: IO MyState -> IO [PlayerKey]
-myStateErrors ioState = do
-  state <- ioState
+myStateErrors :: MyState -> [PlayerKey]
+myStateErrors state = do
   let playerKeys :: [PlayerKey] = List.sort (Map.keys (players state))
       playerErrors :: [PlayerKey] =
         [ playerKeyMe
@@ -150,12 +149,12 @@ myStateErrors ioState = do
             let myGiveeKey = playersGetMyGivee playerKeyMe (players state) (giftYear state),
             (playerKeyMe == myGiverKey) || (playerKeyMe == myGiveeKey)
         ]
-   in return (List.sort playerErrors)
+   in List.sort playerErrors
 
 myStatePrintResults :: IO MyState -> IO MyState
 myStatePrintResults ioState = do
   state <- ioState
-  errorList <- myStateErrors ioState
+  let errorList = myStateErrors state
   print errorList
   print state
   putStrLn ("\n" ++ rosterName state ++ " - Year " ++ show (rosterYear state + giftYear state) ++ " Gifts:\n")
@@ -181,7 +180,7 @@ myStatePrintResults ioState = do
   CM.unless (null errorList) $ do
     putStrLn "\nThere is a logic error in this year's pairings."
     putStrLn "Do you see how it occurs?"
-    putStrLn "If not... call me and I'll explain!\n"
+    putStrLn "If not... call me and I'll explain!"
   return state
 
 myStateAskContinue :: IO MyState -> IO MyState
