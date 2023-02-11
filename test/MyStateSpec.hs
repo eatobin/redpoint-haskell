@@ -156,10 +156,9 @@ selectNewGiver = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
           null (discards beatlesState4) `shouldBe` True
 
 errors :: Spec
-errors = beforeAll (myStateErrors (return weirdState)) $ do
+errors = do
   describe "myStateErrors" $ do
-    it "should report player errors" $ \playerErrors -> do
-      playerErrors `shouldBe` ["GeoHar", "PauMcc"]
+    it "should report player errors" $ myStateErrors weirdState `shouldBe` ["GeoHar", "PauMcc"]
 
 printResults :: Spec
 printResults = do

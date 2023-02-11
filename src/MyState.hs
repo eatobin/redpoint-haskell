@@ -1,14 +1,11 @@
 {-# LANGUAGE DeriveGeneric #-}
---{-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
---module MyState (RosterName, RosterYear, Quit, MyState (..), myStatePrintResults, myStateSelectNewGiver, myStateGiveeIsSuccess, myStateGiveeIsFailure, myStateUpdateAndRunNewYear, myStateDrawPuck, myStateStartNewYear, myStateAskContinue, myStateErrors, myStateJsonStringToState, myStateMain) where
 module MyState (RosterName, RosterYear, Quit, MyState (..), myStateDrawPuck, myStateStartNewYear, myStateGiveeIsFailure, myStateGiveeIsSuccess, myStateSelectNewGiver, myStateErrors, myStatePrintResults, myStateAskContinue, myStateJsonStringToMyState, myStateUpdateAndRunNewYear) where
 
 import qualified Control.Monad as CM
 import qualified Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
---import qualified Data.Char as DC
 import qualified Data.List as List
 import qualified Data.Map.Strict as Map
 import qualified Data.Maybe as DM
@@ -21,8 +18,6 @@ import Players
 import Rules
 import qualified System.IO as SIO
 import qualified System.Random as Ran
-
---import Text.RawString.QQ (r)
 
 type RosterName = String
 
@@ -155,8 +150,6 @@ myStatePrintResults :: IO MyState -> IO MyState
 myStatePrintResults ioState = do
   state <- ioState
   let errorList = myStateErrors state
-  print errorList
-  print state
   putStrLn ("\n" ++ rosterName state ++ " - Year " ++ show (rosterYear state + giftYear state) ++ " Gifts:\n")
   let playerKeys :: [PlayerKey] = List.sort (Map.keys (players state))
   mapM_
