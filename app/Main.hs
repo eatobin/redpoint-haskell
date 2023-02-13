@@ -25,4 +25,4 @@ main :: IO ()
 main =
   do
     let firstStateIO = return (DM.fromJust (myStateJsonStringToMyState hawksJson))
-    firstStateIO >>= myStatePrintResults >>= myStateStartNewYear >>= myStateAskContinue >>= myMainLoop
+    firstStateIO >>= myStatePrintResults >>= myStateAskContinue >>= myMainLoop
