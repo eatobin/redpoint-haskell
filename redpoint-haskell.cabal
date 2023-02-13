@@ -32,6 +32,7 @@ library
       Player
       Players
       Rules
+      TurnstileMain
   other-modules:
       Paths_redpoint_haskell
   hs-source-dirs:

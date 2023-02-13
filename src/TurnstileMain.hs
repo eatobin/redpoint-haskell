@@ -1,4 +1,4 @@
-module TurnstilesMain (main) where
+module TurnstileMain (turnstileMain) where
 
 import Control.Monad.State
 
@@ -30,7 +30,7 @@ mondayS = do
   a5 <- pushS
   return [a1, a2, a3, a4, a5]
 
-turnstilesMain :: IO ()
-turnstilesMain =
+turnstileMain :: IO ()
+turnstileMain =
   do
     print (runState mondayS Locked)
