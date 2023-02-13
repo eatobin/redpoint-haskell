@@ -19,10 +19,17 @@ myMainLoop nextState = do
       putStrLn "Talk about a position with Redpoint?"
       putStrLn "Please call: Eric Tobin 773-679-6617"
       putStrLn "Thanks! Bye...\n"
-    else myStateUpdateAndRunNewYear nextState >>= myStatePrintResults >>= myStateAskContinue >>= myMainLoop
+    else
+      myStateUpdateAndRunNewYear nextState
+        >>= myStatePrintResults
+        >>= myStateAskContinue
+        >>= myMainLoop
 
 main :: IO ()
 main =
   do
     let firstStateIO = return (DM.fromJust (myStateJsonStringToMyState hawksJson))
-    firstStateIO >>= myStatePrintResults >>= myStateAskContinue >>= myMainLoop
+    firstStateIO
+      >>= myStatePrintResults
+      >>= myStateAskContinue
+      >>= myMainLoop
