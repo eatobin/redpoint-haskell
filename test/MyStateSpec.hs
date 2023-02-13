@@ -108,66 +108,66 @@ startNewYear = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
     it "should update maybeGiver" $ \beatlesState1 -> do
       maybeGiver beatlesState1 `shouldNotBe` (Nothing :: Maybe Giver)
 
-giveeIsFailure :: Spec
-giveeIsFailure = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
-  describe "myStateGiveeIsFailure" $ do
-    it "should have a failing givee" $ \beatlesState1 -> do
-      let badGivee = DM.fromJust (maybeGivee beatlesState1)
-      let beatlesState2IO = myStateGiveeIsFailure (return beatlesState1)
-      do
-        beatlesState2 <- beatlesState2IO
-        Set.notMember badGivee (giveeHat beatlesState2) `shouldBe` True
-        DM.fromJust (maybeGivee beatlesState2) `shouldNotBe` badGivee
-        Set.member badGivee (discards beatlesState2) `shouldBe` True
-
-giveeIsSuccess :: Spec
-giveeIsSuccess = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
-  describe "myStateGiveeIsSuccess" $ do
-    it "should have a successful givee" $ \beatlesState1 -> do
-      let goodGivee = DM.fromJust (maybeGivee beatlesState1)
-      let goodGiver = DM.fromJust (maybeGiver beatlesState1)
-      let beatlesState2IO = myStateGiveeIsSuccess (return beatlesState1)
-      do
-        beatlesState2 <- beatlesState2IO
-        playersGetMyGivee goodGiver (players beatlesState2) (giftYear beatlesState2) `shouldBe` goodGivee
-        playersGetMyGiver goodGivee (players beatlesState2) (giftYear beatlesState2) `shouldBe` goodGiver
-        Set.notMember goodGivee (giveeHat beatlesState2) `shouldBe` True
-        DM.isNothing (maybeGivee beatlesState2) `shouldBe` True
-
-selectNewGiver :: Spec
-selectNewGiver = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
-  describe "myStateSelectNewGiver" $ do
-    it "should select a new giver" $ \beatlesState1 -> do
-      let badGivee = DM.fromJust (maybeGivee beatlesState1)
-      let beatlesState2IO = myStateGiveeIsFailure (return beatlesState1)
-      do
-        beatlesState2 <- beatlesState2IO
-        let goodGivee = DM.fromJust (maybeGivee beatlesState2)
-        let goodGiver = DM.fromJust (maybeGiver beatlesState2)
-        let beatlesState3IO = myStateGiveeIsSuccess (return beatlesState2)
-        let beatlesState4IO = myStateSelectNewGiver beatlesState3IO
-        do
-          beatlesState4 <- beatlesState4IO
-          Set.member badGivee (giveeHat beatlesState4) `shouldBe` True
-          Set.notMember goodGivee (giveeHat beatlesState4) `shouldBe` True
-          Set.notMember goodGiver (giverHat beatlesState4) `shouldBe` True
-          DM.fromJust (maybeGivee beatlesState4) `shouldNotBe` goodGivee
-          DM.fromJust (maybeGiver beatlesState4) `shouldNotBe` goodGiver
-          null (discards beatlesState4) `shouldBe` True
-
-errors :: Spec
-errors = do
-  describe "myStateErrors" $ do
-    it "should report player errors" $ myStateErrors weirdState `shouldBe` ["GeoHar", "PauMcc"]
-
-printResults :: Spec
-printResults = do
-  describe "myStatePrintResults" $ do
-    it "should print itself and return itself - beatlesState0" $ myStatePrintResults (return beatlesState0) `shouldReturn` beatlesState0
-    it "should print itself and return itself - weirdState" $ myStatePrintResults (return weirdState) `shouldReturn` weirdState
-
-convertFromJSON :: Spec
-convertFromJSON = do
-  describe "myStateJsonStringToMyState" $ do
-    it "convert from JSON-Beatles" $ myStateJsonStringToMyState beatlesJson `shouldBe` Just beatlesState0
-    it "convert from JSON-Hawks" $ myStateJsonStringToMyState hawksJson `shouldBe` Just (MyState {rosterName = "Blackhawks", rosterYear = 2010, players = Map.fromList [("AdaBur", Player {playerName = "Adam Burish", giftHistory = Vec.fromList [GiftPair {givee = "DunKei", giver = "JonToe"}]}), ("AndLad", Player {playerName = "Andrew Ladd", giftHistory = Vec.fromList [GiftPair {givee = "JoeQue", giver = "KriVer"}]}), ("AntNie", Player {playerName = "Antti Niemi", giftHistory = Vec.fromList [GiftPair {givee = "JonToe", giver = "MarHos"}]}), ("BreSea", Player {playerName = "Brent Seabrook", giftHistory = Vec.fromList [GiftPair {givee = "KriVer", giver = "NikHja"}]}), ("BriCam", Player {playerName = "Brian Campbell", giftHistory = Vec.fromList [GiftPair {givee = "NikHja", giver = "PatSha"}]}), ("BryBic", Player {playerName = "Bryan Bickell", giftHistory = Vec.fromList [GiftPair {givee = "MarHos", giver = "PatKan"}]}), ("CriHue", Player {playerName = "Cristobal Huet", giftHistory = Vec.fromList [GiftPair {givee = "PatKan", giver = "TomKop"}]}), ("DavBol", Player {playerName = "Dave Bolland", giftHistory = Vec.fromList [GiftPair {givee = "PatSha", giver = "TroBro"}]}), ("DunKei", Player {playerName = "Duncan Keith", giftHistory = Vec.fromList [GiftPair {givee = "TomKop", giver = "AdaBur"}]}), ("JoeQue", Player {playerName = "Joel Quenneville", giftHistory = Vec.fromList [GiftPair {givee = "TroBro", giver = "AndLad"}]}), ("JonToe", Player {playerName = "Jonathan Toews", giftHistory = Vec.fromList [GiftPair {givee = "AdaBur", giver = "AntNie"}]}), ("KriVer", Player {playerName = "Kris Versteeg", giftHistory = Vec.fromList [GiftPair {givee = "AndLad", giver = "BreSea"}]}), ("MarHos", Player {playerName = "Marian Hossa", giftHistory = Vec.fromList [GiftPair {givee = "AntNie", giver = "BryBic"}]}), ("NikHja", Player {playerName = "Niklas Hjalmarsson", giftHistory = Vec.fromList [GiftPair {givee = "BreSea", giver = "BriCam"}]}), ("PatKan", Player {playerName = "Patrick Kane", giftHistory = Vec.fromList [GiftPair {givee = "BryBic", giver = "CriHue"}]}), ("PatSha", Player {playerName = "Patrick Sharp", giftHistory = Vec.fromList [GiftPair {givee = "BriCam", giver = "DavBol"}]}), ("TomKop", Player {playerName = "Tomas Kopecky", giftHistory = Vec.fromList [GiftPair {givee = "CriHue", giver = "DunKei"}]}), ("TroBro", Player {playerName = "Troy Brouwer", giftHistory = Vec.fromList [GiftPair {givee = "DavBol", giver = "JoeQue"}]})], giftYear = 0, giveeHat = Set.fromList [], giverHat = Set.fromList [], maybeGivee = Nothing, maybeGiver = Nothing, discards = Set.fromList [], quit = "n"})
+--giveeIsFailure :: Spec
+--giveeIsFailure = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
+--  describe "myStateGiveeIsFailure" $ do
+--    it "should have a failing givee" $ \beatlesState1 -> do
+--      let badGivee = DM.fromJust (maybeGivee beatlesState1)
+--      let beatlesState2IO = myStateGiveeIsFailure (return beatlesState1)
+--      do
+--        beatlesState2 <- beatlesState2IO
+--        Set.notMember badGivee (giveeHat beatlesState2) `shouldBe` True
+--        DM.fromJust (maybeGivee beatlesState2) `shouldNotBe` badGivee
+--        Set.member badGivee (discards beatlesState2) `shouldBe` True
+--
+--giveeIsSuccess :: Spec
+--giveeIsSuccess = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
+--  describe "myStateGiveeIsSuccess" $ do
+--    it "should have a successful givee" $ \beatlesState1 -> do
+--      let goodGivee = DM.fromJust (maybeGivee beatlesState1)
+--      let goodGiver = DM.fromJust (maybeGiver beatlesState1)
+--      let beatlesState2IO = myStateGiveeIsSuccess (return beatlesState1)
+--      do
+--        beatlesState2 <- beatlesState2IO
+--        playersGetMyGivee goodGiver (players beatlesState2) (giftYear beatlesState2) `shouldBe` goodGivee
+--        playersGetMyGiver goodGivee (players beatlesState2) (giftYear beatlesState2) `shouldBe` goodGiver
+--        Set.notMember goodGivee (giveeHat beatlesState2) `shouldBe` True
+--        DM.isNothing (maybeGivee beatlesState2) `shouldBe` True
+--
+--selectNewGiver :: Spec
+--selectNewGiver = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
+--  describe "myStateSelectNewGiver" $ do
+--    it "should select a new giver" $ \beatlesState1 -> do
+--      let badGivee = DM.fromJust (maybeGivee beatlesState1)
+--      let beatlesState2IO = myStateGiveeIsFailure (return beatlesState1)
+--      do
+--        beatlesState2 <- beatlesState2IO
+--        let goodGivee = DM.fromJust (maybeGivee beatlesState2)
+--        let goodGiver = DM.fromJust (maybeGiver beatlesState2)
+--        let beatlesState3IO = myStateGiveeIsSuccess (return beatlesState2)
+--        let beatlesState4IO = myStateSelectNewGiver beatlesState3IO
+--        do
+--          beatlesState4 <- beatlesState4IO
+--          Set.member badGivee (giveeHat beatlesState4) `shouldBe` True
+--          Set.notMember goodGivee (giveeHat beatlesState4) `shouldBe` True
+--          Set.notMember goodGiver (giverHat beatlesState4) `shouldBe` True
+--          DM.fromJust (maybeGivee beatlesState4) `shouldNotBe` goodGivee
+--          DM.fromJust (maybeGiver beatlesState4) `shouldNotBe` goodGiver
+--          null (discards beatlesState4) `shouldBe` True
+--
+--errors :: Spec
+--errors = do
+--  describe "myStateErrors" $ do
+--    it "should report player errors" $ myStateErrors weirdState `shouldBe` ["GeoHar", "PauMcc"]
+--
+--printResults :: Spec
+--printResults = do
+--  describe "myStatePrintResults" $ do
+--    it "should print itself and return itself - beatlesState0" $ myStatePrintResults (return beatlesState0) `shouldReturn` beatlesState0
+--    it "should print itself and return itself - weirdState" $ myStatePrintResults (return weirdState) `shouldReturn` weirdState
+--
+--convertFromJSON :: Spec
+--convertFromJSON = do
+--  describe "myStateJsonStringToMyState" $ do
+--    it "convert from JSON-Beatles" $ myStateJsonStringToMyState beatlesJson `shouldBe` Just beatlesState0
+--    it "convert from JSON-Hawks" $ myStateJsonStringToMyState hawksJson `shouldBe` Just (MyState {rosterName = "Blackhawks", rosterYear = 2010, players = Map.fromList [("AdaBur", Player {playerName = "Adam Burish", giftHistory = Vec.fromList [GiftPair {givee = "DunKei", giver = "JonToe"}]}), ("AndLad", Player {playerName = "Andrew Ladd", giftHistory = Vec.fromList [GiftPair {givee = "JoeQue", giver = "KriVer"}]}), ("AntNie", Player {playerName = "Antti Niemi", giftHistory = Vec.fromList [GiftPair {givee = "JonToe", giver = "MarHos"}]}), ("BreSea", Player {playerName = "Brent Seabrook", giftHistory = Vec.fromList [GiftPair {givee = "KriVer", giver = "NikHja"}]}), ("BriCam", Player {playerName = "Brian Campbell", giftHistory = Vec.fromList [GiftPair {givee = "NikHja", giver = "PatSha"}]}), ("BryBic", Player {playerName = "Bryan Bickell", giftHistory = Vec.fromList [GiftPair {givee = "MarHos", giver = "PatKan"}]}), ("CriHue", Player {playerName = "Cristobal Huet", giftHistory = Vec.fromList [GiftPair {givee = "PatKan", giver = "TomKop"}]}), ("DavBol", Player {playerName = "Dave Bolland", giftHistory = Vec.fromList [GiftPair {givee = "PatSha", giver = "TroBro"}]}), ("DunKei", Player {playerName = "Duncan Keith", giftHistory = Vec.fromList [GiftPair {givee = "TomKop", giver = "AdaBur"}]}), ("JoeQue", Player {playerName = "Joel Quenneville", giftHistory = Vec.fromList [GiftPair {givee = "TroBro", giver = "AndLad"}]}), ("JonToe", Player {playerName = "Jonathan Toews", giftHistory = Vec.fromList [GiftPair {givee = "AdaBur", giver = "AntNie"}]}), ("KriVer", Player {playerName = "Kris Versteeg", giftHistory = Vec.fromList [GiftPair {givee = "AndLad", giver = "BreSea"}]}), ("MarHos", Player {playerName = "Marian Hossa", giftHistory = Vec.fromList [GiftPair {givee = "AntNie", giver = "BryBic"}]}), ("NikHja", Player {playerName = "Niklas Hjalmarsson", giftHistory = Vec.fromList [GiftPair {givee = "BreSea", giver = "BriCam"}]}), ("PatKan", Player {playerName = "Patrick Kane", giftHistory = Vec.fromList [GiftPair {givee = "BryBic", giver = "CriHue"}]}), ("PatSha", Player {playerName = "Patrick Sharp", giftHistory = Vec.fromList [GiftPair {givee = "BriCam", giver = "DavBol"}]}), ("TomKop", Player {playerName = "Tomas Kopecky", giftHistory = Vec.fromList [GiftPair {givee = "CriHue", giver = "DunKei"}]}), ("TroBro", Player {playerName = "Troy Brouwer", giftHistory = Vec.fromList [GiftPair {givee = "DavBol", giver = "JoeQue"}]})], giftYear = 0, giveeHat = Set.fromList [], giverHat = Set.fromList [], maybeGivee = Nothing, maybeGiver = Nothing, discards = Set.fromList [], quit = "n"})

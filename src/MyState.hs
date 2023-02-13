@@ -1,6 +1,8 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
+--module MyState (RosterName, RosterYear, Quit, MyState (..), myStateDrawPuck, myStateStartNewYear, myStateJsonStringToMyState, myStatePrintResults, myStateAskContinue) where
+
 module MyState (RosterName, RosterYear, Quit, MyState (..), myStateDrawPuck, myStateStartNewYear, myStateGiveeIsFailure, myStateGiveeIsSuccess, myStateSelectNewGiver, myStateErrors, myStatePrintResults, myStateAskContinue, myStateJsonStringToMyState, myStateUpdateAndRunNewYear) where
 
 import qualified Control.Monad as CM
@@ -48,9 +50,8 @@ myStateDrawPuck hat
     i :: Int <- Ran.randomRIO (0, Prelude.length hat - 1)
     return (Just (Set.elemAt i hat))
 
-myStateStartNewYear :: IO MyState -> IO MyState
-myStateStartNewYear ioState = do
-  state <- ioState
+myStateStartNewYear :: MyState -> IO MyState
+myStateStartNewYear state = do
   let freshHat :: Hat = hatMakeHat (players state)
    in do
         newGivee <- myStateDrawPuck freshHat
@@ -69,9 +70,8 @@ myStateStartNewYear ioState = do
               quit = quit state
             }
 
-myStateGiveeIsFailure :: IO MyState -> IO MyState
-myStateGiveeIsFailure ioState = do
-  state <- ioState
+myStateGiveeIsFailure :: MyState -> IO MyState
+myStateGiveeIsFailure state = do
   let giveeToRemove :: Givee = DM.fromJust (maybeGivee state)
       diminishedGiveeHat :: Hat = hatRemovePuck giveeToRemove (giveeHat state)
    in do
@@ -90,9 +90,8 @@ myStateGiveeIsFailure ioState = do
               quit = quit state
             }
 
-myStateGiveeIsSuccess :: IO MyState -> IO MyState
-myStateGiveeIsSuccess ioState = do
-  state <- ioState
+myStateGiveeIsSuccess :: MyState -> IO MyState
+myStateGiveeIsSuccess state = do
   let currentGiver :: Giver = DM.fromJust (maybeGiver state)
       currentGivee :: Givee = DM.fromJust (maybeGivee state)
       updatedGiveePlayers :: Players = playersUpdateMyGivee currentGiver currentGivee (giftYear state) (players state)
@@ -111,9 +110,8 @@ myStateGiveeIsSuccess ioState = do
               quit = quit state
             }
 
-myStateSelectNewGiver :: IO MyState -> IO MyState
-myStateSelectNewGiver ioState = do
-  state <- ioState
+myStateSelectNewGiver :: MyState -> IO MyState
+myStateSelectNewGiver state = do
   let giverToRemove :: Giver = DM.fromJust (maybeGiver state)
       replenishedGiveeHat :: Hat = hatReturnDiscards (discards state) (giveeHat state)
       diminishedGiverHat :: Hat = hatRemovePuck giverToRemove (giverHat state)
@@ -146,9 +144,8 @@ myStateErrors state = do
         ]
    in List.sort playerErrors
 
-myStatePrintResults :: IO MyState -> IO MyState
-myStatePrintResults ioState = do
-  state <- ioState
+myStatePrintResults :: MyState -> IO MyState
+myStatePrintResults state = do
   let errorList = myStateErrors state
   putStrLn ("\n" ++ rosterName state ++ " - Year " ++ show (rosterYear state + giftYear state) ++ " Gifts:\n")
   let playerKeys :: [PlayerKey] = List.sort (Map.keys (players state))
@@ -176,9 +173,8 @@ myStatePrintResults ioState = do
     putStrLn "If not... call me and I'll explain!"
   return state
 
-myStateAskContinue :: IO MyState -> IO MyState
-myStateAskContinue ioState = do
-  state <- ioState
+myStateAskContinue :: MyState -> IO MyState
+myStateAskContinue state = do
   putStr "\nContinue? ('q' to quit): "
   SIO.hFlush SIO.stdout
   reply <- getLine
@@ -187,9 +183,9 @@ myStateAskContinue ioState = do
 myStateJsonStringToMyState :: JsonString -> Maybe MyState
 myStateJsonStringToMyState jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe MyState
 
-myStateUpdateAndRunNewYear :: IO MyState -> IO MyState
-myStateUpdateAndRunNewYear ioState = do
-  myStateLoop (myStateStartNewYear ioState)
+myStateUpdateAndRunNewYear :: MyState -> IO MyState
+myStateUpdateAndRunNewYear state = do
+  myStateLoop (myStateStartNewYear state)
 
 myStateLoop :: IO MyState -> IO MyState
 myStateLoop alteredStateIO = do
@@ -201,7 +197,7 @@ myStateLoop alteredStateIO = do
           if rulesGiveeNotSelf (DM.fromJust (maybeGiver alteredState)) (DM.fromJust (maybeGivee alteredState))
             && rulesGiveeNotReciprocal (DM.fromJust (maybeGiver alteredState)) (DM.fromJust (maybeGivee alteredState)) (players alteredState) (giftYear alteredState)
             && rulesGiveeNotRepeat (DM.fromJust (maybeGiver alteredState)) (DM.fromJust (maybeGivee alteredState)) (giftYear alteredState) (players alteredState)
-            then myStateLoop (myStateGiveeIsSuccess (return alteredState))
-            else myStateLoop (myStateGiveeIsFailure (return alteredState))
-        else myStateLoop (myStateSelectNewGiver (return alteredState))
+            then myStateLoop (myStateGiveeIsSuccess alteredState)
+            else myStateLoop (myStateGiveeIsFailure alteredState)
+        else myStateLoop (myStateSelectNewGiver alteredState)
     else return alteredState
