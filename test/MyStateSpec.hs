@@ -80,9 +80,9 @@ spec = do
   drawPuck
   startNewYear
   giveeIsFailure
-
   giveeIsSuccess
---  selectNewGiver
+  selectNewGiver
+
 --  errors
 --  printResults
 --  convertFromJSON
@@ -135,27 +135,28 @@ giveeIsSuccess = beforeAll (myStateStartNewYear beatlesState0) $ do
         Set.notMember goodGivee (giveeHat beatlesState2) `shouldBe` True
         DM.isNothing (maybeGivee beatlesState2) `shouldBe` True
 
---selectNewGiver :: Spec
---selectNewGiver = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
---  describe "myStateSelectNewGiver" $ do
---    it "should select a new giver" $ \beatlesState1 -> do
---      let badGivee = DM.fromJust (maybeGivee beatlesState1)
---      let beatlesState2IO = myStateGiveeIsFailure (return beatlesState1)
---      do
---        beatlesState2 <- beatlesState2IO
---        let goodGivee = DM.fromJust (maybeGivee beatlesState2)
---        let goodGiver = DM.fromJust (maybeGiver beatlesState2)
---        let beatlesState3IO = myStateGiveeIsSuccess (return beatlesState2)
---        let beatlesState4IO = myStateSelectNewGiver beatlesState3IO
---        do
---          beatlesState4 <- beatlesState4IO
---          Set.member badGivee (giveeHat beatlesState4) `shouldBe` True
---          Set.notMember goodGivee (giveeHat beatlesState4) `shouldBe` True
---          Set.notMember goodGiver (giverHat beatlesState4) `shouldBe` True
---          DM.fromJust (maybeGivee beatlesState4) `shouldNotBe` goodGivee
---          DM.fromJust (maybeGiver beatlesState4) `shouldNotBe` goodGiver
---          null (discards beatlesState4) `shouldBe` True
---
+selectNewGiver :: Spec
+selectNewGiver = beforeAll (myStateStartNewYear beatlesState0) $ do
+  describe "myStateSelectNewGiver" $ do
+    it "should select a new giver" $ \beatlesState1 -> do
+      let badGivee = DM.fromJust (maybeGivee beatlesState1)
+      let beatlesState2IO = myStateGiveeIsFailure beatlesState1
+      do
+        beatlesState2 <- beatlesState2IO
+        let goodGivee = DM.fromJust (maybeGivee beatlesState2)
+        let goodGiver = DM.fromJust (maybeGiver beatlesState2)
+        let beatlesState3IO = myStateGiveeIsSuccess beatlesState2
+        beatlesState3 <- beatlesState3IO
+        let beatlesState4IO = myStateSelectNewGiver beatlesState3
+        do
+          beatlesState4 <- beatlesState4IO
+          Set.member badGivee (giveeHat beatlesState4) `shouldBe` True
+          Set.notMember goodGivee (giveeHat beatlesState4) `shouldBe` True
+          Set.notMember goodGiver (giverHat beatlesState4) `shouldBe` True
+          DM.fromJust (maybeGivee beatlesState4) `shouldNotBe` goodGivee
+          DM.fromJust (maybeGiver beatlesState4) `shouldNotBe` goodGiver
+          null (discards beatlesState4) `shouldBe` True
+
 --errors :: Spec
 --errors = do
 --  describe "myStateErrors" $ do
