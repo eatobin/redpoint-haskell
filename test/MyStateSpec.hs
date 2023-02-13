@@ -80,11 +80,12 @@ spec = do
   drawPuck
   startNewYear
   giveeIsFailure
-  giveeIsSuccess
-  selectNewGiver
-  errors
-  printResults
-  convertFromJSON
+
+--  giveeIsSuccess
+--  selectNewGiver
+--  errors
+--  printResults
+--  convertFromJSON
 
 drawPuck :: Spec
 drawPuck = do
@@ -93,7 +94,7 @@ drawPuck = do
     it "should NOT draw a puck from an empty hat" $ myStateDrawPuck Set.empty `shouldReturn` Nothing
 
 startNewYear :: Spec
-startNewYear = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
+startNewYear = beforeAll (myStateStartNewYear beatlesState0) $ do
   describe "myStateStartNewYear" $ do
     it "should update players" $ \beatlesState1 -> do
       players beatlesState1 Map.! "RinSta" `shouldBe` rinStaPlus
@@ -108,18 +109,18 @@ startNewYear = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
     it "should update maybeGiver" $ \beatlesState1 -> do
       maybeGiver beatlesState1 `shouldNotBe` (Nothing :: Maybe Giver)
 
---giveeIsFailure :: Spec
---giveeIsFailure = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
---  describe "myStateGiveeIsFailure" $ do
---    it "should have a failing givee" $ \beatlesState1 -> do
---      let badGivee = DM.fromJust (maybeGivee beatlesState1)
---      let beatlesState2IO = myStateGiveeIsFailure (return beatlesState1)
---      do
---        beatlesState2 <- beatlesState2IO
---        Set.notMember badGivee (giveeHat beatlesState2) `shouldBe` True
---        DM.fromJust (maybeGivee beatlesState2) `shouldNotBe` badGivee
---        Set.member badGivee (discards beatlesState2) `shouldBe` True
---
+giveeIsFailure :: Spec
+giveeIsFailure = beforeAll (myStateStartNewYear beatlesState0) $ do
+  describe "myStateGiveeIsFailure" $ do
+    it "should have a failing givee" $ \beatlesState1 -> do
+      let badGivee = DM.fromJust (maybeGivee beatlesState1)
+      let beatlesState2IO = myStateGiveeIsFailure beatlesState1
+      do
+        beatlesState2 <- beatlesState2IO
+        Set.notMember badGivee (giveeHat beatlesState2) `shouldBe` True
+        DM.fromJust (maybeGivee beatlesState2) `shouldNotBe` badGivee
+        Set.member badGivee (discards beatlesState2) `shouldBe` True
+
 --giveeIsSuccess :: Spec
 --giveeIsSuccess = beforeAll (myStateStartNewYear (return beatlesState0)) $ do
 --  describe "myStateGiveeIsSuccess" $ do
