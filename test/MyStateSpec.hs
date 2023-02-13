@@ -84,7 +84,8 @@ spec = do
   selectNewGiver
 
   errors
---  printResults
+  printResults
+
 --  convertFromJSON
 
 drawPuck :: Spec
@@ -162,12 +163,12 @@ errors = do
   describe "myStateErrors" $ do
     it "should report player errors" $ myStateErrors weirdState `shouldBe` ["GeoHar", "PauMcc"]
 
---printResults :: Spec
---printResults = do
---  describe "myStatePrintResults" $ do
---    it "should print itself and return itself - beatlesState0" $ myStatePrintResults (return beatlesState0) `shouldReturn` beatlesState0
---    it "should print itself and return itself - weirdState" $ myStatePrintResults (return weirdState) `shouldReturn` weirdState
---
+printResults :: Spec
+printResults = do
+  describe "myStatePrintResults" $ do
+    it "should print itself and return itself - beatlesState0" $ myStatePrintResults beatlesState0 `shouldReturn` beatlesState0
+    it "should print itself and return itself - weirdState" $ myStatePrintResults weirdState `shouldReturn` weirdState
+
 --convertFromJSON :: Spec
 --convertFromJSON = do
 --  describe "myStateJsonStringToMyState" $ do
