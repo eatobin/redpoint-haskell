@@ -83,7 +83,7 @@ spec = do
   giveeIsSuccess
   selectNewGiver
 
---  errors
+  errors
 --  printResults
 --  convertFromJSON
 
@@ -157,11 +157,11 @@ selectNewGiver = beforeAll (myStateStartNewYear beatlesState0) $ do
           DM.fromJust (maybeGiver beatlesState4) `shouldNotBe` goodGiver
           null (discards beatlesState4) `shouldBe` True
 
---errors :: Spec
---errors = do
---  describe "myStateErrors" $ do
---    it "should report player errors" $ myStateErrors weirdState `shouldBe` ["GeoHar", "PauMcc"]
---
+errors :: Spec
+errors = do
+  describe "myStateErrors" $ do
+    it "should report player errors" $ myStateErrors weirdState `shouldBe` ["GeoHar", "PauMcc"]
+
 --printResults :: Spec
 --printResults = do
 --  describe "myStatePrintResults" $ do
