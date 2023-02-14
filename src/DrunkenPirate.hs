@@ -19,7 +19,7 @@
 
 module DrunkenPirate (treasureMap) where
 
-data Position t = Position t deriving (Show)
+newtype Position t = Position t deriving (Show)
 
 stagger :: Num t => Position t -> Position t
 stagger (Position d) = Position (d + 2)
@@ -34,10 +34,11 @@ rtn x = x
 x >>== f = f x
 
 treasureMap :: Num t => Position t -> Position t
-treasureMap posM = posM >>==
-                  stagger >>==
-                  stagger >>==
-                  crawl >>==
-                  rtn
+treasureMap posM =
+  posM
+    >>== stagger
+    >>== stagger
+    >>== crawl
+    >>== rtn
 
 -- treasureMap (Position 100) -> Position 105
