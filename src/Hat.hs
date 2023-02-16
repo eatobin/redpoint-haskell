@@ -11,6 +11,9 @@ type Hat = Set.Set PlayerKey
 
 type Discards = Hat
 
+hatJsonStringToHat :: JsonString -> Maybe Hat
+hatJsonStringToHat jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe Hat
+
 hatMakeHat :: Players -> Hat
 hatMakeHat = Map.keysSet
 
@@ -22,6 +25,3 @@ hatDiscardGivee = Set.insert
 
 hatReturnDiscards :: Discards -> Hat -> Hat
 hatReturnDiscards = Set.union
-
-hatJsonStringToHat :: JsonString -> Maybe Hat
-hatJsonStringToHat jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe Hat
