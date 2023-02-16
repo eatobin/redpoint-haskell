@@ -10,6 +10,9 @@ import Player
 
 type Players = Map.Map PlayerKey Player
 
+playersJsonStringToPlayers :: JsonString -> Maybe Players
+playersJsonStringToPlayers jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe Players
+
 playersUpdatePlayer :: PlayerKey -> Player -> Players -> Players
 -- playersUpdatePlayer playerKey player players = Map.insert playerKey player players
 playersUpdatePlayer = Map.insert
@@ -62,6 +65,3 @@ playersUpdateMyGiver selfKey ger giftYear players =
       giftPair = giftHistory player Vec.! giftYear
       ngp = giftPairUpdateGiver ger giftPair
    in playersSetGiftPair selfKey giftYear ngp players
-
-playersJsonStringToPlayers :: JsonString -> Maybe Players
-playersJsonStringToPlayers jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe Players
