@@ -41,6 +41,9 @@ data MyState = MyState
 
 instance A.FromJSON MyState
 
+myStateJsonStringToMyState :: JsonString -> Maybe MyState
+myStateJsonStringToMyState jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe MyState
+
 myStateDrawPuck :: Hat -> IO (Maybe PlayerKey)
 myStateDrawPuck hat
   | Set.null hat = return Nothing
@@ -177,9 +180,6 @@ myStateAskContinue state = do
   SIO.hFlush SIO.stdout
   reply <- getLine
   return state {quit = reply}
-
-myStateJsonStringToMyState :: JsonString -> Maybe MyState
-myStateJsonStringToMyState jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe MyState
 
 myStateUpdateAndRunNewYear :: MyState -> IO MyState
 myStateUpdateAndRunNewYear state = do
