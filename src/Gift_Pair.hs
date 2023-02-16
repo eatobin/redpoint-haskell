@@ -22,11 +22,11 @@ data GiftPair = GiftPair
 
 instance A.FromJSON GiftPair
 
+giftPairJsonStringToGiftPair :: JsonString -> Maybe GiftPair
+giftPairJsonStringToGiftPair jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe GiftPair
+
 giftPairUpdateGivee :: Givee -> GiftPair -> GiftPair
 giftPairUpdateGivee givee1 giftPair = giftPair {givee = givee1}
 
 giftPairUpdateGiver :: Giver -> GiftPair -> GiftPair
 giftPairUpdateGiver giver1 giftPair = giftPair {giver = giver1}
-
-giftPairJsonStringToGiftPair :: JsonString -> Maybe GiftPair
-giftPairJsonStringToGiftPair jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe GiftPair
