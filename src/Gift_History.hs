@@ -9,11 +9,11 @@ type GiftHistory = Vec.Vector GiftPair
 
 type GiftYear = Int
 
+giftHistoryJsonStringToGiftHistory :: JsonString -> Maybe GiftHistory
+giftHistoryJsonStringToGiftHistory jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe GiftHistory
+
 giftHistoryAddYear :: PlayerKey -> GiftHistory -> GiftHistory
 giftHistoryAddYear playerKey giftHistory = Vec.snoc giftHistory (GiftPair {givee = playerKey, giver = playerKey})
 
 giftHistoryUpdateGiftHistory :: GiftYear -> GiftPair -> GiftHistory -> GiftHistory
 giftHistoryUpdateGiftHistory giftYear giftPair giftHistory = giftHistory Vec.// [(giftYear, giftPair)]
-
-giftHistoryJsonStringToGiftHistory :: JsonString -> Maybe GiftHistory
-giftHistoryJsonStringToGiftHistory jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe GiftHistory
