@@ -18,8 +18,8 @@ data Player = Player
 
 instance A.FromJSON Player
 
-playerUpdateGiftHistory :: GiftHistory -> Player -> Player
-playerUpdateGiftHistory giftHistory1 player = player {giftHistory = giftHistory1}
-
 playerJsonStringToPlayer :: JsonString -> Maybe Player
 playerJsonStringToPlayer jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe Player
+
+playerUpdateGiftHistory :: GiftHistory -> Player -> Player
+playerUpdateGiftHistory giftHistory1 player = player {giftHistory = giftHistory1}
