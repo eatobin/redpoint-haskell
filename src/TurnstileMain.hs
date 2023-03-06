@@ -34,3 +34,8 @@ turnstileMain :: IO ()
 turnstileMain =
   do
     print (runState mondayS Locked)
+
+--λ> turnstileMain -> ([Thank,Open,Tut,Thank,Open],Locked)
+--λ> runState mondayS Locked -> ([Thank,Open,Tut,Thank,Open],Locked)
+--λ> evalState mondayS Locked -> [Thank,Open,Tut,Thank,Open]
+--λ> execState mondayS Locked -> Locked
