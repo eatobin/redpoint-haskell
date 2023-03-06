@@ -14,8 +14,10 @@ treasureMap pos =
     >>= stagger
     >>= crawl
 
--- -- treasureMap 100 -> Identity 105
--- -- runIdentity (treasureMap 600) -> 605
+--λ> :l DrunkenPirate
+
+--treasureMap 100 -> Identity 105
+--runIdentity (treasureMap 600) -> 605
 
 --module DrunkenPirate (treasureMap) where
 --
