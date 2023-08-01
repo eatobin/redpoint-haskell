@@ -15,8 +15,8 @@ type Giver = PlayerKey
 type JsonString = String
 
 data GiftPair = GiftPair
-  { givee :: Givee,
-    giver :: Giver
+  { givee :: !Givee,
+    giver :: !Giver
   }
   deriving (Show, Eq, G.Generic)
 

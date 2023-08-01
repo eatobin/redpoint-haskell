@@ -11,8 +11,8 @@ import Gift_Pair
 type PlayerName = String
 
 data Player = Player
-  { playerName :: PlayerName,
-    giftHistory :: GiftHistory
+  { playerName :: !PlayerName,
+    giftHistory :: !GiftHistory
   }
   deriving (Show, Eq, G.Generic)
 
