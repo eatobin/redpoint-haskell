@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.35.1.
+-- This file has been generated from package.yaml by hpack version 0.36.0.
 --
 -- see: https://github.com/sol/hpack
 
@@ -44,7 +44,6 @@ library
     , base >=4.7 && <5
     , bytestring
     , containers
-    , hspec
     , monad-loops
     , mtl
     , random
@@ -63,7 +62,6 @@ executable redpoint-haskell-exe
     , base >=4.7 && <5
     , bytestring
     , containers
-    , hspec
     , monad-loops
     , mtl
     , random
@@ -93,7 +91,7 @@ test-suite spec
     , base >=4.7 && <5
     , bytestring
     , containers
-    , hspec ==2.*
+    , hspec
     , monad-loops
     , mtl
     , random

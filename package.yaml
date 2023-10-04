@@ -24,7 +24,6 @@ dependencies:
   - base >= 4.7 && < 5
   - bytestring
   - containers
-  - hspec
   - monad-loops
   - mtl
   - random
@@ -68,4 +67,5 @@ tests:
       - -rtsopts
       - -with-rtsopts=-N
     dependencies:
+      - hspec
       - redpoint-haskell
