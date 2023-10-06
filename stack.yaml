@@ -9,7 +9,7 @@
 # to be used for project dependencies. For example:
 #
 # resolver: lts-3.5
-# resolver: nightly-2015-09-21
+resolver: nightly-2023-10-04
 # resolver: ghc-7.10.2
 #
 # The location of a snapshot can be provided as a file or url. Stack assumes
@@ -17,7 +17,7 @@
 #
 # resolver: ./custom-snapshot.yaml
 # resolver: https://example.com/snapshots/2018-01-01.yaml
-resolver: lts-21.7
+# resolver: lts-21.7
 # 10/02/23 - bump to:
 # LTS Haskell 21.7 (ghc-9.4.5)
 

@@ -44,6 +44,7 @@ library
     , base >=4.7 && <5
     , bytestring
     , containers
+    , hspec
     , monad-loops
     , mtl
     , random
@@ -62,6 +63,7 @@ executable redpoint-haskell-exe
     , base >=4.7 && <5
     , bytestring
     , containers
+    , hspec
     , monad-loops
     , mtl
     , random
@@ -91,7 +93,7 @@ test-suite spec
     , base >=4.7 && <5
     , bytestring
     , containers
-    , hspec
+    , hspec ==2.*
     , monad-loops
     , mtl
     , random
