@@ -1,27 +1,27 @@
-module Hat (Hat, Discards, hatMakeHat, hatRemovePuck, hatDiscardGivee, hatReturnDiscards, hatJsonStringToHat) where
+module Hat (HatSet, DiscardsSet, hatMakeHat, hatRemovePuck, hatDiscardGivee, hatReturnDiscards, hatJsonStringToHatSet) where
 
 import qualified Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.Map.Strict as Map
 import qualified Data.Set as Set
-import Gift_Pair
+import GiftPair
 import Players
 
-type Hat = Set.Set PlayerKey
+type HatSet = Set.Set PlayerKey
 
-type Discards = Hat
+type DiscardsSet = HatSet
 
-hatJsonStringToHat :: JsonString -> Maybe Hat
-hatJsonStringToHat jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe Hat
+hatJsonStringToHatSet :: JsonString -> Maybe HatSet
+hatJsonStringToHatSet jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe HatSet
 
-hatMakeHat :: Players -> Hat
+hatMakeHat :: PlayersMap -> HatSet
 hatMakeHat = Map.keysSet
 
-hatRemovePuck :: PlayerKey -> Hat -> Hat
+hatRemovePuck :: PlayerKey -> HatSet -> HatSet
 hatRemovePuck = Set.delete
 
-hatDiscardGivee :: Givee -> Discards -> Discards
+hatDiscardGivee :: Givee -> DiscardsSet -> DiscardsSet
 hatDiscardGivee = Set.insert
 
-hatReturnDiscards :: Discards -> Hat -> Hat
+hatReturnDiscards :: DiscardsSet -> HatSet -> HatSet
 hatReturnDiscards = Set.union

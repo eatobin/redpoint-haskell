@@ -1,1 +1,1 @@
-stack --resolver lts-18.28 new redpoint-haskell
+stack --resolver nightly-2023-10-04 new redpoint-haskell

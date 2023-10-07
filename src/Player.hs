@@ -1,25 +1,25 @@
 {-# LANGUAGE DeriveGeneric #-}
 
-module Player (PlayerName, Player (..), playerUpdateGiftHistory, playerJsonStringToPlayer) where
+module Player (PlayerName, PlayerStruct (..), playerUpdateGiftHistory, playerJsonStringToPlayerStruct) where
 
 import qualified Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
 import qualified GHC.Generics as G
-import Gift_History
-import Gift_Pair
+import GiftHistory
+import GiftPair
 
 type PlayerName = String
 
-data Player = Player
-  { playerName :: !PlayerName,
-    giftHistory :: !GiftHistory
+data PlayerStruct = PlayerStruct
+  { playerName :: PlayerName,
+    giftHistory :: GiftHistoryVector
   }
   deriving (Show, Eq, G.Generic)
 
-instance A.FromJSON Player
+instance A.FromJSON PlayerStruct
 
-playerJsonStringToPlayer :: JsonString -> Maybe Player
-playerJsonStringToPlayer jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe Player
+playerJsonStringToPlayerStruct :: JsonString -> Maybe PlayerStruct
+playerJsonStringToPlayerStruct jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe PlayerStruct
 
-playerUpdateGiftHistory :: GiftHistory -> Player -> Player
+playerUpdateGiftHistory :: GiftHistoryVector -> PlayerStruct -> PlayerStruct
 playerUpdateGiftHistory giftHistory1 player = player {giftHistory = giftHistory1}

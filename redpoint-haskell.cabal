@@ -1,18 +1,18 @@
-cabal-version: 1.12
+cabal-version: 2.2
 
 -- This file has been generated from package.yaml by hpack version 0.36.0.
 --
 -- see: https://github.com/sol/hpack
 
 name:           redpoint-haskell
-version:        0.1.0.0
+version:        0.0.0.0
 description:    Please see the README on GitHub at <https://github.com/eatobin/redpoint-haskell#readme>
 homepage:       https://github.com/eatobin/redpoint-haskell#readme
 bug-reports:    https://github.com/eatobin/redpoint-haskell/issues
 author:         Eric Tobin
 maintainer:     eatobin@gmail.com
 copyright:      None
-license:        BSD3
+license:        BSD-3-Clause
 license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
@@ -26,8 +26,8 @@ source-repository head
 library
   exposed-modules:
       DrunkenPirate
-      Gift_History
-      Gift_Pair
+      GiftHistory
+      GiftPair
       Hat
       MyState
       Player
@@ -35,6 +35,8 @@ library
       Rules
       TurnstileMain
   other-modules:
+      Paths_redpoint_haskell
+  autogen-modules:
       Paths_redpoint_haskell
   hs-source-dirs:
       src
@@ -55,6 +57,10 @@ library
 
 executable redpoint-haskell-exe
   main-is: Main.hs
+  other-modules:
+      Paths_redpoint_haskell
+  autogen-modules:
+      Paths_redpoint_haskell
   hs-source-dirs:
       app
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
@@ -73,17 +79,12 @@ executable redpoint-haskell-exe
     , vector
   default-language: Haskell2010
 
-test-suite spec
+test-suite redpoint-haskell-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
-      GiftHistorySpec
-      GiftPairSpec
-      HatSpec
-      MyStateSpec
-      PlayerSpec
-      PlayersSpec
-      RulesSpec
+      Paths_redpoint_haskell
+  autogen-modules:
       Paths_redpoint_haskell
   hs-source-dirs:
       test
@@ -93,7 +94,7 @@ test-suite spec
     , base >=4.7 && <5
     , bytestring
     , containers
-    , hspec ==2.*
+    , hspec
     , monad-loops
     , mtl
     , random
@@ -102,4 +103,3 @@ test-suite spec
     , stm
     , vector
   default-language: Haskell2010
-  build-tool-depends: hspec-discover:hspec-discover == 2.*

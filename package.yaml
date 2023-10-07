@@ -1,7 +1,7 @@
 name: redpoint-haskell
-version: 0.1.0.0
+version: 0.0.0.0
 github: "eatobin/redpoint-haskell"
-license: BSD3
+license: BSD-3-Clause
 author: "Eric Tobin"
 maintainer: "eatobin@gmail.com"
 copyright: "None"
@@ -56,13 +56,11 @@ executables:
       - -with-rtsopts=-N
     dependencies:
       - redpoint-haskell
-    when:
-      - condition: false
-        other-modules: Paths_redpoint_haskell  # your package name here
 
 tests:
-  spec:
-    defaults: hspec/hspec@main
+  redpoint-haskell-test:
+    main: Spec.hs
+    source-dirs: test
     ghc-options:
       - -threaded
       - -rtsopts

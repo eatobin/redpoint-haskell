@@ -1,7 +1,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module MyState (RosterName, RosterYear, Quit, MyState (..), myStateDrawPuck, myStateStartNewYear, myStateGiveeIsFailure, myStateGiveeIsSuccess, myStateSelectNewGiver, myStateErrors, myStatePrintResults, myStateAskContinue, myStateJsonStringToMyState, myStateUpdateAndRunNewYear) where
+module MyState (RosterName, RosterYear, Quit, MyStateStruct (..), myStateDrawPuck, myStateStartNewYear, myStateGiveeIsFailure, myStateGiveeIsSuccess, myStateSelectNewGiver, myStateErrors, myStatePrintResults, myStateAskContinue, myStateJsonStringToMyStateStruct, myStateUpdateAndRunNewYear) where
 
 import qualified Control.Monad as CM
 import qualified Data.Aeson as A
@@ -11,8 +11,8 @@ import qualified Data.Map.Strict as Map
 import qualified Data.Maybe as DM
 import qualified Data.Set as Set
 import qualified GHC.Generics as G
-import Gift_History
-import Gift_Pair
+import GiftHistory
+import GiftPair
 import Hat
 import Players
 import Rules
@@ -25,35 +25,35 @@ type RosterYear = Int
 
 type Quit = String
 
-data MyState = MyState
+data MyStateStruct = MyStateStruct
   { rosterName :: RosterName,
     rosterYear :: RosterYear,
-    players :: Players,
+    players :: PlayersMap,
     giftYear :: GiftYear,
-    giveeHat :: Hat,
-    giverHat :: Hat,
+    giveeHat :: HatSet,
+    giverHat :: HatSet,
     maybeGivee :: Maybe Givee,
     maybeGiver :: Maybe Giver,
-    discards :: Discards,
+    discards :: DiscardsSet,
     quit :: Quit
   }
   deriving (Show, Eq, G.Generic)
 
-instance A.FromJSON MyState
+instance A.FromJSON MyStateStruct
 
-myStateJsonStringToMyState :: JsonString -> Maybe MyState
-myStateJsonStringToMyState jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe MyState
+myStateJsonStringToMyStateStruct :: JsonString -> Maybe MyStateStruct
+myStateJsonStringToMyStateStruct jsonString = A.decodeStrict (BS.pack jsonString) :: Maybe MyStateStruct
 
-myStateDrawPuck :: Hat -> IO (Maybe PlayerKey)
+myStateDrawPuck :: HatSet -> IO (Maybe PlayerKey)
 myStateDrawPuck hat
   | Set.null hat = return Nothing
   | otherwise = do
     i :: Int <- Ran.randomRIO (0, Prelude.length hat - 1)
     return (Just (Set.elemAt i hat))
 
-myStateStartNewYear :: MyState -> IO MyState
+myStateStartNewYear :: MyStateStruct -> IO MyStateStruct
 myStateStartNewYear state = do
-  let freshHat :: Hat = hatMakeHat (players state)
+  let freshHat :: HatSet = hatMakeHat (players state)
    in do
         newGivee <- myStateDrawPuck freshHat
         newGiver <- myStateDrawPuck freshHat
@@ -71,10 +71,10 @@ myStateStartNewYear state = do
               quit = quit state
             }
 
-myStateGiveeIsFailure :: MyState -> IO MyState
+myStateGiveeIsFailure :: MyStateStruct -> IO MyStateStruct
 myStateGiveeIsFailure state = do
   let giveeToRemove :: Givee = DM.fromJust (maybeGivee state)
-      diminishedGiveeHat :: Hat = hatRemovePuck giveeToRemove (giveeHat state)
+      diminishedGiveeHat :: HatSet = hatRemovePuck giveeToRemove (giveeHat state)
    in do
         newGivee <- myStateDrawPuck diminishedGiveeHat
         return
@@ -91,11 +91,11 @@ myStateGiveeIsFailure state = do
               quit = quit state
             }
 
-myStateGiveeIsSuccess :: MyState -> IO MyState
+myStateGiveeIsSuccess :: MyStateStruct -> IO MyStateStruct
 myStateGiveeIsSuccess state = do
   let currentGiver :: Giver = DM.fromJust (maybeGiver state)
       currentGivee :: Givee = DM.fromJust (maybeGivee state)
-      updatedGiveePlayers :: Players = playersUpdateMyGivee currentGiver currentGivee (giftYear state) (players state)
+      updatedGiveePlayers :: PlayersMap = playersUpdateMyGivee currentGiver currentGivee (giftYear state) (players state)
    in do
         return
           state
@@ -111,11 +111,11 @@ myStateGiveeIsSuccess state = do
               quit = quit state
             }
 
-myStateSelectNewGiver :: MyState -> IO MyState
+myStateSelectNewGiver :: MyStateStruct -> IO MyStateStruct
 myStateSelectNewGiver state = do
   let giverToRemove :: Giver = DM.fromJust (maybeGiver state)
-      replenishedGiveeHat :: Hat = hatReturnDiscards (discards state) (giveeHat state)
-      diminishedGiverHat :: Hat = hatRemovePuck giverToRemove (giverHat state)
+      replenishedGiveeHat :: HatSet = hatReturnDiscards (discards state) (giveeHat state)
+      diminishedGiverHat :: HatSet = hatRemovePuck giverToRemove (giverHat state)
    in do
         newGivee <- myStateDrawPuck replenishedGiveeHat
         newGiver <- myStateDrawPuck diminishedGiverHat
@@ -133,7 +133,7 @@ myStateSelectNewGiver state = do
               quit = quit state
             }
 
-myStateErrors :: MyState -> [PlayerKey]
+myStateErrors :: MyStateStruct -> [PlayerKey]
 myStateErrors state = do
   let playerKeys :: [PlayerKey] = List.sort (Map.keys (players state))
       playerErrors :: [PlayerKey] =
@@ -145,7 +145,7 @@ myStateErrors state = do
         ]
    in List.sort playerErrors
 
-myStatePrintResults :: MyState -> IO MyState
+myStatePrintResults :: MyStateStruct -> IO MyStateStruct
 myStatePrintResults state = do
   let errorList = myStateErrors state
   putStrLn ("\n" ++ rosterName state ++ " - Year " ++ show (rosterYear state + giftYear state) ++ " Gifts:\n")
@@ -174,18 +174,18 @@ myStatePrintResults state = do
     putStrLn "If not... call me and I'll explain!"
   return state
 
-myStateAskContinue :: MyState -> IO MyState
+myStateAskContinue :: MyStateStruct -> IO MyStateStruct
 myStateAskContinue state = do
   putStr "\nContinue? ('q' to quit): "
   SIO.hFlush SIO.stdout
   reply <- getLine
   return state {quit = reply}
 
-myStateUpdateAndRunNewYear :: MyState -> IO MyState
+myStateUpdateAndRunNewYear :: MyStateStruct -> IO MyStateStruct
 myStateUpdateAndRunNewYear state = do
   myStateLoop (myStateStartNewYear state)
 
-myStateLoop :: IO MyState -> IO MyState
+myStateLoop :: IO MyStateStruct -> IO MyStateStruct
 myStateLoop alteredStateIO = do
   alteredState <- alteredStateIO
   if DM.isJust (maybeGiver alteredState)
