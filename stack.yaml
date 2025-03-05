@@ -9,7 +9,7 @@
 # to be used for project dependencies. For example:
 #
 # resolver: lts-21.13
-resolver: nightly-2023-10-04
+# resolver: nightly-2023-10-04
 # Stackage Nightly 2023-10-04 (ghc-9.6.3)
 #
 # The location of a snapshot can be provided as a file or url. Stack assumes
@@ -17,7 +17,7 @@ resolver: nightly-2023-10-04
 #
 # resolver: ./custom-snapshot.yaml
 # resolver: https://example.com/snapshots/2023-01-01.yaml
-# resolver: lts-21.7
+resolver: lts-22.43
 
 # User packages to be built.
 # Various formats can be used as shown in the example below.

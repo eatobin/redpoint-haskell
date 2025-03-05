@@ -14,7 +14,7 @@ treasureMap pos =
     >>= stagger
     >>= crawl
 
---λ> :l DrunkenPirate
+--λ> :l src/DrunkenPirate.hs
 
 --treasureMap 100 -> Identity 105
 --runIdentity (treasureMap 600) -> 605
