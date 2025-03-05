@@ -56,6 +56,9 @@ executables:
       - -with-rtsopts=-N
     dependencies:
       - redpoint-haskell
+    when:
+      - condition: false
+        other-modules: Paths_redpoint_haskell
 
 tests:
   redpoint-haskell-test:
