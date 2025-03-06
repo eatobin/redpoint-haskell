@@ -30,10 +30,21 @@ mondayS = do
   a5 <- pushS
   return [a1, a2, a3, a4, a5]
 
+tuesdayS :: State TurnstileState [TurnstileOutput]
+tuesdayS = do
+  a1 <- pushS
+  a2 <- coinS
+  a3 <- coinS
+  a4 <- coinS
+  a5 <- pushS
+  a6 <- coinS
+  return [a1, a2, a3, a4, a5, a6]
+
 turnstileMain :: IO ()
 turnstileMain =
   do
-    print (runState mondayS Locked)
+    print (runState mondayS Unlocked)
+    print (runState tuesdayS Unlocked)
 
 -- λ> :l src/TurnstileMain.hs
 -- λ> turnstileMain -> ([Thank,Open,Tut,Thank,Open],Locked)
