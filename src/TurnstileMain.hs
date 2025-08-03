@@ -1,6 +1,6 @@
 module TurnstileMain (turnstileMain) where
 
-import Control.Monad.State
+import Control.Monad.State (MonadState (state), State, evalState, execState, runState)
 
 data TurnstileState = Locked | Unlocked
   deriving (Eq, Show)
@@ -45,6 +45,8 @@ turnstileMain =
   do
     print (runState mondayS Unlocked)
     print (runState tuesdayS Unlocked)
+    print (evalState mondayS Locked)
+    print (execState mondayS Locked)
 
 -- λ> :l src/TurnstileMain.hs
 -- λ> turnstileMain -> ([Thank,Open,Tut,Thank,Open],Locked)
