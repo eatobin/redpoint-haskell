@@ -5,8 +5,24 @@ import qualified Data.ByteString.Char8 as BS
 import qualified Data.Map.Strict as Map
 import qualified Data.Vector as Vec
 import GiftHistory
+  ( GiftYear,
+    giftHistoryAddYear,
+    giftHistoryUpdateGiftHistoryVector,
+  )
 import GiftPair
+  ( GiftPairStruct (givee, giver),
+    Givee,
+    Giver,
+    JsonString,
+    PlayerKey,
+    giftPairUpdateGivee,
+    giftPairUpdateGiver,
+  )
 import Player
+  ( PlayerName,
+    PlayerStruct (giftHistory, playerName),
+    playerUpdateGiftHistory,
+  )
 
 type PlayersMap = Map.Map PlayerKey PlayerStruct
 

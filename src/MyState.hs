@@ -11,11 +11,30 @@ import qualified Data.Map.Strict as Map
 import qualified Data.Maybe as DM
 import qualified Data.Set as Set
 import qualified GHC.Generics as G
-import GiftHistory
-import GiftPair
+import GiftHistory (GiftYear)
+import GiftPair (Givee, Giver, JsonString, PlayerKey)
 import Hat
+  ( DiscardsSet,
+    HatSet,
+    hatDiscardGivee,
+    hatMakeHat,
+    hatRemovePuck,
+    hatReturnDiscards,
+  )
 import Players
+  ( PlayersMap,
+    playersAddYear,
+    playersGetMyGivee,
+    playersGetMyGiver,
+    playersGetPlayerName,
+    playersUpdateMyGivee,
+    playersUpdateMyGiver,
+  )
 import Rules
+  ( rulesGiveeNotReciprocal,
+    rulesGiveeNotRepeat,
+    rulesGiveeNotSelf,
+  )
 import qualified System.IO as SIO
 import qualified System.Random as Ran
 
@@ -48,8 +67,8 @@ myStateDrawPuck :: HatSet -> IO (Maybe PlayerKey)
 myStateDrawPuck hat
   | Set.null hat = return Nothing
   | otherwise = do
-    i :: Int <- Ran.randomRIO (0, Prelude.length hat - 1)
-    return (Just (Set.elemAt i hat))
+      i :: Int <- Ran.randomRIO (0, Prelude.length hat - 1)
+      return (Just (Set.elemAt i hat))
 
 myStateStartNewYear :: MyStateStruct -> IO MyStateStruct
 myStateStartNewYear state = do

@@ -2,9 +2,9 @@
 
 module Rules (rulesGiveeNotSelf, rulesGiveeNotReciprocal, rulesGiveeNotRepeat) where
 
-import GiftHistory
-import GiftPair
-import Players
+import GiftHistory (GiftYear)
+import GiftPair (Givee, PlayerKey)
+import Players (PlayersMap, playersGetMyGivee)
 
 rulesGiveeNotSelf :: PlayerKey -> Givee -> Bool
 rulesGiveeNotSelf selfKey gee =

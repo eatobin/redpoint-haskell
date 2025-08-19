@@ -5,13 +5,69 @@ import qualified Data.Maybe as DM
 import qualified Data.Set as Set
 import qualified Data.Vector as Vec
 import GiftHistory
+  ( GiftHistoryVector,
+    giftHistoryAddYear,
+    giftHistoryJsonStringToGiftHistoryVector,
+    giftHistoryUpdateGiftHistoryVector,
+  )
 import GiftPair
+  ( GiftPairStruct (..),
+    Givee,
+    Giver,
+    JsonString,
+    giftPairJsonStringToGiftPairStruct,
+    giftPairUpdateGivee,
+    giftPairUpdateGiver,
+  )
 import Hat
+  ( HatSet,
+    hatDiscardGivee,
+    hatMakeHat,
+    hatRemovePuck,
+    hatReturnDiscards,
+  )
 import MyState
+  ( MyStateStruct (..),
+    myStateDrawPuck,
+    myStateErrors,
+    myStateGiveeIsFailure,
+    myStateGiveeIsSuccess,
+    myStateJsonStringToMyStateStruct,
+    myStatePrintResults,
+    myStateSelectNewGiver,
+    myStateStartNewYear,
+  )
 import Player
+  ( PlayerStruct (..),
+    playerJsonStringToPlayerStruct,
+    playerUpdateGiftHistory,
+  )
 import Players
+  ( PlayersMap,
+    playersAddYear,
+    playersGetMyGivee,
+    playersGetMyGiver,
+    playersGetPlayerName,
+    playersJsonStringToPlayersMap,
+    playersUpdateMyGivee,
+    playersUpdateMyGiver,
+    playersUpdatePlayer,
+  )
 import Rules
+  ( rulesGiveeNotReciprocal,
+    rulesGiveeNotRepeat,
+    rulesGiveeNotSelf,
+  )
 import Test.Hspec
+  ( Spec,
+    beforeAll,
+    describe,
+    hspec,
+    it,
+    shouldBe,
+    shouldNotBe,
+    shouldReturn,
+  )
 import Text.RawString.QQ (r)
 
 -- giftPair

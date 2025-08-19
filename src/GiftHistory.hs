@@ -3,7 +3,7 @@ module GiftHistory (GiftHistoryVector, GiftYear, giftHistoryAddYear, giftHistory
 import qualified Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.Vector as Vec
-import GiftPair
+import GiftPair (GiftPairStruct (..), JsonString, PlayerKey)
 
 type GiftHistoryVector = Vec.Vector GiftPairStruct
 

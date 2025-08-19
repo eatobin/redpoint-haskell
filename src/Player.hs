@@ -5,8 +5,8 @@ module Player (PlayerName, PlayerStruct (..), playerUpdateGiftHistory, playerJso
 import qualified Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
 import qualified GHC.Generics as G
-import GiftHistory
-import GiftPair
+import GiftHistory (GiftHistoryVector)
+import GiftPair (JsonString)
 
 type PlayerName = String
 

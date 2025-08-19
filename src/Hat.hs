@@ -4,8 +4,8 @@ import qualified Data.Aeson as A
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.Map.Strict as Map
 import qualified Data.Set as Set
-import GiftPair
-import Players
+import GiftPair (Givee, JsonString, PlayerKey)
+import Players (PlayersMap)
 
 type HatSet = Set.Set PlayerKey
 
