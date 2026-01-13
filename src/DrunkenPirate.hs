@@ -20,6 +20,7 @@
 --     >>= stagger
 --     >>= stagger
 
+-- $ stack repl --ghc-options -Wno-type-defaults
 -- λ> :l src/DrunkenPirate.hs
 
 -- treasureMap 100 -> Identity 105
