@@ -20,21 +20,29 @@
 --     >>= stagger
 --     >>= stagger
 
--- $ stack repl --ghc-options -Wno-type-defaults
+-- \$ stack repl --ghc-options -Wno-type-defaults
 -- λ> :l src/DrunkenPirate.hs
 
 -- treasureMap 100 -> Identity 105
 -- runIdentity (treasureMap 600) -> 605
 
-module DrunkenPirate (treasureMap) where
+module DrunkenPirate (treasureMap, treasureMapX) where
+
+import Control.Monad.Identity (Identity (Identity, runIdentity))
 
 newtype Position t = Position t deriving (Show)
 
 stagger :: (Num t) => Position t -> Position t
 stagger (Position d) = Position (d + 2)
 
+staggerX :: (Num t) => Identity t -> Identity t
+staggerX (Identity d) = Identity (d + 2)
+
 crawl :: (Num t) => Position t -> Position t
 crawl (Position d) = Position (d + 1)
+
+crawlX :: (Num t) => Identity t -> Identity t
+crawlX (Identity d) = Identity {runIdentity = d + 1}
 
 rtn :: p -> p
 rtn x = x
@@ -50,6 +58,15 @@ treasureMap posM =
     >>== stagger
     >>== rtn
 
+treasureMapX :: Identity Int -> Identity Int
+treasureMapX posX =
+  posX
+    >>== crawlX
+    >>== staggerX
+    >>== staggerX
+    >>== rtn
+
 -- treasureMap (Position 100) -> Position 105
 -- treasureMap (Position (100 :: Int))
 -- treasureMap (Position (100.8 :: Double))
+-- treasureMapX (Identity 100)
