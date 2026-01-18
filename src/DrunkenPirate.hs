@@ -36,7 +36,7 @@ stagger :: (Num t) => Position t -> Position t
 stagger (Position d) = Position (d + 2)
 
 staggerX :: (Num t) => Identity t -> Identity t
-staggerX (Identity d) = Identity (d + 2)
+staggerX (Identity d) = Identity {runIdentity = d + 2}
 
 crawl :: (Num t) => Position t -> Position t
 crawl (Position d) = Position (d + 1)
@@ -70,3 +70,4 @@ treasureMapX posX =
 -- treasureMap (Position (100 :: Int))
 -- treasureMap (Position (100.8 :: Double))
 -- treasureMapX (Identity 100)
+-- runIdentity (treasureMapX 600) -> 605
