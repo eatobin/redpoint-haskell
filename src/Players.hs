@@ -46,7 +46,7 @@ playersAddYear players =
         let ngh = giftHistoryAddYear playerKey gh
         let nplr = playerUpdateGiftHistory ngh player
         (playerKey, nplr)
-      | (playerKey, player) <- Map.toAscList players
+    | (playerKey, player) <- Map.toAscList players
     ]
 
 playersGetMyGivee :: PlayerKey -> PlayersMap -> GiftYear -> Givee

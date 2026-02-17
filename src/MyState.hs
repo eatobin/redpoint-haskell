@@ -157,10 +157,10 @@ myStateErrors state = do
   let playerKeys :: [PlayerKey] = List.sort (Map.keys (players state))
       playerErrors :: [PlayerKey] =
         [ playerKeyMe
-          | playerKeyMe <- playerKeys,
-            let myGiverKey = playersGetMyGiver playerKeyMe (players state) (giftYear state),
-            let myGiveeKey = playersGetMyGivee playerKeyMe (players state) (giftYear state),
-            (playerKeyMe == myGiverKey) || (playerKeyMe == myGiveeKey)
+        | playerKeyMe <- playerKeys,
+          let myGiverKey = playersGetMyGiver playerKeyMe (players state) (giftYear state),
+          let myGiveeKey = playersGetMyGivee playerKeyMe (players state) (giftYear state),
+          (playerKeyMe == myGiverKey) || (playerKeyMe == myGiveeKey)
         ]
    in List.sort playerErrors
 
@@ -185,7 +185,7 @@ myStatePrintResults state = do
                 if playerKey == giveeKey
                   then pName ++ " is **buying** for no one - **ERROR**"
                   else pName ++ " is buying for " ++ giveeName
-      | playerKey <- playerKeys
+    | playerKey <- playerKeys
     ]
   CM.unless (null errorList) $ do
     putStrLn "\nThere is a logic error in this year's pairings."
