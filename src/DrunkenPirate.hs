@@ -1,3 +1,5 @@
+-- Rewrite a pure state-passing function using the State monad wrapper?
+
 -- haskell
 -- -- It passes the value straight through with no extra logic
 -- identityExample :: Identity Int
