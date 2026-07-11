@@ -27,7 +27,7 @@
 
 -- haskell
 
--- A type synonym for clarity
+-- -- A type synonym for clarity
 -- type Score = Int
 
 -- -- Manually taking the state and returning the new state
