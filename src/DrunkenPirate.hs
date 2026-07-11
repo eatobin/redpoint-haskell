@@ -98,6 +98,17 @@
 --     -- 3. Get only the final score
 --     print $ execState runGameState initialState
 
+-- Pro-Tip: Using modify
+
+-- You can make the monadic code even shorter by using modify, which applies a function directly to the internal state without needing separate get and put steps:
+
+-- haskell
+
+-- scorePointState :: State Score String
+-- scorePointState = do
+--     modify (+ 10)
+--     return "Point scored!"
+
 module DrunkenPirate (treasureMap) where
 
 import Control.Monad.Identity (Identity (Identity, runIdentity))
