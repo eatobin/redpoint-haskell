@@ -21,7 +21,9 @@
 
 -- Here is a step-by-step example showing a game scorekeeper rewritten from a manual pure function into the State monad.
 
--- 1. The Manual Pure ApproachIn standard pure code, you must manually pass the integer score into every function and accept a new tuple back. It is easy to accidentally pass the wrong state variable name.
+-- 1. The Manual Pure Approach
+
+-- In standard pure code, you must manually pass the integer score into every function and accept a new tuple back. It is easy to accidentally pass the wrong state variable name.
 
 -- haskell
 
