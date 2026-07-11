@@ -1,6 +1,7 @@
 -- Rewrite a pure state-passing function using the State monad wrapper?
 
 -- haskell
+
 -- -- It passes the value straight through with no extra logic
 -- identityExample :: Identity Int
 -- identityExample = do
@@ -8,6 +9,7 @@
 --     return (x + 1)
 
 -- haskell
+
 -- -- It automatically passes the integer state from line to line
 -- stateExample :: State Int String
 -- stateExample = do
@@ -48,7 +50,9 @@
 --         (msg2, s2) = bonusPointPure s1
 --     in (msg1 ++ " " ++ msg2, s2)
 
--- 2. The State Monad RewriteWith Control.Monad.State, the state is handled entirely behind the scenes inside the monad's plumbing. You use get to read the state and put to overwrite it.
+-- 2. The State Monad Rewrite
+
+-- With Control.Monad.State, the state is handled entirely behind the scenes inside the monad's plumbing. You use get to read the state and put to overwrite it.
 
 -- haskell
 
@@ -81,6 +85,7 @@
 -- 3. How to Execute the State Monad
 
 -- To actually run your State action and get data back, you unwrap it by providing an initial state value to one of three runner functions:
+
 -- runState: Returns both the final value and the final state as a tuple.
 -- evalState: Returns only the final computed value.
 -- execState: Returns only the final state.
@@ -101,6 +106,7 @@
 
 --     -- 3. Get only the final score
 --     print $ execState runGameState initialState
+--     -- Output: 60
 
 -- Pro-Tip: Using modify
 
