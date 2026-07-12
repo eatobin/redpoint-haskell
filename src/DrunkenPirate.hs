@@ -119,27 +119,66 @@
 --     modify (+ 10)
 --     return "Point scored!"
 
-module DrunkenPirate (treasureMap) where
+module DrunkenPirate (runTreasureMapState, main) where
 
-import Control.Monad.Identity (Identity (Identity, runIdentity))
+import Control.Monad.State
+  ( MonadState (get, put),
+    State,
+    evalState,
+    execState,
+    runState,
+  )
 
-stagger :: Int -> Identity Int
-stagger p = Identity {runIdentity = p + 2}
+type Position = Int
 
-crawl :: Int -> Identity Int
-crawl p = Identity {runIdentity = p + 1}
+stagger :: State Position String
+stagger = do
+  currentPosition <- get
+  let newPosition = currentPosition + 2
+  put newPosition
+  return "Just staggered two"
+
+crawl :: State Position String
+crawl = do
+  currentPosition <- get
+  let newPosition = currentPosition + 1
+  put newPosition
+  return "Just crawled one"
+
+runTreasureMapState :: State Position [String]
+runTreasureMapState = do
+  msg1 <- crawl
+  msg2 <- stagger
+  msg3 <- stagger
+  return [msg1, msg2, msg3]
+
+main :: IO ()
+main = do
+  let initialPosition = 100
+
+  print $ runState runTreasureMapState initialPosition
+  print $ evalState runTreasureMapState initialPosition
+  print $ execState runTreasureMapState initialPosition
+
+-- import Control.Monad.Identity (Identity (Identity, runIdentity))
+
+-- stagger :: Int -> Identity Int
+-- stagger p = Identity {runIdentity = p + 2}
+
+-- crawl :: Int -> Identity Int
+-- crawl p = Identity {runIdentity = p + 1}
+
+-- -- treasureMap :: Int -> Identity Int
+-- -- treasureMap pos =
+-- --   stagger pos
+-- --     >>= stagger
+-- --     >>= crawl
 
 -- treasureMap :: Int -> Identity Int
 -- treasureMap pos =
---   stagger pos
+--   crawl pos
 --     >>= stagger
---     >>= crawl
-
-treasureMap :: Int -> Identity Int
-treasureMap pos =
-  crawl pos
-    >>= stagger
-    >>= stagger
+--     >>= stagger
 
 -- \$ stack repl --ghc-options -Wno-type-defaults
 -- λ> :l src/DrunkenPirate.hs
